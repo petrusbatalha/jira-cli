@@ -1,13 +1,16 @@
-extern crate rpassword;
 extern crate base64;
+extern crate pretty_env_logger;
+extern crate rpassword;
 extern crate serde_json;
 extern crate yaml_rust;
-use yaml_rust::{YamlLoader, Yaml};
-use serde::{Deserialize, Serialize};
-use structopt::StructOpt;
-use std::fs::File;
+#[macro_use]
+extern crate log;
 use reqwest::header::{HeaderMap, HeaderValue};
+use serde::{Deserialize, Serialize};
+use std::fs::File;
 use std::io::Read;
+use structopt::StructOpt;
+use yaml_rust::{Yaml, YamlLoader};
 
 #[derive(Debug, StructOpt)]
 #[structopt(name = "example", about = "An example of StructOpt usage.")]
@@ -41,7 +44,7 @@ struct Fields {
     description: String,
     issuetype: IssueType,
     labels: Vec<String>,
-    components: Vec<String>,
+    components: Vec<Component>,
     customfield_10214: String,
     customfield_10101: String,
 }
@@ -56,9 +59,14 @@ struct IssueType {
     name: String,
 }
 
+#[derive(Debug, Clone, Serialize, Deserialize)]
+struct Component {
+    name: String,
+}
+
 #[tokio::main]
 async fn main() -> Result<(), Box<dyn std::error::Error>> {
-   let opt = Opt::from_args();
+    let opt = Opt::from_args();
     let story_uri = opt.host.to_string() + "/rest/api/2/issue/";
 
     // Build auth headers.
@@ -68,7 +76,9 @@ async fn main() -> Result<(), Box<dyn std::error::Error>> {
     // Open stories yaml.
     let mut stories_file = File::open(opt.input).unwrap();
     let mut yaml_as_string = String::new();
-    stories_file.read_to_string(&mut yaml_as_string).expect("Failed to load yaml");
+    stories_file
+        .read_to_string(&mut yaml_as_string)
+        .expect("Failed to load yaml");
 
     let yaml_file = YamlLoader::load_from_str(&yaml_as_string).unwrap();
     let yaml = &yaml_file[0];
@@ -79,13 +89,13 @@ async fn main() -> Result<(), Box<dyn std::error::Error>> {
     let client = reqwest::Client::new();
 
     for body in req_bodies {
-        // let res =
-        //     client.post(&story_uri)
-        //         .headers(get_auth(&credentials))
-        //         .body(body)
-        //         .send()
-        //         .await?;
-        println!("{:?}", body);
+        let res = client
+            .post(&story_uri)
+            .headers(get_auth(&credentials))
+            .body(body.clone())
+            .send()
+            .await?;
+        info!("Response: {:?}", res);
     }
 
     Ok(())
@@ -95,10 +105,11 @@ fn get_auth(credentials: &str) -> HeaderMap {
     let content_type: String = "application/json".to_string();
     let mut headers = HeaderMap::new();
 
-    headers.insert("Authorization",
-                   HeaderValue::from_str(credentials).unwrap());
-    headers.insert("Content-Type",
-                   HeaderValue::from_str(&content_type).unwrap());
+    headers.insert("Authorization", HeaderValue::from_str(credentials).unwrap());
+    headers.insert(
+        "Content-Type",
+        HeaderValue::from_str(&content_type).unwrap(),
+    );
     headers
 }
 
@@ -106,40 +117,47 @@ fn build_req_body(yaml: Yaml) -> Vec<String> {
     let yaml_metadata = &yaml["metadata"];
     let epic = yaml_metadata.clone()["epic"].as_str().unwrap().to_string();
     let team = yaml_metadata.clone()["team"].as_str().unwrap().to_string();
-    let project = yaml_metadata.clone()["project"].as_str().unwrap().to_string();
+    let project = yaml_metadata.clone()["project"]
+        .as_str()
+        .unwrap()
+        .to_string();
     let mut req_list: Vec<String> = Vec::new();
 
     let mut labels: Vec<String> = Vec::new();
     for label in yaml_metadata.clone()["labels"].as_vec().unwrap() {
         labels.push(label.as_str().unwrap().to_string());
-    };
+    }
 
-    let mut components: Vec<String> = Vec::new();
+    let mut components: Vec<Component> = Vec::new();
     for component in yaml_metadata.clone()["components"].as_vec().unwrap() {
-        components.push(component.as_str().unwrap().to_string());
-    };
+        components.push(Component {
+            name: component.as_str().unwrap().to_string(),
+        });
+    }
 
     // Get yaml block "stories".
     for story in yaml["stories"].as_vec().unwrap() {
         let labels = labels.clone();
         let components = components.clone();
         let key = project.clone();
-        let customfield_10101= epic.clone();
-        let customfield_10214= team.clone();
+        let customfield_10101 = epic.clone();
+        let customfield_10214 = team.clone();
 
         // Get nested fields
         // Get project key.
         let project: Project = Project { key };
 
         // Get Issue Type.
-        let issuetype = IssueType { name: "Story".to_string()};
+        let issuetype = IssueType {
+            name: "Story".to_string(),
+        };
 
         // Get single fields
         let summary: String = story.clone()["name"].as_str().unwrap().to_string();
         let description: String = story.clone()["description"].as_str().unwrap().to_string();
 
-        let req_body =
-            IssueBody { fields: Fields {
+        let req_body = IssueBody {
+            fields: Fields {
                 project,
                 summary,
                 description,
@@ -148,14 +166,14 @@ fn build_req_body(yaml: Yaml) -> Vec<String> {
                 components,
                 customfield_10101,
                 customfield_10214,
-            }
+            },
         };
 
         let body = serde_json::to_string(&req_body).unwrap();
 
         req_list.push(body.clone());
 
-        println!("Serialized: {}", body);
+        debug!("Req body: {}", body);
     }
     req_list
 }

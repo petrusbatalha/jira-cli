@@ -3,7 +3,7 @@ metadata:
   project: ESTRT
   components:
     - enge-cloud
-  epic: ESTRT-1254
+  epic: ESTRT-1055
   team: engenhariacloud
   labels:
     - H2
@@ -36,8 +36,7 @@ stories:
         - Mecanismos disponíveis para comunicação com o IBM Db2.
 
       DoD: Documentação no Confluence.
-  -
-    name: |
+  - name: |
       [Quarkus] Mapear facilitadores para uso de Base de Dados [Semelhante ao Spring Data].
     point: 0
     description: |
@@ -96,12 +95,6 @@ stories:
       não apresentaria uma diferença significativa.
 
       DoD: <digite-o-definition-of-done>
-  - name: | 
-      Desenho para requisição do M.A.
-    point: 0
-    description: |
-      Criar desenho para requisitar a criação do M.A.
-      DoD: Requisição M.A realizada.
   - name: |    
       Requisitar pipeline para os serviços do Real World.
     point: 0
