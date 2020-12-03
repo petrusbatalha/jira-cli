@@ -7,7 +7,12 @@ metadata:
   labels:
     - H2
 stories:
-  - name: |
+  - name: |-
+      Desenho para requisição do M.A.
+    point: 0
+    description: |
+      eita
+  - name: |-
         [Quarkus] Mapear facilitadores para Kubernetes.
     point: 0
     description: |
@@ -19,7 +24,7 @@ stories:
         Compatibilidade com log na Cloud ?
 
       DoD: Documentação no Confluence.
-  - name: |
+  - name: |-
         [Quarkus] Mapear dependencias necessárias para uso do Quarkus.
     point: 0
     description: |
@@ -27,7 +32,7 @@ stories:
         - Mapear as dependencias para as diferentes implementações do Quarkus [GraalVM, JVM, Nativo].
 
       DoD: Documentação no Cockroach.
-  - name: |
+  - name: |-
       [Quarkus] Mapear compatibilidade para comunicação com o IBM Db2.
     point: 0
     description: |
@@ -35,7 +40,7 @@ stories:
         - Mecanismos disponíveis para comunicação com o IBM Db2.
 
       DoD: Documentação no Confluence.
-  - name: |
+  - name: |-
       [Quarkus] Mapear facilitadores para uso de Base de Dados [Semelhante ao Spring Data].
     point: 0
     description: |
@@ -45,27 +50,27 @@ stories:
       - Facilitador para CockroachDB?
 
       DoD: Documentação no Confluence.
-  - name: |
+  - name: |-
       [Quarkus] Compatibilidade com connector CWS.
     point: 0
     description: |
       Avaliar a compatibilidade do framework com o connector CWS, 
       elencando se é plausível a sua adaptação, ou se é o esforço é muito grande.
       DoD: <digite-o-definition-of-done>
-  - name: |
+  - name: |-
       [Quarkus] Compatibilidade com IBM Event Streams.
     point: 0
     description: |
       Avaliar as opções de bibliotecas Kafka para o Quarkus.
       DoD: <digite-o-definition-of-done>
-  - name: |
+  - name: |-
       [Quarkus] Compatibilidade com estrutural de log.
     point: 0
     description: |
       Avaliar a compatibilidade da biblioteca estrutural de log com o Quarkus,
       elencando se é plausível a sua adaptação, ou se é o esforço é muito grande.
       DoD: <digite-o-definition-of-done>
-  - name: |
+  - name: |-
       [Quarkus] Compatibilidade com pipeline DevSecOps.
     point: 0
     description: |
@@ -74,7 +79,7 @@ stories:
       - Compatível com o gateway de qualidade de código do Sonar?
       - Compatível com as métricas do fortify?
       DoD: <digite-o-definition-of-done>
-  - name: |
+  - name: |-
       [Quarkus] Compatibilidade do Quarkus nativo com pipeline DevSecOps.
     point: 0
     description: |
@@ -84,7 +89,7 @@ stories:
       - Compatível com as métricas do fortify?
 
       DoD: <digite-o-definition-of-done>
-  - name: |
+  - name: |-
       [Quarkus] Avaliar performance Quarkus GraalVM VS Quarkus JVM VS Quarkus Nativo.
     point: 0
     description: |
@@ -94,7 +99,7 @@ stories:
       não apresentaria uma diferença significativa.
 
       DoD: <digite-o-definition-of-done>
-  - name: |    
+  - name: |-
       Requisitar pipeline para os serviços do Real World.
     point: 0
     description: | 
@@ -104,7 +109,7 @@ stories:
         enge-srv-spring-moedas
 
       DoD: Requisicao da pipeline realizada.
-  - name: |
+  - name: |-
       [Quarkus] Desenvolvimento rota GET enge-srv-quarkus-converte-moedas/api/moedas/origem/destino/valor
     point: 0
     description: |
@@ -129,7 +134,7 @@ stories:
         OBS: A história deverá incluir os testes unitários para a rota.
 
         DoD: Rota desenvolvida com os seus devidos testes unitários.
-  - name: |
+  - name: |-
       [Quarkus] Desenvolvimento rota POST enge-srv-quarkus-converte-moedas/api/moeda/conversoes
     point: 0
     description: |
@@ -156,7 +161,7 @@ stories:
         OBS: A história deverá incluir os testes unitário da rota.
 
         DoD: Rota desenvolvida com os seus devidos testes unitários.
-  - name: |
+  - name: |-
         [Quarkus] Adicionando Métricas/Healthcheck/Swagger.
     point: 0
     description: |
@@ -166,7 +171,7 @@ stories:
         padrão prometheus.
 
         DoD: Caracteristicas implementadas e testadas.
-  - name: |
+  - name: |-
         [Quarkus] Adequação esteira DevSecOps.
     point: 0
     description: |
@@ -177,7 +182,7 @@ stories:
         - Criação dos testes do Octane.
 
         DoD: Microsserviço nos ambientes de Desenvolvimento.
-  - name: |
+  - name: |-
         [Quarkus] Utilizar a GraalVM para o microsserviço.
     point: 0
     description: |
@@ -185,7 +190,7 @@ stories:
         - Fazer build de imagem docker utilizando a GraalVM.
 
         DoD: Imagem docker criada com a GraalVM e testes realizados.
-  - name: |
+  - name: |-
         [Quarkus] Adaptar o microsserviço para o modo nativo do Quarkus.
     point: 0
     description: |

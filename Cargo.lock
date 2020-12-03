@@ -407,6 +407,7 @@ name = "jira-cli"
 version = "0.1.0"
 dependencies = [
  "base64",
+ "lazy_static",
  "log",
  "pretty_env_logger",
  "reqwest",
