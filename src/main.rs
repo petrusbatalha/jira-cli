@@ -1,12 +1,22 @@
-extern crate base64;
-extern crate pretty_env_logger;
-extern crate rpassword;
-extern crate serde_json;
-extern crate yaml_rust;
+#![feature(associated_type_defaults)]
 #[macro_use]
 extern crate log;
 #[macro_use]
 extern crate lazy_static;
+
+mod fields;
+mod jira_structs;
+mod traits;
+mod file_utilities;
+
+extern crate base64;
+extern crate pretty_env_logger;
+extern crate rpassword;
+extern crate serde_json;
+
+use crate::fields::CustomFieldsHandler;
+use crate::jira_structs::{Component, Fields, FieldsMeta, IssueType, IssuesResponse, Project, JiraMeta};
+use crate::traits::Searchable;
 use reqwest::header::CONTENT_TYPE;
 use reqwest::Client;
 use serde::{Deserialize, Serialize};
@@ -27,7 +37,7 @@ struct Opt {
 
     /// Stories input file
     #[structopt(short = "s", long = "stories")]
-    input: String,
+    input: Option<String>,
 
     /// Jira user
     #[structopt(short = "u", long = "user")]
@@ -42,42 +52,6 @@ struct Opt {
     log_level: String,
 }
 
-#[derive(Debug, Clone, Serialize)]
-struct FieldsMeta {
-    issuetype: IssueType,
-    labels: Vec<String>,
-    components: Vec<Component>,
-    project: Project,
-    customfield_10214: String,
-    customfield_10101: String,
-}
-
-#[derive(Debug, Clone, Serialize)]
-struct Fields {
-    summary: String,
-    description: String,
-}
-
-#[derive(Debug, Clone, Serialize)]
-struct Project {
-    key: String,
-}
-
-#[derive(Debug, Clone, Serialize)]
-struct IssueType {
-    name: String,
-}
-
-#[derive(Debug, Clone, Serialize)]
-struct Component {
-    name: String,
-}
-
-#[derive(Debug, Clone, Deserialize)]
-struct IssuesResponse {
-    issues: Vec<Value>,
-}
-
 lazy_static! {
     static ref REST_CLIENT: Client = reqwest::Client::new();
 }
@@ -89,26 +63,30 @@ async fn main() {
     env::set_var("RUST_LOG", opt.log_level.to_ascii_uppercase());
     pretty_env_logger::init();
 
-    let jira_api = format!("{}{}", opt.host.to_string(), "/rest/api/2");
     let pass = rpassword::read_password_from_tty(Some("Password: ")).unwrap();
     let user = opt.user;
-    let yaml_path = opt.input;
 
-    // Load Yaml file.
-    let yaml = load_yaml(&yaml_path).await;
-    build_req(&jira_api, &user, &pass, &yaml).await.unwrap();
-}
+    // let jira_api = format!("{}{}", opt.host.to_string(), "/rest/api/2");
+    let jira_meta = JiraMeta {
+        host: opt.host.to_string(),
+        user,
+        pass,
+    };
 
-async fn load_yaml(yaml_path: &str) -> Yaml {
-    // Open stories yaml.
-    let mut stories_file = File::open(yaml_path).unwrap();
-    let mut yaml_as_string = String::new();
-    stories_file
-        .read_to_string(&mut yaml_as_string)
-        .expect("Failed to load yaml");
+    let custom_fields_handler = CustomFieldsHandler{
+        jira_meta
+    };
 
-    let yaml_file = YamlLoader::load_from_str(&yaml_as_string).unwrap();
-    yaml_file[0].clone()
+    let custom_fields =
+        &custom_fields_handler.list(&REST_CLIENT).await.unwrap();
+
+    println!("CUSTOM FIELDS {:?}", custom_fields);
+
+    // let yaml_path = opt.input;
+    //
+    // // Load Yaml file.
+    // let yaml = load_yaml(&yaml_path).await;
+    // build_req(&jira_api, &user, &pass, &yaml).await.unwrap();
 }
 
 async fn build_req(
