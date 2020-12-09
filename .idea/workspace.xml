@@ -15,11 +15,10 @@
   <component name="ChangeListManager">
     <list default="true" id="54f75dd0-d2b5-4f5c-bfda-06307fd1452d" name="Default Changelist" comment="">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Cargo.lock" beforeDir="false" afterPath="$PROJECT_DIR$/Cargo.lock" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Cargo.toml" beforeDir="false" afterPath="$PROJECT_DIR$/Cargo.toml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/fields.rs" beforeDir="false" afterPath="$PROJECT_DIR$/src/fields.rs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/file_utilities.rs" beforeDir="false" afterPath="$PROJECT_DIR$/src/file_utilities.rs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/jira_structs.rs" beforeDir="false" afterPath="$PROJECT_DIR$/src/jira_structs.rs" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main.rs" beforeDir="false" afterPath="$PROJECT_DIR$/src/main.rs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/traits.rs" beforeDir="false" afterPath="$PROJECT_DIR$/src/traits.rs" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -97,6 +96,7 @@
       <option name="presentableId" value="Default" />
       <updated>1606765457542</updated>
       <workItem from="1606765458969" duration="61473000" />
+      <workItem from="1607533491348" duration="2580000" />
     </task>
     <servers />
   </component>

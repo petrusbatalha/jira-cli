@@ -5,9 +5,9 @@ extern crate log;
 extern crate lazy_static;
 
 mod fields;
+mod file_utilities;
 mod jira_structs;
 mod traits;
-mod file_utilities;
 
 extern crate base64;
 extern crate pretty_env_logger;
@@ -15,7 +15,9 @@ extern crate rpassword;
 extern crate serde_json;
 
 use crate::fields::CustomFieldsHandler;
-use crate::jira_structs::{Component, Fields, FieldsMeta, IssueType, IssuesResponse, Project, JiraMeta};
+use crate::jira_structs::{
+    Component, Fields, FieldsMeta, IssueType, IssuesResponse, JiraMeta, Project,
+};
 use crate::traits::Searchable;
 use reqwest::header::CONTENT_TYPE;
 use reqwest::Client;
@@ -78,8 +80,7 @@ async fn main() {
         custom_fields: None,
     };
 
-    let custom_fields =
-        &custom_fields_handler.list(&REST_CLIENT).await;
+    let custom_fields = &custom_fields_handler.list(&REST_CLIENT).await;
 
     println!("CUSTOM FIELDS {:?}", custom_fields);
 

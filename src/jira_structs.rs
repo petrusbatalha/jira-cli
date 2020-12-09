@@ -1,5 +1,5 @@
-use serde_json::Value;
 use serde::{Deserialize, Serialize};
+use serde_json::Value;
 
 #[derive(Debug, Clone, Deserialize)]
 pub struct Schema {
@@ -11,7 +11,7 @@ pub struct Schema {
     system: Option<String>,
 }
 
-pub struct JiraMeta  {
+pub struct JiraMeta {
     pub host: String,
     pub user: String,
     pub pass: String,

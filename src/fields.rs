@@ -1,16 +1,17 @@
+use crate::file_utilities::{json_from_file, json_to_file};
+use crate::jira_structs::{JiraMeta, Schema};
 use crate::traits::Searchable;
+use async_trait::async_trait;
 use reqwest::header::CONTENT_TYPE;
 use reqwest::Client;
-use async_trait::async_trait;
-use crate::jira_structs::{JiraMeta, Schema};
-use serde::{Deserialize};
-use std::collections::HashMap;
-use crate::file_utilities::json_to_file;
-use std::collections::hash_map::{RandomState, Drain};
 use serde::de::value::Error;
+use serde::Deserialize;
+use std::collections::hash_map::{Drain, RandomState};
+use std::collections::HashMap;
 
 const FIELDS_URI: &str = "/rest/api/2/field";
 const FILE_CACHE_PATH: &str = "./custom_fields.json";
+
 type CustomFieldsCache = HashMap<String, Vec<String>>;
 
 pub struct CustomFieldsHandler {
@@ -31,9 +32,8 @@ pub struct CustomFields {
     schema: Option<Schema>,
 }
 
-#[async_trait]
-impl Searchable<CustomFieldsCache> for CustomFieldsHandler {
-    async fn list(&self, client: &Client) -> CustomFieldsCache {
+impl CustomFieldsHandler {
+    async fn get_custom_fields(&self, client: &Client) -> CustomFieldsCache {
         let uri = format!("{}{}", &self.jira_meta.host, &FIELDS_URI);
 
         let fields = client
@@ -55,14 +55,24 @@ impl Searchable<CustomFieldsCache> for CustomFieldsHandler {
             &custom_fields_map.insert(field.name, field.clause_names);
         }
 
-        match json_to_file::<&CustomFieldsCache>(&custom_fields_map,&FILE_CACHE_PATH).await {
+        match json_to_file::<&CustomFieldsCache>(&custom_fields_map, &FILE_CACHE_PATH).await {
             Ok(()) => {
                 debug!("Custom Fields Cache File created at {}", &FILE_CACHE_PATH);
-            },
+            }
             Err(e) => {
                 error!("Failed to create Custom Field File Cache {}", e);
             }
         }
-        return custom_fields_map.to_owned()
+        return custom_fields_map.to_owned();
+    }
+}
+
+#[async_trait]
+impl Searchable<CustomFieldsCache> for CustomFieldsHandler {
+    async fn list(&self, client: &Client) -> CustomFieldsCache {
+        match json_from_file(&FILE_CACHE_PATH).await {
+            Ok(fields) => fields,
+            _ => self.get_custom_fields(client).await,
+        }
     }
 }
