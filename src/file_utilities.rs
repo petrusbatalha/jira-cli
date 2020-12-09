@@ -1,9 +1,7 @@
 extern crate yaml_rust;
 
 use self::yaml_rust::{Yaml, YamlLoader};
-use serde::de::value::Error;
-use serde::{de, Deserialize, Serialize};
-use std::collections::HashMap;
+use serde::{Deserialize, Serialize};
 use std::fs::File;
 use std::io::{BufReader, Read};
 

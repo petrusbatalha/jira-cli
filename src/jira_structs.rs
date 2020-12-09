@@ -1,6 +1,8 @@
 use serde::{Deserialize, Serialize};
 use serde_json::Value;
 
+pub(crate) static REST_URI: &str = "/rest/api/2";
+
 #[derive(Debug, Clone, Deserialize)]
 pub struct Schema {
     #[serde(rename = "type")]
@@ -11,6 +13,7 @@ pub struct Schema {
     system: Option<String>,
 }
 
+#[derive(Debug, Clone, Deserialize)]
 pub struct JiraMeta {
     pub host: String,
     pub user: String,

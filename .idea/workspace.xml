@@ -14,6 +14,7 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="54f75dd0-d2b5-4f5c-bfda-06307fd1452d" name="Default Changelist" comment="">
+      <change afterPath="$PROJECT_DIR$/src/project.rs" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/fields.rs" beforeDir="false" afterPath="$PROJECT_DIR$/src/fields.rs" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/file_utilities.rs" beforeDir="false" afterPath="$PROJECT_DIR$/src/file_utilities.rs" afterDir="false" />
@@ -65,6 +66,17 @@
     <property name="org.rust.cargo.project.model.PROJECT_DISCOVERY" value="true" />
   </component>
   <component name="RunManager">
+    <configuration default="true" type="ArquillianJUnit" factoryName="" nameIsGenerated="true">
+      <option name="arquillianRunConfiguration">
+        <value>
+          <option name="containerStateName" value="" />
+        </value>
+      </option>
+      <option name="TEST_OBJECT" value="class" />
+      <method v="2">
+        <option name="Make" enabled="true" />
+      </method>
+    </configuration>
     <configuration name="Run jira-cli" type="CargoCommandRunConfiguration" factoryName="Cargo Command" temporary="true">
       <option name="channel" value="DEFAULT" />
       <option name="command" value="run --package jira-cli --bin jira-cli" />
@@ -96,7 +108,7 @@
       <option name="presentableId" value="Default" />
       <updated>1606765457542</updated>
       <workItem from="1606765458969" duration="61473000" />
-      <workItem from="1607533491348" duration="2580000" />
+      <workItem from="1607533491348" duration="7417000" />
     </task>
     <servers />
   </component>
@@ -116,10 +128,14 @@
     <option name="oldMeFiltersMigrated" value="true" />
   </component>
   <component name="WindowStateProjectService">
-    <state x="533" y="173" key="#com.intellij.ide.util.MemberChooser" timestamp="1607454322835">
+    <state x="533" y="173" key="#com.intellij.ide.util.MemberChooser" timestamp="1607539979623">
       <screen x="0" y="0" width="1440" height="900" />
     </state>
-    <state x="533" y="173" key="#com.intellij.ide.util.MemberChooser/0.0.1440.900@0.0.1440.900" timestamp="1607454322835" />
+    <state x="533" y="173" key="#com.intellij.ide.util.MemberChooser/0.0.1440.900@0.0.1440.900" timestamp="1607539979623" />
+    <state x="100" y="100" width="1240" height="700" key="DiffContextDialog" timestamp="1607541906709">
+      <screen x="0" y="0" width="1440" height="900" />
+    </state>
+    <state x="100" y="100" width="1240" height="700" key="DiffContextDialog/0.0.1440.900@0.0.1440.900" timestamp="1607541906709" />
     <state width="1398" height="245" key="GridCell.Tab.0.bottom" timestamp="1607511557512">
       <screen x="0" y="0" width="1440" height="900" />
     </state>
@@ -136,9 +152,9 @@
       <screen x="0" y="0" width="1440" height="900" />
     </state>
     <state width="1398" height="245" key="GridCell.Tab.0.right/0.0.1440.900@0.0.1440.900" timestamp="1607511557511" />
-    <state x="357" y="196" width="725" height="676" key="search.everywhere.popup" timestamp="1607458075804">
+    <state x="357" y="196" width="725" height="676" key="search.everywhere.popup" timestamp="1607541491855">
       <screen x="0" y="0" width="1440" height="900" />
     </state>
-    <state x="357" y="196" width="725" height="676" key="search.everywhere.popup/0.0.1440.900@0.0.1440.900" timestamp="1607458075804" />
+    <state x="357" y="196" width="725" height="676" key="search.everywhere.popup/0.0.1440.900@0.0.1440.900" timestamp="1607541491855" />
   </component>
 </project>

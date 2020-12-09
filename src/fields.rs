@@ -1,16 +1,14 @@
 use crate::file_utilities::{json_from_file, json_to_file};
-use crate::jira_structs::{JiraMeta, Schema};
+use crate::jira_structs::{JiraMeta, Schema, REST_URI};
 use crate::traits::Searchable;
 use async_trait::async_trait;
 use reqwest::header::CONTENT_TYPE;
 use reqwest::Client;
-use serde::de::value::Error;
 use serde::Deserialize;
-use std::collections::hash_map::{Drain, RandomState};
 use std::collections::HashMap;
 
-const FIELDS_URI: &str = "/rest/api/2/field";
 const FILE_CACHE_PATH: &str = "./custom_fields.json";
+const FIELD_URI: &str = "/fields";
 
 type CustomFieldsCache = HashMap<String, Vec<String>>;
 
@@ -34,7 +32,7 @@ pub struct CustomFields {
 
 impl CustomFieldsHandler {
     async fn get_custom_fields(&self, client: &Client) -> CustomFieldsCache {
-        let uri = format!("{}{}", &self.jira_meta.host, &FIELDS_URI);
+        let uri = format!("{}{}{}", &self.jira_meta.host, &REST_URI, &FIELD_URI);
 
         let fields = client
             .get(&uri)
