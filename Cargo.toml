@@ -8,6 +8,7 @@ edition = "2018"
 
 [dependencies]
 lazy_static = "1.4.0"
+async-trait = "0.1.42"
 tokio = {version = "0.2.5", features = ["full"] }
 structopt = "0.3.21"
 log = "0.4.11"

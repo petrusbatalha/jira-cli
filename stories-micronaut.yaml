@@ -1,0 +1,187 @@
+metadata:
+  project: ESTRT
+  components:
+    - enge-cloud
+  epic: ESTRT-1293
+  team: engenhariacloud
+  labels:
+    - H2
+stories:
+  - name: |-
+      [Micronaut] Mapear facilitadores para Kubernetes.
+    description: |-
+      [Para Refinamento]
+        Quais facilitadores disponíveis para uso no Kubernetes?
+        Leitura de configmap ?
+        Leitura de Secrets ?
+        Reload de configurações ?
+        Compatibilidade com log na Cloud ?
+
+      DoD: Documentação no Confluence.
+  - name: |-
+      [Micronaut] Mapear dependencias necessárias para uso do Micronaut JVM.
+    description: |-
+      [Para Refinamento]
+        - Mapear as dependencias para as diferentes implementações do Micronaut JVM.
+
+      DoD: Documentação no Confluence.
+  - name: |-
+      [Micronaut] Mapear dependencias necessárias para uso do Micronaut Native.
+    description: |-
+      [Para Refinamento]
+        - Mapear as dependencias para as diferentes implementações do Micronaut Native.
+
+      DoD: Documentação no Confluence.
+  - name: |-
+      [Micronaut] Mapear dependencias necessárias para uso do Micronaut GraalVm.
+    description: |-
+      [Para Refinamento]
+        - Mapear as dependencias para as diferentes implementações do Micronaut GraalVm.
+
+      DoD: Documentação no Confluence.
+  - name: |-
+      [Micronaut] Mapear compatibilidade para comunicação com o IBM Db2.
+    description: |-
+      [Para Refinamento]
+        - Mecanismos disponíveis para comunicação com o IBM Db2.
+
+      DoD: Documentação no Confluence.
+  - name: |-
+      [Micronaut] Mapear facilitadores para uso de Base de Dados [Semelhante ao Spring Data].
+    description: |-
+      - Mapear facilitadores para uso de Bases de Dados existentes para o Micronaut.
+      - Facilitador para Redis?
+      - Facilitador para MongoDB?
+      - Facilitador para CockroachDB?
+
+      DoD: Documentação no Confluence.
+  - name: |-
+      [Micronaut] Compatibilidade com connector CWS.
+    description: |-
+      Avaliar a compatibilidade do framework com o connector CWS,
+      elencando se é plausível a sua adaptação, ou se é o esforço é muito grande.
+      DoD: <digite-o-definition-of-done>
+  - name: |-
+      [Micronaut] Compatibilidade com IBM Event Streams.
+    description: |
+      Avaliar as opções de bibliotecas Kafka para o Micronaut.
+      DoD: <digite-o-definition-of-done>
+  - name: |-
+      [Micronaut] Compatibilidade com estrutural de log.
+    description: |-
+      Avaliar a compatibilidade da biblioteca estrutural de log com o Micronaut,
+      elencando se é plausível a sua adaptação, ou se é o esforço é muito grande.
+      DoD: <digite-o-definition-of-done>
+  - name: |-
+      [Micronaut] Compatibilidade com pipeline DevSecOps.
+    description: |-
+      Avaliar a compatibilidade de microsserviços Micronaut com a Esteira DevSecOps.
+      - Execução de teste unitários, é compatível com JUnit? Surefire?
+      - Compatível com o gateway de qualidade de código do Sonar?
+      - Compatível com as métricas do fortify?
+      DoD: <digite-o-definition-of-done>
+  - name: |-
+      [Micronaut] Compatibilidade do Micronaut nativo com pipeline DevSecOps.
+    description: |-
+      Avaliar a compatibilidade de microsserviços Micronaut no modo Nativo com a Esteira DevSecOps.
+      - Execução de teste unitários, é compatível com JUnit? Surefire?
+      - Compatível com o gateway de qualidade de código do Sonar?
+      - Compatível com as métricas do fortify?
+
+      DoD: <digite-o-definition-of-done>
+  - name: |-
+      [Micronaut] Avaliar performance Micronaut GraalVM VS Micronaut JVM VS Micronaut Nativo.
+    description: |-
+      Para evitar bloqueios da disponibilização do modo nativo do Micronaut na esteira DevSecOps,
+      pode-se avaliar a execução dos testes em outro ambiente, pois a imagem utilizada será
+      a mesma que utilizariamos na esteira, portanto a diferença de performance entre os metodos
+      não apresentaria uma diferença significativa.
+
+      DoD: <digite-o-definition-of-done>
+  - name: |-
+      Requisitar pipeline para os serviços do Real World.
+    description: |-
+      Requisitar a pipeline para os serviços:
+        enge-srv-micronaut-converte-moedas
+        enge-srv-Micronaut-converte-moedas
+        enge-srv-spring-moedas
+
+      DoD: Requisicao da pipeline realizada.
+  - name: |-
+      [Micronaut] Desenvolvimento rota GET enge-srv-micronaut-real-world/api/moedas/origem/destino/valor
+    description: |-
+      A rota deverá receber uma moeda de origem, uma moeda de destino e um valor.
+      Chamará o microsserviço enge-srv-spring-moedas buscando a cotação das moedas recebidas.
+      Realizará o parse do retorno do enge-srv-spring-moedas, calculando a conversão e retornando
+      o valor para o usuário.
+
+      Exemplo:
+       Dado que:
+         [origem] = Libras
+         [destino] = Real
+         [valor] = 50
+       Chamará:
+         GET enge-srv-spring-moedas/api/moedas/Libras/Real/100
+       Receberá:
+        {"moedaOrigem":{"nome":"libra","valor":1.35},"moedaDestino":{"nome":"real","valor":0.19}}
+       Retornará:
+        [{"nome":"real","valor":710.53},{"nome":"pesos","valor":2700.0},{"nome":"yen","valor":14062.0},{"nome":"euro","valor":110.99}]
+
+       OBS: A história deverá incluir os testes unitários para a rota.
+
+       DoD: Rota desenvolvida com os seus devidos testes unitários.
+  - name: |-
+      [Micronaut] Desenvolvimento rota POST enge-srv-micronaut-real-world/api/moedas/origem/50
+    description: |-
+      A rota deverá receber no body da requisição, uma moeda de origem, um valor e uma lista de moedas de destino.
+      Chamará o microsserviço enge-srv-spring-moedas buscando a cotação das moedas recebidas.
+      Realizará o parse do retorno do enge-srv-spring-moedas, calculando a conversão
+      para cada uma das moedas de destino.
+
+      Exemplo:
+       Dado que payload:
+         "destino": ["Real", "Pesos", "Ien"],
+       Chamará:
+         GET enge-srv-spring-moedas/api/moedas/Libras/Real
+       Receberá:
+         {"moedaOrigem":{"nome":"libra","valor":1.35},"moedasDestino":[{"nome":"real","valor":0.19},{"nome":"pesos","valor":0.050},{"nome":"yen","valor":0.0096},{"nome":"euro","valor":1.22}]}
+       Retornará:
+         {"nome":"real","valor":710.53}
+
+       OBS: A história deverá incluir os testes unitário da rota.
+
+       DoD: Rota desenvolvida com os seus devidos testes unitários.
+  - name: |-
+      [Micronaut] Adicionando Métricas/Healthcheck/Swagger.
+    description: |-
+      - Adicionar a especificação OpenApi para as rotas do microsserviço.
+      - Adicionar rota de healthcheck usando alguma implementação disponível para Micronaut.
+      - Adicionar rota para expor métricas do microsserviço usando alguma implementação disponível para Micronaut,
+      padrão prometheus.
+
+      DoD: Caracteristicas implementadas e testadas.
+  - name: |-
+      [Micronaut] Adequação esteira DevSecOps.
+    description: |-
+      - Adaptar o serviço para a esteira DevSecOps.
+      - Alterar o pom.xml do Micronaut para a esteira DevSecOps.
+      - Adaptar o codigo para passar no Quality Gate do Sonar caso necessário.
+      - Adaptar a imagem docker de acordo com as melhores práticas para Micronaut.
+      - Criação dos testes do Octane.
+
+      DoD: Microsserviço nos ambientes de Desenvolvimento.
+  - name: |-
+      [Micronaut] Utilizar a GraalVM para o microsserviço.
+    description: |-
+      - Adaptar o serviço para utilização da GraalVM.
+      - Fazer build de imagem docker utilizando a GraalVM.
+
+      DoD: Imagem docker criada com a GraalVM e testes realizados.
+  - name: |-
+      [Micronaut] Adaptar o microsserviço para o modo nativo do Micronaut.
+    description: |-
+      - Adaptar o serviço para compilar para código nativo.
+      - Criar os testes unitários do modo nativo.
+      - Fazer build de imagem docker com o código nativo.
+
+      DoD: Imagem docker criada contendo o binário da aplicação e testes realizados.

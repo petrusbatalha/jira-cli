@@ -6,7 +6,7 @@ use crate::jira_structs::{JiraMeta, Schema};
 use serde::{Deserialize};
 use std::collections::HashMap;
 use crate::file_utilities::json_to_file;
-use std::collections::hash_map::RandomState;
+use std::collections::hash_map::{RandomState, Drain};
 use serde::de::value::Error;
 
 const FIELDS_URI: &str = "/rest/api/2/field";
@@ -15,6 +15,7 @@ type CustomFieldsCache = HashMap<String, Vec<String>>;
 
 pub struct CustomFieldsHandler {
     pub jira_meta: JiraMeta,
+    pub custom_fields: Option<CustomFieldsCache>,
 }
 
 #[derive(Debug, Clone, Deserialize)]
@@ -31,8 +32,8 @@ pub struct CustomFields {
 }
 
 #[async_trait]
-impl Searchable<Vec<CustomFields>> for CustomFieldsHandler {
-    async fn list(&self, client: &Client) -> Result<Vec<CustomFields>, Box<dyn std::error::Error>> {
+impl Searchable<CustomFieldsCache> for CustomFieldsHandler {
+    async fn list(&self, client: &Client) -> CustomFieldsCache {
         let uri = format!("{}{}", &self.jira_meta.host, &FIELDS_URI);
 
         let fields = client
@@ -40,7 +41,8 @@ impl Searchable<Vec<CustomFields>> for CustomFieldsHandler {
             .basic_auth(&self.jira_meta.user, Some(&self.jira_meta.pass))
             .header(CONTENT_TYPE, "application/json")
             .send()
-            .await?
+            .await
+            .unwrap()
             .json::<Vec<CustomFields>>()
             .await
             .unwrap();
@@ -50,18 +52,17 @@ impl Searchable<Vec<CustomFields>> for CustomFieldsHandler {
         let mut custom_fields_map: CustomFieldsCache = HashMap::with_capacity(len);
 
         for field in fields.clone() {
-            custom_fields_map.insert(field.name, field.clause_names);
+            &custom_fields_map.insert(field.name, field.clause_names);
         }
 
-        match json_to_file::<CustomFieldsCache>(custom_fields_map,&FILE_CACHE_PATH).await {
-            Ok(file) => {
+        match json_to_file::<&CustomFieldsCache>(&custom_fields_map,&FILE_CACHE_PATH).await {
+            Ok(()) => {
                 debug!("Custom Fields Cache File created at {}", &FILE_CACHE_PATH);
             },
             Err(e) => {
                 error!("Failed to create Custom Field File Cache {}", e);
             }
         }
-
-        Ok(fields)
+        return custom_fields_map.to_owned()
     }
 }

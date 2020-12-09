@@ -73,12 +73,13 @@ async fn main() {
         pass,
     };
 
-    let custom_fields_handler = CustomFieldsHandler{
-        jira_meta
+    let custom_fields_handler = CustomFieldsHandler {
+        jira_meta,
+        custom_fields: None,
     };
 
     let custom_fields =
-        &custom_fields_handler.list(&REST_CLIENT).await.unwrap();
+        &custom_fields_handler.list(&REST_CLIENT).await;
 
     println!("CUSTOM FIELDS {:?}", custom_fields);
 
