@@ -74,8 +74,9 @@ async fn main() {
         pass: Some(conf["jira"]["pass"].as_str().unwrap().to_owned()),
     };
 
-    let project = &ProjectHandler.list(&arg_option, &REST_CLIENT).await;
-    println!("Project: {:?}", project);
+    &ProjectHandler.list(&arg_option, &REST_CLIENT).await;
+    // let project = &ProjectHandler.list(&arg_option, &REST_CLIENT).await;
+    // println!("{}", project);
 
     let custom_fields = &CustomFieldsHandler.list(&arg_option,&REST_CLIENT).await;
 

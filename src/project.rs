@@ -4,10 +4,14 @@ use async_trait::async_trait;
 use reqwest::header::CONTENT_TYPE;
 use reqwest::Client;
 use serde::Deserialize;
+use std::ops;
+use core::fmt;
 
 static PROJECT_URI: &str = "/project";
 
 pub struct ProjectHandler;
+
+pub struct ProjectsDisplay<'a>(pub &'a Vec<ProjectDisplay>);
 
 #[derive(Debug, Clone, Deserialize)]
 pub struct ProjectDisplay {
@@ -53,9 +57,25 @@ struct Project {
     project_type_key: String,
 }
 
+impl<'a> fmt::Display for ProjectsDisplay<'a> {
+    fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
+        self.iter().fold(Ok(()), |result, project| {
+            result.and_then(|_| writeln!(f, "|Name|\t\t\t|Key|\n{}\t{}", project.name, project.key))
+        })
+    }
+}
+
+impl<'a> ops::Deref for ProjectsDisplay<'a> {
+    type Target = Vec<ProjectDisplay>;
+
+    fn deref(&self) -> &Self::Target {
+        &self.0
+    }
+}
+
 #[async_trait]
-impl Searchable<Vec<ProjectDisplay>> for ProjectHandler {
-    async fn list(&self, options: &ArgOptions, client: &Client) -> Vec<ProjectDisplay> {
+impl Searchable<Result<(), ()>> for ProjectHandler {
+    async fn list(&self, options: &ArgOptions, client: &Client) -> Result<(), ()> {
         let uri = format!("{}{}{}", &options.host, &REST_URI, &PROJECT_URI);
 
         let projects = client
@@ -80,6 +100,9 @@ impl Searchable<Vec<ProjectDisplay>> for ProjectHandler {
             };
             projects_display.push(project_display);
         }
-        projects_display
+
+        info!("{}", ProjectsDisplay {0: &projects_display,});
+
+        Ok(())
     }
 }

@@ -15,8 +15,8 @@
   <component name="ChangeListManager">
     <list default="true" id="54f75dd0-d2b5-4f5c-bfda-06307fd1452d" name="Default Changelist" comment="">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/epic.rs" beforeDir="false" afterPath="$PROJECT_DIR$/src/epic.rs" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main.rs" beforeDir="false" afterPath="$PROJECT_DIR$/src/main.rs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/project.rs" beforeDir="false" afterPath="$PROJECT_DIR$/src/project.rs" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -109,7 +109,7 @@
       <workItem from="1607533491348" duration="10395000" />
       <workItem from="1607610548860" duration="4053000" />
       <workItem from="1607616172857" duration="8230000" />
-      <workItem from="1607626954672" duration="1789000" />
+      <workItem from="1607626954672" duration="4503000" />
     </task>
     <servers />
   </component>
