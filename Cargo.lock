@@ -19,6 +19,12 @@ dependencies = [
 ]
 
 [[package]]
+name = "anyhow"
+version = "1.0.35"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "2c0df63cb2955042487fad3aefd2c6e3ae7389ac5dc1beb28921de0b69f779d4"
+
+[[package]]
 name = "async-trait"
 version = "0.1.42"
 source = "registry+https://github.com/rust-lang/crates.io-index"
@@ -417,6 +423,7 @@ checksum = "dc6f3ad7b9d11a0c00842ff8de1b60ee58661048eb8049ed33c73594f359d7e6"
 name = "jira-cli"
 version = "0.1.0"
 dependencies = [
+ "anyhow",
  "async-trait",
  "base64",
  "lazy_static",
@@ -428,6 +435,7 @@ dependencies = [
  "serde_json",
  "structopt",
  "tokio",
+ "url",
  "yaml-rust",
 ]
 

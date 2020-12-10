@@ -9,18 +9,19 @@ mod file_utilities;
 mod jira_structs;
 mod project;
 mod traits;
+mod epic;
 
 extern crate base64;
 extern crate pretty_env_logger;
 extern crate rpassword;
 
 use crate::fields::CustomFieldsHandler;
-use crate::jira_structs::{JiraMeta};
 use crate::project::ProjectHandler;
-use crate::traits::Searchable;
+use crate::traits::{Searchable, ArgOptions};
+use structopt::StructOpt;
 use reqwest::Client;
 use std::env;
-use structopt::StructOpt;
+use crate::epic::EpicHandler;
 
 #[derive(Debug, StructOpt)]
 #[structopt(name = "example", about = "An example of StructOpt usage.")]
@@ -41,6 +42,10 @@ struct Opt {
     #[structopt(short = "h", long = "host")]
     host: String,
 
+    // Jira Project
+    #[structopt(short = "p", long = "project", default_value = "")]
+    jira_project: String,
+
     /// Log Level
     #[structopt(short = "l", long = "log", default_value = "INFO")]
     log_level: String,
@@ -60,29 +65,32 @@ async fn main() {
     let pass = rpassword::read_password_from_tty(Some("Password: ")).unwrap();
     let user = opt.user;
 
-    // let jira_api = format!("{}{}", opt.host.to_string(), "/rest/api/2");
-    let jira_meta = JiraMeta {
+    let p = opt.jira_project;
+
+    let project = if p.is_empty() {
+        None
+    } else {
+        Some(p)
+    };
+
+    let arg_option = ArgOptions {
+        project,
         host: opt.host.to_string(),
-        user,
-        pass,
+        user: Some(user),
+        pass: Some(pass),
     };
 
-    let custom_fields_handler = CustomFieldsHandler {
-        jira_meta: jira_meta.clone(),
-        custom_fields: None,
-    };
+    let project = &ProjectHandler.list(&arg_option, &REST_CLIENT).await;
+    println!("Project: {:?}", project);
 
-    let project_handler = ProjectHandler {
-        jira_meta: jira_meta.clone(),
-    };
+    let custom_fields = &CustomFieldsHandler.list(&arg_option,&REST_CLIENT).await;
 
-    let project = &project_handler.list(&REST_CLIENT).await;
-    println!("Project: {:?}", project[0]);
+    let epic_link: &Vec<String> = custom_fields.get("Epic Link").unwrap();
+    println!("CUSTOM FIELDS {:?}", epic_link[0]);
 
-    let custom_fields = &custom_fields_handler.list(&REST_CLIENT).await;
+    let epic = &EpicHandler.list(&arg_option, &REST_CLIENT).await;
+    println!("CUSTOM FIELDS {:?}", epic.as_ref());
 
-    let epic: &Vec<String> = custom_fields.get("Epic Link").unwrap();
-    println!("CUSTOM FIELDS {:?}", epic[0]);
 
     // let yaml_path = opt.input;
     //

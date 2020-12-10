@@ -1,6 +1,6 @@
 use crate::file_utilities::{json_from_file, json_to_file};
-use crate::jira_structs::{JiraMeta, Schema, REST_URI};
-use crate::traits::Searchable;
+use crate::jira_structs::{Schema, REST_URI};
+use crate::traits::{Searchable, ArgOptions};
 use async_trait::async_trait;
 use reqwest::header::CONTENT_TYPE;
 use reqwest::Client;
@@ -12,10 +12,7 @@ const FIELD_URI: &str = "/fields";
 
 type CustomFieldsCache = HashMap<String, Vec<String>>;
 
-pub struct CustomFieldsHandler {
-    pub jira_meta: JiraMeta,
-    pub custom_fields: Option<CustomFieldsCache>,
-}
+pub struct CustomFieldsHandler;
 
 #[derive(Debug, Clone, Deserialize)]
 pub struct CustomFields {
@@ -31,12 +28,12 @@ pub struct CustomFields {
 }
 
 impl CustomFieldsHandler {
-    async fn get_custom_fields(&self, client: &Client) -> CustomFieldsCache {
-        let uri = format!("{}{}{}", &self.jira_meta.host, &REST_URI, &FIELD_URI);
+    async fn get_custom_fields(&self, options: &ArgOptions, client: &Client) -> CustomFieldsCache {
+        let uri = format!("{}{}{}", &options.host, &REST_URI, &FIELD_URI);
 
         let fields = client
             .get(&uri)
-            .basic_auth(&self.jira_meta.user, Some(&self.jira_meta.pass))
+            .basic_auth(&options.user.as_ref().unwrap(), options.clone().pass)
             .header(CONTENT_TYPE, "application/json")
             .send()
             .await
@@ -67,10 +64,10 @@ impl CustomFieldsHandler {
 
 #[async_trait]
 impl Searchable<CustomFieldsCache> for CustomFieldsHandler {
-    async fn list(&self, client: &Client) -> CustomFieldsCache {
+    async fn list(&self, options: &ArgOptions, client: &Client) -> CustomFieldsCache {
         match json_from_file(&FILE_CACHE_PATH).await {
             Ok(fields) => fields,
-            _ => self.get_custom_fields(client).await,
+            _ => self.get_custom_fields(&options, client).await,
         }
     }
 }

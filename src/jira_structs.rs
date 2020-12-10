@@ -1,7 +1,18 @@
 use serde::{Deserialize, Serialize};
 use serde_json::Value;
 
-pub(crate) static REST_URI: &str = "/rest/api/2";
+pub static REST_URI: &str = "/rest/api/2";
+pub static JQL: &str = "/search?jql=";
+
+#[derive(Debug, Clone, Deserialize)]
+pub struct Issue {
+    pub expand: String,
+    pub id: String,
+    #[serde(rename = "self")]
+    pub issue_link: String,
+    pub key: String,
+    pub fields: Option<Fields>,
+}
 
 #[derive(Debug, Clone, Deserialize)]
 pub struct Schema {
@@ -13,45 +24,38 @@ pub struct Schema {
     system: Option<String>,
 }
 
-#[derive(Debug, Clone, Deserialize)]
-pub struct JiraMeta {
-    pub host: String,
-    pub user: String,
-    pub pass: String,
-}
-
 #[derive(Debug, Clone, Serialize)]
-pub(crate) struct FieldsMeta {
+pub struct FieldsMeta {
     pub issuetype: IssueType,
     pub labels: Vec<String>,
     pub components: Vec<Component>,
     pub project: Project,
-    pub(crate) customfield_10214: String,
-    pub(crate) customfield_10101: String,
+    pub customfield_10214: String,
+    pub customfield_10101: String,
+}
+
+#[derive(Debug, Clone, Serialize, Deserialize)]
+pub struct Fields {
+    pub summary: Option<String>,
+    pub description: Option<String>,
 }
 
 #[derive(Debug, Clone, Serialize)]
-pub(crate) struct Fields {
-    pub summary: String,
-    pub description: String,
+pub struct Project {
+    pub key: String,
 }
 
 #[derive(Debug, Clone, Serialize)]
-pub(crate) struct Project {
-    pub(crate) key: String,
+pub struct IssueType {
+    pub name: String,
 }
 
 #[derive(Debug, Clone, Serialize)]
-pub(crate) struct IssueType {
-    pub(crate) name: String,
-}
-
-#[derive(Debug, Clone, Serialize)]
-pub(crate) struct Component {
-    pub(crate) name: String,
+pub struct Component {
+    pub name: String,
 }
 
 #[derive(Debug, Clone, Deserialize)]
-pub(crate) struct IssuesResponse {
-    pub(crate) issues: Vec<Value>,
+pub struct IssuesResponse {
+    pub issues: Vec<Value>,
 }

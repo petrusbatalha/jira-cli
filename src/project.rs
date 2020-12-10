@@ -1,5 +1,5 @@
-use crate::jira_structs::{JiraMeta, REST_URI};
-use crate::traits::Searchable;
+use crate::jira_structs::{REST_URI};
+use crate::traits::{Searchable, ArgOptions};
 use async_trait::async_trait;
 use reqwest::header::CONTENT_TYPE;
 use reqwest::Client;
@@ -7,9 +7,7 @@ use serde::Deserialize;
 
 static PROJECT_URI: &str = "/project";
 
-pub struct ProjectHandler {
-    pub jira_meta: JiraMeta,
-}
+pub struct ProjectHandler;
 
 #[derive(Debug, Clone, Deserialize)]
 pub struct ProjectDisplay {
@@ -57,12 +55,12 @@ struct Project {
 
 #[async_trait]
 impl Searchable<Vec<ProjectDisplay>> for ProjectHandler {
-    async fn list(&self, client: &Client) -> Vec<ProjectDisplay> {
-        let uri = format!("{}{}{}", &self.jira_meta.host, &REST_URI, &PROJECT_URI);
+    async fn list(&self, options: &ArgOptions, client: &Client) -> Vec<ProjectDisplay> {
+        let uri = format!("{}{}{}", &options.host, &REST_URI, &PROJECT_URI);
 
         let projects = client
             .get(&uri)
-            .basic_auth(&self.jira_meta.user, Some(&self.jira_meta.pass))
+            .basic_auth(&options.user.as_ref().unwrap(), options.clone().pass)
             .header(CONTENT_TYPE, "application/json")
             .send()
             .await
