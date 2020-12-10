@@ -23,6 +23,8 @@ use reqwest::Client;
 use std::env;
 use crate::epic::EpicHandler;
 
+const CONF_PATH: &str = "./.conf.yaml";
+
 #[derive(Debug, StructOpt)]
 #[structopt(name = "example", about = "An example of StructOpt usage.")]
 struct Opt {
@@ -36,15 +38,15 @@ struct Opt {
 
     /// Jira user
     #[structopt(short = "u", long = "user")]
-    user: String,
+    user: Option<String>,
 
     /// Jira Host
     #[structopt(short = "h", long = "host")]
-    host: String,
+    host: Option<String>,
 
     // Jira Project
-    #[structopt(short = "p", long = "project", default_value = "")]
-    jira_project: String,
+    #[structopt(short = "p", long = "project")]
+    jira_project: Option<String>,
 
     /// Log Level
     #[structopt(short = "l", long = "log", default_value = "INFO")]
@@ -58,26 +60,18 @@ lazy_static! {
 #[tokio::main]
 async fn main() {
     let opt = Opt::from_args();
+    let project = opt.jira_project;
 
     env::set_var("RUST_LOG", opt.log_level.to_ascii_uppercase());
     pretty_env_logger::init();
 
-    let pass = rpassword::read_password_from_tty(Some("Password: ")).unwrap();
-    let user = opt.user;
-
-    let p = opt.jira_project;
-
-    let project = if p.is_empty() {
-        None
-    } else {
-        Some(p)
-    };
+    let conf = file_utilities::load_yaml(&CONF_PATH).await;
 
     let arg_option = ArgOptions {
         project,
-        host: opt.host.to_string(),
-        user: Some(user),
-        pass: Some(pass),
+        host:  conf["jira"]["host"].as_str().unwrap().to_owned(),
+        user: Some(conf["jira"]["user"].as_str().unwrap().to_owned()),
+        pass: Some(conf["jira"]["pass"].as_str().unwrap().to_owned()),
     };
 
     let project = &ProjectHandler.list(&arg_option, &REST_CLIENT).await;
@@ -89,12 +83,5 @@ async fn main() {
     println!("CUSTOM FIELDS {:?}", epic_link[0]);
 
     let epic = &EpicHandler.list(&arg_option, &REST_CLIENT).await;
-    println!("CUSTOM FIELDS {:?}", epic.as_ref());
-
-
-    // let yaml_path = opt.input;
-    //
-    // // Load Yaml file.
-    // let yaml = load_yaml(&yaml_path).await;
-    // build_req(&jira_api, &user, &pass, &yaml).await.unwrap();
+    println!("EPIC {:?}", epic.as_ref());
 }

@@ -37,8 +37,6 @@ impl Searchable<Result<Epic, anyhow::Error>> for EpicHandler {
             }
         };
 
-        println!("JQL_QUERY {}", &jql_query);
-
         let epics = client
             .get(Url::parse(&jql_query).unwrap())
             .basic_auth(&options.user.as_ref().unwrap(), options.clone().pass)
