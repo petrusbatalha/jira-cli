@@ -74,13 +74,11 @@ async fn main() {
     };
 
     &ProjectHandler.list(&arg_option, &REST_CLIENT).await;
-    // let project = &ProjectHandler.list(&arg_option, &REST_CLIENT).await;
-    // println!("{}", project);
 
-    let custom_fields = &CustomFieldsHandler.list(&arg_option, &REST_CLIENT).await;
+    // let custom_fields = &CustomFieldsHandler.list(&arg_option, &REST_CLIENT).await;
 
-    let epic_link: &Vec<String> = custom_fields.get("Epic Link").unwrap();
-    println!("CUSTOM FIELDS {:?}", epic_link[0]);
+    // let epic_link: &Vec<String> = custom_fields.get("Epic Link").unwrap();
+    // println!("CUSTOM FIELDS {:?}", epic_link[0]);
 
     // let epic = &EpicHandler.list(&arg_option, &REST_CLIENT).await;
     // println!("EPIC {:?}", epic.as_ref());

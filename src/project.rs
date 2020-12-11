@@ -84,22 +84,30 @@ impl Searchable<Result<(), ()>> for ProjectHandler {
         table.max_column_width = 40;
         table.style = TableStyle::blank();
 
-        table.add_row(Row::new(vec![
-            TableCell::new_with_alignment("Key", 1, Alignment::Center),
-            TableCell::new_with_alignment("Name", 2, Alignment::Center),
-            TableCell::new_with_alignment("ID", 1, Alignment::Center)
-        ]));
+        table.add_row(build_table_header_row());
 
         for project in projects.clone() {
-            table.add_row(Row::new(vec![
-                TableCell::new_with_alignment(project.key, 1, Alignment::Center),
-                TableCell::new_with_alignment(project.name, 2, Alignment::Center),
-                TableCell::new_with_alignment(project.id, 1, Alignment::Center),
-            ]));
+            table.add_row(build_table_body(project));
         }
 
         println!("{}", table.render());
 
         Ok(())
     }
+}
+
+fn build_table_body(project: Project) -> Row<'static> {
+    Row::new(vec![
+        TableCell::new_with_alignment(project.key, 1, Alignment::Left),
+        TableCell::new_with_alignment(project.name, 2, Alignment::Left),
+        TableCell::new_with_alignment(project.id, 1, Alignment::Left),
+    ])
+}
+
+fn build_table_header_row() -> Row<'static> {
+    Row::new(vec![
+        TableCell::new_with_alignment("Key", 1, Alignment::Left),
+        TableCell::new_with_alignment("Name", 2, Alignment::Left),
+        TableCell::new_with_alignment("ID", 1, Alignment::Left)
+    ])
 }
