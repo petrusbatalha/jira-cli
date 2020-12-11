@@ -14,12 +14,7 @@ pub struct EpicHandler;
 
 #[derive(Debug, Clone, Deserialize)]
 pub struct Epic {
-    pub expand: Option<String>,
-    #[serde(rename = "startAt")]
-    pub start_at: Option<i32>,
-    #[serde(rename = "maxResults")]
-    pub max_result: Option<i32>,
-    pub total: Option<i32>,
+
     pub issues: Option<Vec<Issue>>,
 }
 
@@ -58,7 +53,9 @@ impl Searchable<Result<(), anyhow::Error>> for EpicHandler {
         for issue in epics.issues.unwrap() {
             table.add_row(build_table_body(issue));
         }
+
         println!("{}", table.render());
+
         Ok(())
     }
 }

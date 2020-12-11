@@ -11,6 +11,7 @@ mod file_utilities;
 mod jira_structs;
 mod project;
 mod traits;
+mod stories;
 
 extern crate base64;
 extern crate pretty_env_logger;
@@ -22,6 +23,7 @@ use crate::traits::{ArgOptions, Searchable};
 use reqwest::Client;
 use std::env;
 use structopt::StructOpt;
+use crate::stories::StoriesHandler;
 
 const CONF_PATH: &str = "./.conf.yaml";
 
@@ -69,6 +71,7 @@ async fn main() {
 
     let arg_option = ArgOptions {
         project,
+        epic: Some("ESTRT-384".to_string()),
         host: conf["jira"]["host"].as_str().unwrap().to_owned(),
         user: Some(conf["jira"]["user"].as_str().unwrap().to_owned()),
         pass: Some(conf["jira"]["pass"].as_str().unwrap().to_owned()),
@@ -78,13 +81,8 @@ async fn main() {
     &CustomFieldsHandler
         .cache_custom_fields(&arg_option, &REST_CLIENT)
         .await;
-    println!(
-        "EPICO LINK {}",
-        &CustomFieldsHandler
-            .get_custom_field("Epic Link")
-            .await
-            .unwrap()
-    );
+
+    &StoriesHandler.list(&arg_option, &REST_CLIENT).await;
 
     // let epic_link: &Vec<String> = custom_fields.get("Epic Link").unwrap();
     // println!("CUSTOM FIELDS {:?}", epic_link[0]);
