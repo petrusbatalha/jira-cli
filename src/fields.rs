@@ -1,14 +1,18 @@
 use crate::file_utilities::{json_from_file, json_to_file};
 use crate::jira_structs::{Schema, REST_URI};
-use crate::traits::{ArgOptions, Searchable};
-use async_trait::async_trait;
+use crate::traits::ArgOptions;
+use anyhow::bail;
+use anyhow::Error;
 use reqwest::header::CONTENT_TYPE;
 use reqwest::Client;
 use serde::Deserialize;
 use std::collections::HashMap;
+use std::default::default;
 
+const MOST_USED_FIELDS: [&'static str; 1] = ["Epic Link"];
+const MOST_USED_FIELDS_PATH: &str = "./most_used_fields.json";
 const FILE_CACHE_PATH: &str = "./custom_fields.json";
-const FIELD_URI: &str = "/fields";
+const FIELD_URI: &str = "/field";
 
 type CustomFieldsCache = HashMap<String, Vec<String>>;
 
@@ -28,8 +32,12 @@ pub struct CustomFields {
 }
 
 impl CustomFieldsHandler {
-    async fn get_custom_fields(&self, options: &ArgOptions, client: &Client) -> CustomFieldsCache {
-        let uri = format!("{}{}{}", &options.host, &REST_URI, &FIELD_URI);
+    async fn save_custom_fields(
+        &self,
+        options: &ArgOptions,
+        client: &Client,
+    ) -> Result<(), anyhow::Error> {
+        let uri = format!("{}{}{}", &options.host, &REST_URI, FIELD_URI);
 
         let fields = client
             .get(&uri)
@@ -45,9 +53,26 @@ impl CustomFieldsHandler {
         let len = *&fields.len();
 
         let mut custom_fields_map: CustomFieldsCache = HashMap::with_capacity(len);
+        let mut most_used_fields: CustomFieldsCache = HashMap::new();
 
         for field in fields.clone() {
-            &custom_fields_map.insert(field.name, field.clause_names);
+            if field.name.eq(&"Epic Link") {
+                most_used_fields.insert(field.name, field.clause_names);
+            } else {
+                &custom_fields_map.insert(field.name, field.clause_names);
+            }
+        }
+
+        match json_to_file::<&CustomFieldsCache>(&most_used_fields, MOST_USED_FIELDS_PATH).await {
+            Ok(()) => {
+                debug!(
+                    " Most Used Fields File created at {}",
+                    &MOST_USED_FIELDS_PATH
+                );
+            }
+            Err(e) => {
+                error!("Failed to create Most Used Fields File Cache {}", e);
+            }
         }
 
         match json_to_file::<&CustomFieldsCache>(&custom_fields_map, &FILE_CACHE_PATH).await {
@@ -58,16 +83,48 @@ impl CustomFieldsHandler {
                 error!("Failed to create Custom Field File Cache {}", e);
             }
         }
-        return custom_fields_map.to_owned();
+        Ok(())
     }
-}
 
-#[async_trait]
-impl Searchable<CustomFieldsCache> for CustomFieldsHandler {
-    async fn list(&self, options: &ArgOptions, client: &Client) -> CustomFieldsCache {
-        match json_from_file(&FILE_CACHE_PATH).await {
-            Ok(fields) => fields,
-            _ => self.get_custom_fields(&options, client).await,
+    pub async fn get_custom_field(&self, field: &str) -> Result<String, Error> {
+        let mut custom_field = String::new();
+        if MOST_USED_FIELDS.contains(&field) {
+            match json_from_file::<CustomFieldsCache>(&MOST_USED_FIELDS_PATH).await {
+                Ok(file) => {
+                    custom_field = format!("{}", file.unwrap().get(field.clone()).unwrap()[0]);
+                }
+                _ => bail!("Field not found".to_string()),
+            };
+        } else {
+            match json_from_file::<CustomFieldsCache>(&FILE_CACHE_PATH).await {
+                Ok(file) => {
+                    custom_field = format!("{}", file.unwrap().get(field.clone()).unwrap()[0]);
+                }
+                _ => bail!("Field not found".to_string()),
+            };
+        }
+        Ok(custom_field)
+    }
+
+    pub async fn cache_custom_fields(
+        &self,
+        arg_options: &ArgOptions,
+        client: &Client,
+    ) -> Result<(), serde_json::Error> {
+        match json_from_file::<CustomFieldsCache>(&MOST_USED_FIELDS_PATH).await {
+            Ok(_most_used_fields) => {
+                match json_from_file::<CustomFieldsCache>(&FILE_CACHE_PATH).await {
+                    Ok(_fields) => Ok(()),
+                    _ => {
+                        self.save_custom_fields(arg_options, client).await.unwrap();
+                        Ok(())
+                    }
+                }
+            }
+            _ => {
+                self.save_custom_fields(arg_options, client).await.unwrap();
+                Ok(())
+            }
         }
     }
 }

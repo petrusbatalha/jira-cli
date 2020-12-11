@@ -5,7 +5,6 @@ use core::fmt;
 use reqwest::header::CONTENT_TYPE;
 use reqwest::Client;
 use serde::Deserialize;
-use std::fmt::Display;
 use term_table::row::Row;
 use term_table::table_cell::{Alignment, TableCell};
 use term_table::{Table, TableStyle};
@@ -108,6 +107,6 @@ fn build_table_header_row() -> Row<'static> {
     Row::new(vec![
         TableCell::new_with_alignment("Key", 1, Alignment::Left),
         TableCell::new_with_alignment("Name", 2, Alignment::Left),
-        TableCell::new_with_alignment("ID", 1, Alignment::Left)
+        TableCell::new_with_alignment("ID", 1, Alignment::Left),
     ])
 }

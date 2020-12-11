@@ -1,4 +1,5 @@
 #![feature(associated_type_defaults)]
+#![feature(default_free_fn)]
 #[macro_use]
 extern crate log;
 #[macro_use]
@@ -73,9 +74,17 @@ async fn main() {
         pass: Some(conf["jira"]["pass"].as_str().unwrap().to_owned()),
     };
 
-    &ProjectHandler.list(&arg_option, &REST_CLIENT).await;
-
-    // let custom_fields = &CustomFieldsHandler.list(&arg_option, &REST_CLIENT).await;
+    // &ProjectHandler.list(&arg_option, &REST_CLIENT).await;
+    &CustomFieldsHandler
+        .cache_custom_fields(&arg_option, &REST_CLIENT)
+        .await;
+    println!(
+        "EPICO LINK {}",
+        &CustomFieldsHandler
+            .get_custom_field("Epic Link")
+            .await
+            .unwrap()
+    );
 
     // let epic_link: &Vec<String> = custom_fields.get("Epic Link").unwrap();
     // println!("CUSTOM FIELDS {:?}", epic_link[0]);

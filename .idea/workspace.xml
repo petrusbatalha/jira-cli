@@ -15,7 +15,10 @@
   <component name="ChangeListManager">
     <list default="true" id="54f75dd0-d2b5-4f5c-bfda-06307fd1452d" name="Default Changelist" comment="">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/custom_fields.json" beforeDir="false" />
       <change beforePath="$PROJECT_DIR$/src/epic.rs" beforeDir="false" afterPath="$PROJECT_DIR$/src/epic.rs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/fields.rs" beforeDir="false" afterPath="$PROJECT_DIR$/src/fields.rs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/file_utilities.rs" beforeDir="false" afterPath="$PROJECT_DIR$/src/file_utilities.rs" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main.rs" beforeDir="false" afterPath="$PROJECT_DIR$/src/main.rs" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/project.rs" beforeDir="false" afterPath="$PROJECT_DIR$/src/project.rs" afterDir="false" />
     </list>
@@ -65,6 +68,17 @@
     <property name="org.rust.disableDetachedFileInspection/Users/petrusbatalha/jira-cli/src/mod.rs" value="true" />
   </component>
   <component name="RunManager">
+    <configuration default="true" type="ArquillianJUnit" factoryName="" nameIsGenerated="true">
+      <option name="arquillianRunConfiguration">
+        <value>
+          <option name="containerStateName" value="" />
+        </value>
+      </option>
+      <option name="TEST_OBJECT" value="class" />
+      <method v="2">
+        <option name="Make" enabled="true" />
+      </method>
+    </configuration>
     <configuration name="Run jira-cli" type="CargoCommandRunConfiguration" factoryName="Cargo Command" temporary="true">
       <option name="channel" value="DEFAULT" />
       <option name="command" value="run --package jira-cli --bin jira-cli" />
@@ -101,7 +115,7 @@
       <workItem from="1607616172857" duration="8230000" />
       <workItem from="1607626954672" duration="5914000" />
       <workItem from="1607686669251" duration="593000" />
-      <workItem from="1607689165627" duration="3585000" />
+      <workItem from="1607689165627" duration="11695000" />
     </task>
     <servers />
   </component>
@@ -149,9 +163,10 @@
       <screen x="0" y="23" width="1440" height="877" />
     </state>
     <state width="600" height="428" key="javadoc.popup/0.23.1440.877@0.23.1440.877" timestamp="1607692057432" />
-    <state x="357" y="196" width="725" height="676" key="search.everywhere.popup" timestamp="1607541491855">
-      <screen x="0" y="0" width="1440" height="900" />
+    <state x="357" y="214" width="725" height="659" key="search.everywhere.popup" timestamp="1607700001967">
+      <screen x="0" y="23" width="1440" height="877" />
     </state>
     <state x="357" y="196" width="725" height="676" key="search.everywhere.popup/0.0.1440.900@0.0.1440.900" timestamp="1607541491855" />
+    <state x="357" y="214" width="725" height="659" key="search.everywhere.popup/0.23.1440.877@0.23.1440.877" timestamp="1607700001967" />
   </component>
 </project>

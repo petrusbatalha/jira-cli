@@ -1,6 +1,7 @@
 extern crate yaml_rust;
 
 use self::yaml_rust::{Yaml, YamlLoader};
+use anyhow::bail;
 use serde::{Deserialize, Serialize};
 use std::fs::File;
 use std::io::{BufReader, Read};
@@ -25,10 +26,17 @@ pub async fn json_to_file<T: Serialize>(payload: T, path: &str) -> serde_json::R
     serde_json::to_writer(file, &payload)
 }
 
-pub async fn json_from_file<T: for<'de> Deserialize<'de>>(path: &str) -> serde_json::Result<T> {
-    let file = File::open(&path).unwrap();
-
-    let reader = BufReader::new(file);
-
-    serde_json::from_reader::<BufReader<File>, T>(reader)
+pub async fn json_from_file<T: for<'de> Deserialize<'de>>(
+    path: &str,
+) -> Result<serde_json::Result<T>, anyhow::Error> {
+    match File::open(&path) {
+        Ok(file) => {
+            let reader = BufReader::new(file);
+            match serde_json::from_reader::<BufReader<File>, T>(reader) {
+                Ok(json) => Ok(Ok(json)),
+                Err(e) => bail!(e),
+            }
+        }
+        Err(e) => bail!(e),
+    }
 }

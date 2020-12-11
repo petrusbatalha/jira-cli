@@ -5,10 +5,10 @@ use async_trait::async_trait;
 use reqwest::header::CONTENT_TYPE;
 use reqwest::Client;
 use serde::Deserialize;
-use url::Url;
-use term_table::{Table, TableStyle,};
 use term_table::row::Row;
-use term_table::table_cell::{TableCell, Alignment};
+use term_table::table_cell::{Alignment, TableCell};
+use term_table::{Table, TableStyle};
+use url::Url;
 
 pub struct EpicHandler;
 
@@ -69,7 +69,7 @@ fn build_table_body(issue: Issue) -> Row<'static> {
         TableCell::new_with_alignment(fields.summary.unwrap(), 1, Alignment::Left),
         TableCell::new_with_alignment(issue.key, 2, Alignment::Left),
         TableCell::new_with_alignment(issue.id, 1, Alignment::Left),
-        TableCell::new_with_alignment(issue.issue_link, 1, Alignment::Left)
+        TableCell::new_with_alignment(issue.issue_link, 1, Alignment::Left),
     ])
 }
 
@@ -78,6 +78,6 @@ fn build_table_header_row() -> Row<'static> {
         TableCell::new_with_alignment("Name", 1, Alignment::Left),
         TableCell::new_with_alignment("Key", 2, Alignment::Left),
         TableCell::new_with_alignment("ID", 1, Alignment::Left),
-        TableCell::new_with_alignment("Link", 1, Alignment::Left)
+        TableCell::new_with_alignment("Link", 1, Alignment::Left),
     ])
 }
