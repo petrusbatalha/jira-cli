@@ -1,6 +1,6 @@
 use crate::file_utilities::{json_from_file, json_to_file};
 use crate::jira_structs::{Schema, REST_URI};
-use crate::traits::{Searchable, ArgOptions};
+use crate::traits::{ArgOptions, Searchable};
 use async_trait::async_trait;
 use reqwest::header::CONTENT_TYPE;
 use reqwest::Client;

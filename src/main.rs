@@ -4,24 +4,23 @@ extern crate log;
 #[macro_use]
 extern crate lazy_static;
 
+mod epic;
 mod fields;
 mod file_utilities;
 mod jira_structs;
 mod project;
 mod traits;
-mod epic;
 
 extern crate base64;
 extern crate pretty_env_logger;
-extern crate rpassword;
 
+use crate::epic::EpicHandler;
 use crate::fields::CustomFieldsHandler;
 use crate::project::ProjectHandler;
-use crate::traits::{Searchable, ArgOptions};
-use structopt::StructOpt;
+use crate::traits::{ArgOptions, Searchable};
 use reqwest::Client;
 use std::env;
-use crate::epic::EpicHandler;
+use structopt::StructOpt;
 
 const CONF_PATH: &str = "./.conf.yaml";
 
@@ -69,7 +68,7 @@ async fn main() {
 
     let arg_option = ArgOptions {
         project,
-        host:  conf["jira"]["host"].as_str().unwrap().to_owned(),
+        host: conf["jira"]["host"].as_str().unwrap().to_owned(),
         user: Some(conf["jira"]["user"].as_str().unwrap().to_owned()),
         pass: Some(conf["jira"]["pass"].as_str().unwrap().to_owned()),
     };
@@ -78,11 +77,11 @@ async fn main() {
     // let project = &ProjectHandler.list(&arg_option, &REST_CLIENT).await;
     // println!("{}", project);
 
-    let custom_fields = &CustomFieldsHandler.list(&arg_option,&REST_CLIENT).await;
+    let custom_fields = &CustomFieldsHandler.list(&arg_option, &REST_CLIENT).await;
 
     let epic_link: &Vec<String> = custom_fields.get("Epic Link").unwrap();
     println!("CUSTOM FIELDS {:?}", epic_link[0]);
 
-    let epic = &EpicHandler.list(&arg_option, &REST_CLIENT).await;
-    println!("EPIC {:?}", epic.as_ref());
+    // let epic = &EpicHandler.list(&arg_option, &REST_CLIENT).await;
+    // println!("EPIC {:?}", epic.as_ref());
 }

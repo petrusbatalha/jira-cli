@@ -12,7 +12,12 @@ pub struct ArgOptions {
 
 impl Default for ArgOptions {
     fn default() -> Self {
-        ArgOptions { project: None, host: "localhost".to_string(), user: None, pass: None,}
+        ArgOptions {
+            project: None,
+            host: "localhost".to_string(),
+            user: None,
+            pass: None,
+        }
     }
 }
 

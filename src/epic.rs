@@ -1,10 +1,10 @@
-use crate::jira_structs::{REST_URI, Issue, JQL};
-use crate::traits::{Searchable, ArgOptions};
+use crate::jira_structs::{Issue, JQL, REST_URI};
+use crate::traits::{ArgOptions, Searchable};
+use anyhow::bail;
 use async_trait::async_trait;
 use reqwest::header::CONTENT_TYPE;
 use reqwest::Client;
 use serde::Deserialize;
-use anyhow::bail;
 use url::Url;
 pub struct EpicHandler;
 
@@ -24,17 +24,15 @@ pub struct Epic {
 
 #[async_trait]
 impl Searchable<Result<Epic, anyhow::Error>> for EpicHandler {
-    async fn list(&self, options: &ArgOptions, client: &Client) -> Result<Epic,  anyhow::Error> {
+    async fn list(&self, options: &ArgOptions, client: &Client) -> Result<Epic, anyhow::Error> {
         let uri = format!("{}{}", &options.host, &REST_URI);
 
         let jql_query = match &options.project {
-            Some(p) => {
-                format!("{}{}{}{}{}", &uri, &JQL, "PROJECT=", p,
-                        " AND issuetype=Epic&fields=summary,description")
-            },
-            _ => {
-                bail!("Please, define the project to list epics".to_string())
-            }
+            Some(p) => format!(
+                "{}{}{}{}{}",
+                &uri, &JQL, "PROJECT=", p, " AND issuetype=Epic&fields=summary,description"
+            ),
+            _ => bail!("Please, define the project to list epics".to_string()),
         };
 
         let epics = client

@@ -1,19 +1,20 @@
-use crate::jira_structs::{REST_URI};
-use crate::traits::{Searchable, ArgOptions};
+use crate::jira_structs::REST_URI;
+use crate::traits::{ArgOptions, Searchable};
 use async_trait::async_trait;
+use core::fmt;
 use reqwest::header::CONTENT_TYPE;
 use reqwest::Client;
 use serde::Deserialize;
-use std::ops;
-use core::fmt;
+use std::fmt::Display;
+use term_table::row::Row;
+use term_table::table_cell::{Alignment, TableCell};
+use term_table::{Table, TableStyle};
 
 static PROJECT_URI: &str = "/project";
 
 pub struct ProjectHandler;
 
-pub struct ProjectsDisplay<'a>(pub &'a Vec<ProjectDisplay>);
-
-#[derive(Debug, Clone, Deserialize)]
+#[derive(Debug, Clone)]
 pub struct ProjectDisplay {
     pub name: String,
     pub key: String,
@@ -57,19 +58,9 @@ struct Project {
     project_type_key: String,
 }
 
-impl<'a> fmt::Display for ProjectsDisplay<'a> {
+impl fmt::Display for Project {
     fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
-        self.iter().fold(Ok(()), |result, project| {
-            result.and_then(|_| writeln!(f, "|Name|\t\t\t|Key|\n{}\t{}", project.name, project.key))
-        })
-    }
-}
-
-impl<'a> ops::Deref for ProjectsDisplay<'a> {
-    type Target = Vec<ProjectDisplay>;
-
-    fn deref(&self) -> &Self::Target {
-        &self.0
+        write!(f, "{} \t\t {} \t {} \t", self.key, self.name, self.id)
     }
 }
 
@@ -89,19 +80,25 @@ impl Searchable<Result<(), ()>> for ProjectHandler {
             .await
             .unwrap();
 
-        let len = projects.clone().len();
-        let mut projects_display: Vec<ProjectDisplay> = Vec::with_capacity(len);
+        let mut table = Table::new();
+        table.max_column_width = 40;
+        table.style = TableStyle::blank();
+
+        table.add_row(Row::new(vec![
+            TableCell::new_with_alignment("Key", 1, Alignment::Center),
+            TableCell::new_with_alignment("Name", 2, Alignment::Center),
+            TableCell::new_with_alignment("ID", 1, Alignment::Center)
+        ]));
 
         for project in projects.clone() {
-            let project_display = ProjectDisplay {
-                name: project.name,
-                key: project.key,
-                id: project.id,
-            };
-            projects_display.push(project_display);
+            table.add_row(Row::new(vec![
+                TableCell::new_with_alignment(project.key, 1, Alignment::Center),
+                TableCell::new_with_alignment(project.name, 2, Alignment::Center),
+                TableCell::new_with_alignment(project.id, 1, Alignment::Center),
+            ]));
         }
 
-        info!("{}", ProjectsDisplay {0: &projects_display,});
+        println!("{}", table.render());
 
         Ok(())
     }
