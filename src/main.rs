@@ -33,7 +33,7 @@ use structopt::StructOpt;
 use yaml_rust::YamlLoader;
 use std::collections::HashMap;
 
-const CONF_PATH: &str = "./.conf.yaml";
+const CONF_PATH: &str = "./.jira-cli/conf.yaml";
 
 #[derive(Debug, StructOpt)]
 #[structopt(name = "example", about = "An example of StructOpt usage.")]
@@ -86,14 +86,9 @@ async fn main() {
         pass: Some(conf["jira"]["pass"].as_str().unwrap().to_owned()),
     };
 
-    // &ProjectHandler.list(&arg_option, &REST_CLIENT).await;
-    // &CustomFieldsHandler
-    //     .cache_custom_fields(&arg_option, &REST_CLIENT)
-    //     .await;
-    let mut map_team = HashMap::new();
-    &map_team.insert("Team".to_string(), "timitisson".to_string());
-    let mut map_link = HashMap::new();
-    &map_link.insert("Epic Link".to_string(), "Estrututut".to_string());
+    &CustomFieldsHandler
+        .cache_custom_fields(&arg_option, &REST_CLIENT)
+        .await;
 
     &StoriesHandler.list(&arg_option, &REST_CLIENT).await;
     let story = &StoriesHandler

@@ -10,8 +10,8 @@ use std::collections::HashMap;
 use std::default::default;
 
 const MOST_USED_FIELDS: [&'static str; 2] = ["Epic Link", "Team"];
-const MOST_USED_FIELDS_PATH: &str = "./most_used_fields.json";
-const FILE_CACHE_PATH: &str = "./custom_fields.json";
+const MOST_USED_FIELDS_PATH: &str = "./.jira-cli/most_used_fields.json";
+const FILE_CACHE_PATH: &str = "./.jira-cli/custom_fields.json";
 const FIELD_URI: &str = "/field";
 
 type CustomFieldsCache = HashMap<String, Vec<String>>;
@@ -81,25 +81,30 @@ impl CustomFieldsHandler {
                 );
             }
             Err(e) => {
-                error!("Failed to create Most Used Fields File Cache {}", e);
+                bail!("Failed to create Most Used Fields File Cache {}", e);
             }
-        }
+        };
 
         match json_to_file::<&CustomFieldsCache>(&custom_fields_map, &FILE_CACHE_PATH).await {
             Ok(()) => {
                 debug!("Custom Fields Cache File created at {}", &FILE_CACHE_PATH);
             }
             Err(e) => {
-                error!("Failed to create Custom Field File Cache {}", e);
+                bail!("Failed to create Custom Field File Cache {}", e);
             }
-        }
+        };
         Ok(())
     }
 
     pub async fn get_custom_field(&self, field: &str) -> Result<String, anyhow::Error> {
         if MOST_USED_FIELDS.contains(&field) {
             match json_from_file::<CustomFieldsCache>(&MOST_USED_FIELDS_PATH).await {
-                Ok(file) => Ok(file.unwrap().get(field.clone()).unwrap()[0].clone()),
+                Ok(file) => {
+                    match file {
+                        Ok(f) => Ok(f.get(field.clone()).unwrap()[0].clone()),
+                        Err(e) => bail!(e),
+                    }
+                },
                 _ => bail!("Field not found".to_string()),
             }
         } else {
@@ -114,20 +119,32 @@ impl CustomFieldsHandler {
         &self,
         arg_options: &ArgOptions,
         client: &Client,
-    ) -> Result<(), serde_json::Error> {
+    ) -> Result<(), anyhow::Error> {
         match json_from_file::<CustomFieldsCache>(&MOST_USED_FIELDS_PATH).await {
             Ok(_most_used_fields) => {
                 match json_from_file::<CustomFieldsCache>(&FILE_CACHE_PATH).await {
                     Ok(_fields) => Ok(()),
                     _ => {
-                        self.save_custom_fields(arg_options, client).await.unwrap();
-                        Ok(())
+                        match self.save_custom_fields(arg_options, client).await {
+                            Ok(()) => {
+                                info!{"Most used fields cache created with success."}
+                                Ok(())
+                            },
+                            _ => bail!("Failed to create most used fields cache")
+                        }
                     }
                 }
             }
             _ => {
-                self.save_custom_fields(arg_options, client).await.unwrap();
-                Ok(())
+                match self.save_custom_fields(arg_options, client).await {
+                    Ok(()) => {
+                        info!{"Most used fields cache created with success."}
+                        Ok(())
+                    },
+                    _ => {
+                        bail!("Failed to create most used fields cache")
+                    }
+                }
             }
         }
     }
