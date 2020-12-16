@@ -2,7 +2,7 @@ use crate::fields::CustomFieldsHandler;
 use crate::file_utilities::load_yaml;
 use crate::jira_structs::{Issue, IssueType, Project, JQL, REST_URI};
 use crate::traits::{ArgOptions, Searchable};
-use crate::StoryOps;
+use crate::{StoryOps, StoryListOps};
 use async_trait::async_trait;
 use json_patch::merge;
 use reqwest::header::CONTENT_TYPE;
@@ -56,10 +56,10 @@ pub struct Stories {
 }
 
 #[async_trait]
-impl Searchable<StoryOps, Result<(), ()>> for StoriesHandler {
+impl Searchable<StoryListOps, Result<(), ()>> for StoriesHandler {
     async fn list(
         &self,
-        options: &StoryOps,
+        options: &StoryListOps,
         fixed_options: &ArgOptions,
         client: &Client,
     ) -> Result<(), ()> {
@@ -133,8 +133,7 @@ impl StoriesHandler {
             &args
                 .template_path
                 .get_or_insert("./template.yaml".to_string()),
-        )
-        .await
+        ).await
         {
             Ok(yaml) => {
                 let story_yaml = serde_yaml::from_str(&yaml).unwrap();
@@ -148,12 +147,12 @@ impl StoriesHandler {
             None => story_template.project.unwrap(),
         };
 
-        let mut story_json_fields = json!({"fields": {
+        let mut story_json_fields = json!({
                 "project": project,
                 "summary": args.summary.or(story_template.summary),
                 "description":  args.description.or(story_template.description),
                 "labels": args.labels.or(story_template.labels),
-        }});
+        });
 
         let json: Option<Map<String, Value>> = if story_template.custom_fields.is_some() {
             let mut map: Map<String, Value> = Map::new();
@@ -179,7 +178,7 @@ impl StoriesHandler {
         let payload: serde_json::Value = match json {
             Some(json) => {
                 merge(&mut story_json_fields, &serde_json::to_value(json).unwrap());
-                story_json_fields
+                json!({"fields": story_json_fields})
             }
             None => story_json_fields,
         };

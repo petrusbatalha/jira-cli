@@ -41,16 +41,18 @@ pub struct Opts {
 
 #[derive(StructOpt, Debug)]
 enum Commands {
-    /// List jira issue types.
+    /// List jira objects [Projects, Stories and Epics]
     #[structopt(name = "list")]
     List(List),
+    /// Add jira objects, currently supported [Stories]
     #[structopt(name = "add")]
     Add(Add),
 }
 
 #[derive(StructOpt, Debug)]
 enum Add {
-    #[structopt(name = "story")]
+    /// Create jira stories, see [add stories --help] for more
+    #[structopt(name = "stories")]
     Story(StoryOps),
 }
 
@@ -59,7 +61,7 @@ enum List {
     #[structopt(name = "projects")]
     Project(ProjectOps),
     #[structopt(name = "stories")]
-    Story(StoryOps),
+    Story(StoryListOps),
     #[structopt(name = "epics")]
     Epic(EpicOps),
 }
@@ -75,20 +77,24 @@ pub struct EpicOps {
 
 #[derive(StructOpt, Debug)]
 pub struct StoryOps {
-    #[structopt(long = "project", short = "p")]
+    #[structopt(long = "project", short = "p", help = "Project to create stories")]
     project: Option<String>,
-    #[structopt(long = "epic", short = "e")]
+    #[structopt(long = "epic", short = "e", help = "Epic to link stories")]
     epic: Option<String>,
-    #[structopt(long = "summary", short = "s")]
+    #[structopt(long = "summary", short = "s", help = "Story summary")]
     summary: Option<String>,
-    #[structopt(long = "description", short = "d")]
+    #[structopt(long = "description", short = "d", help = "Story Description")]
     description: Option<String>,
-    #[structopt(long = "labels", short = "l")]
+    #[structopt(long = "labels", short = "l", help = "Story Labels")]
     labels: Option<Vec<String>>,
-    #[structopt(long = "customfields", short = "c")]
-    custom_fields: Option<String>,
-    #[structopt(long = "template", short = "t")]
+    #[structopt(long = "template", short = "t", help = "Link to template for creating stories")]
     template_path: Option<String>,
+}
+
+#[derive(StructOpt, Debug)]
+pub struct StoryListOps {
+    #[structopt(long = "epic", short = "e", help="Epic to list stories for.")]
+    epic: Option<String>,
 }
 
 lazy_static! {
