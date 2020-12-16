@@ -86,7 +86,6 @@ impl CustomFieldsHandler {
             Ok(fields_result) => match fields_result {
                 Ok(fields) => Ok(fields),
                 _ => bail!("Failed to create most used fields cache: {}")
-
             },
             Err(e) => {
                 match self.save_custom_fields(arg_options, client).await {

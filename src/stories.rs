@@ -153,7 +153,6 @@ impl StoriesHandler {
                 "labels": args.labels.or(story_template.labels),
         });
 
-        println!("FIELD CACHE {:?}", custom_field_cache.clone());
         let fields_cache = custom_field_cache.clone();
 
         let json: Option<Map<String, Value>> = if story_template.custom_fields.is_some() {
