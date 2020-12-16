@@ -14,38 +14,18 @@ pub struct Issue {
     pub fields: Option<Fields>,
 }
 
-#[derive(Debug, Clone, Deserialize)]
-pub struct Schema {
-    #[serde(rename = "type")]
-    issue_type: Option<String>,
-    custom: Option<String>,
-    custom_id: Option<i32>,
-    items: Option<String>,
-    system: Option<String>,
-}
-
-#[derive(Debug, Clone, Serialize)]
-pub struct FieldsMeta {
-    pub issuetype: IssueType,
-    pub labels: Vec<String>,
-    pub components: Vec<Component>,
-    pub project: Project,
-    pub customfield_10214: String,
-    pub customfield_10101: String,
-}
-
 #[derive(Debug, Clone, Serialize, Deserialize)]
 pub struct Fields {
     pub summary: Option<String>,
     pub description: Option<String>,
 }
 
-#[derive(Debug, Clone, Serialize)]
+#[derive(Debug, Clone, Serialize, Deserialize)]
 pub struct Project {
     pub key: String,
 }
 
-#[derive(Debug, Clone, Serialize)]
+#[derive(Debug, Clone, Serialize, Deserialize)]
 pub struct IssueType {
     pub name: String,
 }

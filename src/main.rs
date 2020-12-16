@@ -1,17 +1,22 @@
 #![feature(associated_type_defaults)]
 #![feature(default_free_fn)]
+#![feature(option_insert)]
 #[macro_use]
 extern crate log;
 #[macro_use]
 extern crate lazy_static;
+#[macro_use]
+extern crate json_patch;
+
+use serde_json::json;
 
 mod epic;
 mod fields;
 mod file_utilities;
 mod jira_structs;
 mod project;
-mod traits;
 mod stories;
+mod traits;
 
 extern crate base64;
 extern crate pretty_env_logger;
@@ -19,11 +24,13 @@ extern crate pretty_env_logger;
 use crate::epic::EpicHandler;
 use crate::fields::CustomFieldsHandler;
 use crate::project::ProjectHandler;
+use crate::stories::{StoriesHandler, Story};
 use crate::traits::{ArgOptions, Searchable};
 use reqwest::Client;
+use std::default::default;
 use std::env;
 use structopt::StructOpt;
-use crate::stories::StoriesHandler;
+use yaml_rust::YamlLoader;
 
 const CONF_PATH: &str = "./.conf.yaml";
 
@@ -67,22 +74,34 @@ async fn main() {
     env::set_var("RUST_LOG", opt.log_level.to_ascii_uppercase());
     pretty_env_logger::init();
 
-    let conf = file_utilities::load_yaml(&CONF_PATH).await;
+    let conf_string = file_utilities::load_yaml(&CONF_PATH).await;
+    let conf = &YamlLoader::load_from_str(&conf_string.unwrap()).unwrap()[0];
 
     let arg_option = ArgOptions {
         project,
-        epic: Some("ESTRT-384".to_string()),
+        epic: Some("ESTRT-1293".to_string()),
         host: conf["jira"]["host"].as_str().unwrap().to_owned(),
         user: Some(conf["jira"]["user"].as_str().unwrap().to_owned()),
         pass: Some(conf["jira"]["pass"].as_str().unwrap().to_owned()),
     };
 
     // &ProjectHandler.list(&arg_option, &REST_CLIENT).await;
-    &CustomFieldsHandler
-        .cache_custom_fields(&arg_option, &REST_CLIENT)
-        .await;
+    // &CustomFieldsHandler
+    //     .cache_custom_fields(&arg_option, &REST_CLIENT)
+    //     .await;
 
     &StoriesHandler.list(&arg_option, &REST_CLIENT).await;
+    let story = &StoriesHandler
+        .create_story(
+            None,
+            Some("TITULO".to_string()),
+            Some("Descricao".to_string()),
+            None,
+            Some(vec!["Team".to_string(), "Epic Link".to_string()]),
+            None,
+        )
+        .await;
+    println!("STORYYY {:?}", story);
 
     // let epic_link: &Vec<String> = custom_fields.get("Epic Link").unwrap();
     // println!("CUSTOM FIELDS {:?}", epic_link[0]);

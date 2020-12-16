@@ -1,23 +1,21 @@
 extern crate yaml_rust;
 
 use self::yaml_rust::{Yaml, YamlLoader};
-use anyhow::bail;
+use anyhow::{anyhow, bail};
 use serde::{Deserialize, Serialize};
 use std::fs::File;
 use std::io::{BufReader, Read};
 
-pub async fn load_yaml(yaml_path: &str) -> Yaml {
+pub async fn load_yaml(yaml_path: &str) -> Result<String, anyhow::Error> {
     // Open stories yaml.
     let mut yaml_file = File::open(yaml_path).unwrap();
 
     let mut yaml_as_string = String::new();
 
-    yaml_file
-        .read_to_string(&mut yaml_as_string)
-        .expect("Failed to load yaml");
-
-    let yaml_file = YamlLoader::load_from_str(&yaml_as_string).unwrap();
-    yaml_file[0].clone()
+    match yaml_file.read_to_string(&mut yaml_as_string) {
+        Ok(_) => Ok(yaml_as_string),
+        Err(_) => Err(anyhow!("failed to read yaml")),
+    }
 }
 
 pub async fn json_to_file<T: Serialize>(payload: T, path: &str) -> serde_json::Result<()> {

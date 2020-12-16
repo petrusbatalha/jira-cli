@@ -1,5 +1,5 @@
 use crate::file_utilities::{json_from_file, json_to_file};
-use crate::jira_structs::{Schema, REST_URI};
+use crate::jira_structs::REST_URI;
 use crate::traits::ArgOptions;
 use anyhow::bail;
 use anyhow::Error;
@@ -9,7 +9,7 @@ use serde::Deserialize;
 use std::collections::HashMap;
 use std::default::default;
 
-const MOST_USED_FIELDS: [&'static str; 1] = ["Epic Link"];
+const MOST_USED_FIELDS: [&'static str; 2] = ["Epic Link", "Team"];
 const MOST_USED_FIELDS_PATH: &str = "./most_used_fields.json";
 const FILE_CACHE_PATH: &str = "./custom_fields.json";
 const FIELD_URI: &str = "/field";
@@ -29,6 +29,16 @@ pub struct CustomFields {
     #[serde(rename = "clauseNames")]
     clause_names: Vec<String>,
     schema: Option<Schema>,
+}
+
+#[derive(Debug, Clone, Deserialize)]
+pub struct Schema {
+    #[serde(rename = "type")]
+    issue_type: Option<String>,
+    custom: Option<String>,
+    custom_id: Option<i32>,
+    items: Option<String>,
+    system: Option<String>,
 }
 
 impl CustomFieldsHandler {
@@ -56,7 +66,7 @@ impl CustomFieldsHandler {
         let mut most_used_fields: CustomFieldsCache = HashMap::new();
 
         for field in fields.clone() {
-            if field.name.eq(&"Epic Link") {
+            if MOST_USED_FIELDS.contains(&&*field.name.clone()) {
                 most_used_fields.insert(field.name, field.clause_names);
             } else {
                 &custom_fields_map.insert(field.name, field.clause_names);
@@ -86,24 +96,22 @@ impl CustomFieldsHandler {
         Ok(())
     }
 
-    pub async fn get_custom_field(&self, field: &str) -> Result<String, Error> {
-        let mut custom_field = String::new();
+    pub async fn get_custom_field(&self, field: &str) -> Result<Vec<String>, anyhow::Error> {
         if MOST_USED_FIELDS.contains(&field) {
             match json_from_file::<CustomFieldsCache>(&MOST_USED_FIELDS_PATH).await {
                 Ok(file) => {
-                    custom_field = format!("{}", file.unwrap().get(field.clone()).unwrap()[0]);
+                    Ok(file.unwrap().get(field.clone()).unwrap().clone())
                 }
                 _ => bail!("Field not found".to_string()),
-            };
+            }
         } else {
             match json_from_file::<CustomFieldsCache>(&FILE_CACHE_PATH).await {
                 Ok(file) => {
-                    custom_field = format!("{}", file.unwrap().get(field.clone()).unwrap()[0]);
+                    Ok(file.unwrap().get(field.clone()).unwrap().clone())
                 }
                 _ => bail!("Field not found".to_string()),
-            };
+            }
         }
-        Ok(custom_field)
     }
 
     pub async fn cache_custom_fields(

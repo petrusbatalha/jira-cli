@@ -1,0 +1,8 @@
+project:
+  key: ESTRT
+labels:
+  - H15
+team: engenhariacloud
+custom_fields:
+  - Epic Link
+  - Team
