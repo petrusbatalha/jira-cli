@@ -1,5 +1,6 @@
 use crate::jira_structs::REST_URI;
 use crate::traits::{ArgOptions, Searchable};
+use crate::ProjectOps;
 use async_trait::async_trait;
 use core::fmt;
 use reqwest::header::CONTENT_TYPE;
@@ -64,13 +65,21 @@ impl fmt::Display for Project {
 }
 
 #[async_trait]
-impl Searchable<Result<(), ()>> for ProjectHandler {
-    async fn list(&self, options: &ArgOptions, client: &Client) -> Result<(), ()> {
-        let uri = format!("{}{}{}", &options.host, &REST_URI, &PROJECT_URI);
+impl Searchable<ProjectOps, Result<(), ()>> for ProjectHandler {
+    async fn list(
+        &self,
+        options: &ProjectOps,
+        fixed_options: &ArgOptions,
+        client: &Client,
+    ) -> Result<(), ()> {
+        let uri = format!("{}{}{}", &fixed_options.host, &REST_URI, &PROJECT_URI);
 
         let projects = client
             .get(&uri)
-            .basic_auth(&options.user.as_ref().unwrap(), options.clone().pass)
+            .basic_auth(
+                &fixed_options.user.as_ref().unwrap(),
+                fixed_options.clone().pass,
+            )
             .header(CONTENT_TYPE, "application/json")
             .send()
             .await
@@ -78,6 +87,8 @@ impl Searchable<Result<(), ()>> for ProjectHandler {
             .json::<Vec<Project>>()
             .await
             .unwrap();
+
+        debug!("Listing projects... called uri: {}", uri);
 
         let mut table = Table::new();
         table.max_column_width = 40;

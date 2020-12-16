@@ -25,6 +25,12 @@ pub struct Project {
     pub key: String,
 }
 
+impl Project {
+    pub fn new(key: String) -> Project {
+        Project { key }
+    }
+}
+
 #[derive(Debug, Clone, Serialize, Deserialize)]
 pub struct IssueType {
     pub name: String,

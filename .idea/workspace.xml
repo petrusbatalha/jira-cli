@@ -15,7 +15,14 @@
   <component name="ChangeListManager">
     <list default="true" id="54f75dd0-d2b5-4f5c-bfda-06307fd1452d" name="Default Changelist" comment="">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/epic.rs" beforeDir="false" afterPath="$PROJECT_DIR$/src/epic.rs" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/fields.rs" beforeDir="false" afterPath="$PROJECT_DIR$/src/fields.rs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/file_utilities.rs" beforeDir="false" afterPath="$PROJECT_DIR$/src/file_utilities.rs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/jira_structs.rs" beforeDir="false" afterPath="$PROJECT_DIR$/src/jira_structs.rs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main.rs" beforeDir="false" afterPath="$PROJECT_DIR$/src/main.rs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/project.rs" beforeDir="false" afterPath="$PROJECT_DIR$/src/project.rs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/stories.rs" beforeDir="false" afterPath="$PROJECT_DIR$/src/stories.rs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/traits.rs" beforeDir="false" afterPath="$PROJECT_DIR$/src/traits.rs" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/template.yaml" beforeDir="false" afterPath="$PROJECT_DIR$/template.yaml" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
@@ -133,14 +140,18 @@
     <option name="oldMeFiltersMigrated" value="true" />
   </component>
   <component name="WindowStateProjectService">
+    <state x="445" y="259" key="#com.intellij.fileTypes.FileTypeChooser" timestamp="1608138332609">
+      <screen x="0" y="0" width="1440" height="900" />
+    </state>
+    <state x="445" y="259" key="#com.intellij.fileTypes.FileTypeChooser/0.0.1440.900@0.0.1440.900" timestamp="1608138332609" />
     <state x="533" y="173" key="#com.intellij.ide.util.MemberChooser" timestamp="1607539979623">
       <screen x="0" y="0" width="1440" height="900" />
     </state>
     <state x="533" y="173" key="#com.intellij.ide.util.MemberChooser/0.0.1440.900@0.0.1440.900" timestamp="1607539979623" />
-    <state x="100" y="120" width="1240" height="683" key="DiffContextDialog" timestamp="1608051677073">
-      <screen x="0" y="23" width="1440" height="877" />
+    <state x="100" y="100" width="1240" height="700" key="DiffContextDialog" timestamp="1608139868847">
+      <screen x="0" y="0" width="1440" height="900" />
     </state>
-    <state x="100" y="100" width="1240" height="700" key="DiffContextDialog/0.0.1440.900@0.0.1440.900" timestamp="1607595514576" />
+    <state x="100" y="100" width="1240" height="700" key="DiffContextDialog/0.0.1440.900@0.0.1440.900" timestamp="1608139868847" />
     <state x="100" y="120" width="1240" height="683" key="DiffContextDialog/0.23.1440.877@0.23.1440.877" timestamp="1608051677073" />
     <state width="1398" height="245" key="GridCell.Tab.0.bottom" timestamp="1607511557512">
       <screen x="0" y="0" width="1440" height="900" />
@@ -166,10 +177,10 @@
       <screen x="0" y="23" width="1440" height="877" />
     </state>
     <state width="600" height="428" key="javadoc.popup/0.23.1440.877@0.23.1440.877" timestamp="1608059894731" />
-    <state x="357" y="214" width="725" height="659" key="search.everywhere.popup" timestamp="1608052921941">
-      <screen x="0" y="23" width="1440" height="877" />
+    <state x="357" y="196" width="725" height="676" key="search.everywhere.popup" timestamp="1608139812679">
+      <screen x="0" y="0" width="1440" height="900" />
     </state>
-    <state x="357" y="196" width="725" height="676" key="search.everywhere.popup/0.0.1440.900@0.0.1440.900" timestamp="1607541491855" />
+    <state x="357" y="196" width="725" height="676" key="search.everywhere.popup/0.0.1440.900@0.0.1440.900" timestamp="1608139812679" />
     <state x="357" y="214" width="725" height="659" key="search.everywhere.popup/0.23.1440.877@0.23.1440.877" timestamp="1608052921941" />
   </component>
 </project>

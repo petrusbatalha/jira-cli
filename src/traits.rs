@@ -1,12 +1,9 @@
 use async_trait::async_trait;
 use reqwest::Client;
 use serde::Deserialize;
-use term_table::row::Row;
 
 #[derive(Debug, Clone, Deserialize)]
 pub struct ArgOptions {
-    pub project: Option<String>,
-    pub epic: Option<String>,
     pub host: String,
     pub user: Option<String>,
     pub pass: Option<String>,
@@ -15,8 +12,6 @@ pub struct ArgOptions {
 impl Default for ArgOptions {
     fn default() -> Self {
         ArgOptions {
-            project: None,
-            epic: None,
             host: "localhost".to_string(),
             user: None,
             pass: None,
@@ -25,7 +20,8 @@ impl Default for ArgOptions {
 }
 
 #[async_trait]
-pub trait Searchable<T> {
-    type Output = T;
-    async fn list(&self, options: &ArgOptions, client: &Client) -> T;
+pub trait Searchable<O, R> {
+    type Result = R;
+    type Options = O;
+    async fn list(&self, options: &O, fixed_options: &ArgOptions, client: &Client) -> R;
 }

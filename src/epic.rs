@@ -1,6 +1,6 @@
-use crate::jira_structs::{Issue, JQL, REST_URI};
+use crate::jira_structs::{Issue, JQL, REST_URI, Project};
 use crate::traits::{ArgOptions, Searchable};
-use anyhow::bail;
+use crate::EpicOps;
 use async_trait::async_trait;
 use reqwest::header::CONTENT_TYPE;
 use reqwest::Client;
@@ -21,21 +21,26 @@ pub struct Epic {
 // https://jira.bradesco.com.br:8443/rest/api/2/search?jql=PROJECT=ESTRT AND issuetype="Epic"&fields=summary
 
 #[async_trait]
-impl Searchable<Result<(), anyhow::Error>> for EpicHandler {
-    async fn list(&self, options: &ArgOptions, client: &Client) -> Result<(), anyhow::Error> {
-        let uri = format!("{}{}", &options.host, &REST_URI);
+impl Searchable<EpicOps, Result<(), anyhow::Error>> for EpicHandler {
+    async fn list(
+        &self,
+        options: &EpicOps,
+        fixed_options: &ArgOptions,
+        client: &Client,
+    ) -> Result<(), anyhow::Error> {
+        let uri = format!("{}{}", &fixed_options.host, &REST_URI);
 
-        let jql_query = match &options.project {
-            Some(p) => format!(
+        let project = Project::new(options.project_key.clone());
+        let jql_query = format!(
                 "{}{}{}{}{}",
-                &uri, &JQL, "PROJECT=", p, " AND issuetype=Epic&fields=summary,description"
-            ),
-            _ => bail!("Please, define the project to list epics".to_string()),
-        };
+                &uri, &JQL, "PROJECT=", project.key, " AND issuetype=Epic&fields=summary,description");
 
         let epics = client
             .get(Url::parse(&jql_query).unwrap())
-            .basic_auth(&options.user.as_ref().unwrap(), options.clone().pass)
+            .basic_auth(
+                &fixed_options.user.as_ref().unwrap(),
+                fixed_options.clone().pass,
+            )
             .header(CONTENT_TYPE, "application/json")
             .send()
             .await

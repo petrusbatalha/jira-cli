@@ -2,9 +2,8 @@ use crate::fields::CustomFieldsHandler;
 use crate::file_utilities::load_yaml;
 use crate::jira_structs::{Issue, IssueType, Project, JQL, REST_URI};
 use crate::traits::{ArgOptions, Searchable};
-use anyhow::{anyhow, bail};
+use crate::StoryOps;
 use async_trait::async_trait;
-use core::fmt;
 use json_patch::merge;
 use reqwest::header::CONTENT_TYPE;
 use reqwest::Client;
@@ -12,15 +11,11 @@ use serde::{Deserialize, Serialize};
 use serde_json::Value;
 use serde_json::{json, Map};
 use serde_yaml;
-use std::borrow::Borrow;
 use std::collections::HashMap;
 use std::default::default;
 use term_table::row::Row;
 use term_table::table_cell::{Alignment, TableCell};
 use term_table::{Table, TableStyle};
-use yaml_rust::YamlLoader;
-
-static STORIES_URI: &str = "/project";
 
 pub struct StoriesHandler;
 
@@ -61,9 +56,14 @@ pub struct Stories {
 }
 
 #[async_trait]
-impl Searchable<Result<(), ()>> for StoriesHandler {
-    async fn list(&self, options: &ArgOptions, client: &Client) -> Result<(), ()> {
-        let uri = format!("{}{}", &options.host, &REST_URI);
+impl Searchable<StoryOps, Result<(), ()>> for StoriesHandler {
+    async fn list(
+        &self,
+        options: &StoryOps,
+        fixed_options: &ArgOptions,
+        client: &Client,
+    ) -> Result<(), ()> {
+        let uri = format!("{}{}", &fixed_options.host, &REST_URI);
 
         let epic_uri = format!(
             "{}{}{}{}{}",
@@ -74,14 +74,17 @@ impl Searchable<Result<(), ()>> for StoriesHandler {
                 .await
                 .unwrap(),
             "=",
-            &options.epic.as_ref().unwrap()
+            &options.epic.clone().unwrap()
         );
 
         debug!("Epic Request {}", epic_uri);
 
         let stories = client
             .get(&epic_uri)
-            .basic_auth(&options.user.as_ref().unwrap(), options.clone().pass)
+            .basic_auth(
+                &fixed_options.user.as_ref().unwrap(),
+                fixed_options.clone().pass,
+            )
             .header(CONTENT_TYPE, "application/json")
             .send()
             .await
@@ -125,39 +128,36 @@ fn build_table_header_row() -> Row<'static> {
 }
 
 impl StoriesHandler {
-    pub async fn create_story(
-        &self,
-        project: Option<Project>,
-        summary: Option<String>,
-        description: Option<String>,
-        labels: Option<Vec<String>>,
-        custom_fields: Option<Vec<HashMap<String, String>>>,
-        mut path: Option<String>,
-    ) -> String {
-        let mut story_template: Story =
-            match load_yaml(&path.get_or_insert("./template.yaml".to_string())).await {
-                Ok(yaml) => {
-                    let story_yaml = serde_yaml::from_str(&yaml).unwrap();
-                    story_yaml
-                }
-                Err(_) => Story { ..default() },
-            };
-
-        let story = Story {
-            project: project.or(story_template.project),
-            summary: summary.or(story_template.summary),
-            description: description.or(story_template.description),
-            labels: labels.or(story_template.labels),
-            ..default()
+    pub async fn create_story(&self, mut args: StoryOps) {
+        let story_template: Story = match load_yaml(
+            &args
+                .template_path
+                .get_or_insert("./template.yaml".to_string()),
+        )
+        .await
+        {
+            Ok(yaml) => {
+                let story_yaml = serde_yaml::from_str(&yaml).unwrap();
+                story_yaml
+            }
+            Err(_) => Story { ..default() },
         };
 
-        let mut story_json_fields = json!(&story);
-        let cf = custom_fields.or(story_template.custom_fields);
+        let project = match args.project {
+            Some(key) => Project::new(key),
+            None => story_template.project.unwrap(),
+        };
 
-        let json: Option<Map<String, Value>> = if cf.is_some() {
-            let custom_fields = cf.unwrap();
+        let mut story_json_fields = json!({"fields": {
+                "project": project,
+                "summary": args.summary.or(story_template.summary),
+                "description":  args.description.or(story_template.description),
+                "labels": args.labels.or(story_template.labels),
+        }});
+
+        let json: Option<Map<String, Value>> = if story_template.custom_fields.is_some() {
             let mut map: Map<String, Value> = Map::new();
-            for field_map in custom_fields {
+            for field_map in story_template.custom_fields.unwrap() {
                 for (field_key, field_value) in field_map {
                     let custom_field_key = &CustomFieldsHandler
                         .get_custom_field(&*field_key)
@@ -183,6 +183,6 @@ impl StoriesHandler {
             }
             None => story_json_fields,
         };
-        json!({"fields": &payload}).to_string().replace("\"custom_fields\":null,", "")
+        println!("{:?}", payload.to_string());
     }
 }

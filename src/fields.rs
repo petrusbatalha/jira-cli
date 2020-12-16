@@ -2,12 +2,10 @@ use crate::file_utilities::{json_from_file, json_to_file};
 use crate::jira_structs::REST_URI;
 use crate::traits::ArgOptions;
 use anyhow::bail;
-use anyhow::Error;
 use reqwest::header::CONTENT_TYPE;
 use reqwest::Client;
 use serde::Deserialize;
 use std::collections::HashMap;
-use std::default::default;
 
 const MOST_USED_FIELDS: [&'static str; 3] = ["Epic Link", "Team", "Story Points"];
 const MOST_USED_FIELDS_PATH: &str = "./.jira-cli/most_used_fields.json";
@@ -99,11 +97,9 @@ impl CustomFieldsHandler {
     pub async fn get_custom_field(&self, field: &str) -> Result<String, anyhow::Error> {
         if MOST_USED_FIELDS.contains(&field) {
             match json_from_file::<CustomFieldsCache>(&MOST_USED_FIELDS_PATH).await {
-                Ok(file) => {
-                    match file {
-                        Ok(f) => Ok(f.get(field.clone()).unwrap()[0].clone()),
-                        Err(e) => bail!(e),
-                    }
+                Ok(file) => match file {
+                    Ok(f) => Ok(f.get(field.clone()).unwrap()[0].clone()),
+                    Err(e) => bail!(e),
                 },
                 _ => bail!("Field not found".to_string()),
             }
@@ -124,28 +120,22 @@ impl CustomFieldsHandler {
             Ok(_most_used_fields) => {
                 match json_from_file::<CustomFieldsCache>(&FILE_CACHE_PATH).await {
                     Ok(_fields) => Ok(()),
-                    _ => {
-                        match self.save_custom_fields(arg_options, client).await {
-                            Ok(()) => {
-                                info!{"Most used fields cache created with success."}
-                                Ok(())
-                            },
-                            _ => bail!("Failed to create most used fields cache")
+                    _ => match self.save_custom_fields(arg_options, client).await {
+                        Ok(()) => {
+                            info! {"Most used fields cache created with success."}
+                            Ok(())
                         }
-                    }
-                }
-            }
-            _ => {
-                match self.save_custom_fields(arg_options, client).await {
-                    Ok(()) => {
-                        info!{"Most used fields cache created with success."}
-                        Ok(())
+                        _ => bail!("Failed to create most used fields cache"),
                     },
-                    _ => {
-                        bail!("Failed to create most used fields cache")
-                    }
                 }
             }
+            _ => match self.save_custom_fields(arg_options, client).await {
+                Ok(()) => {
+                    info! {"Most used fields cache created with success."}
+                    Ok(())
+                }
+                _ => bail!("Failed to create most used fields cache"),
+            },
         }
     }
 }

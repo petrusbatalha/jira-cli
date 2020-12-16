@@ -1,6 +1,4 @@
 extern crate yaml_rust;
-
-use self::yaml_rust::{Yaml, YamlLoader};
 use anyhow::{anyhow, bail};
 use serde::{Deserialize, Serialize};
 use std::fs::File;
