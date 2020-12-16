@@ -31,6 +31,7 @@ use std::default::default;
 use std::env;
 use structopt::StructOpt;
 use yaml_rust::YamlLoader;
+use std::collections::HashMap;
 
 const CONF_PATH: &str = "./.conf.yaml";
 
@@ -89,6 +90,10 @@ async fn main() {
     // &CustomFieldsHandler
     //     .cache_custom_fields(&arg_option, &REST_CLIENT)
     //     .await;
+    let mut map_team = HashMap::new();
+    &map_team.insert("Team".to_string(), "timitisson".to_string());
+    let mut map_link = HashMap::new();
+    &map_link.insert("Epic Link".to_string(), "Estrututut".to_string());
 
     &StoriesHandler.list(&arg_option, &REST_CLIENT).await;
     let story = &StoriesHandler
@@ -97,7 +102,7 @@ async fn main() {
             Some("TITULO".to_string()),
             Some("Descricao".to_string()),
             None,
-            Some(vec!["Team".to_string(), "Epic Link".to_string()]),
+            Some(vec![map_link, map_team]),
             None,
         )
         .await;

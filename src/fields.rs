@@ -96,19 +96,15 @@ impl CustomFieldsHandler {
         Ok(())
     }
 
-    pub async fn get_custom_field(&self, field: &str) -> Result<Vec<String>, anyhow::Error> {
+    pub async fn get_custom_field(&self, field: &str) -> Result<String, anyhow::Error> {
         if MOST_USED_FIELDS.contains(&field) {
             match json_from_file::<CustomFieldsCache>(&MOST_USED_FIELDS_PATH).await {
-                Ok(file) => {
-                    Ok(file.unwrap().get(field.clone()).unwrap().clone())
-                }
+                Ok(file) => Ok(file.unwrap().get(field.clone()).unwrap()[0].clone()),
                 _ => bail!("Field not found".to_string()),
             }
         } else {
             match json_from_file::<CustomFieldsCache>(&FILE_CACHE_PATH).await {
-                Ok(file) => {
-                    Ok(file.unwrap().get(field.clone()).unwrap().clone())
-                }
+                Ok(file) => Ok(file.unwrap().get(field.clone()).unwrap()[0].clone()),
                 _ => bail!("Field not found".to_string()),
             }
         }

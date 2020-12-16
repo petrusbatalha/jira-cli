@@ -1,24 +1,24 @@
 use crate::fields::CustomFieldsHandler;
-use crate::file_utilities::{load_yaml};
+use crate::file_utilities::load_yaml;
 use crate::jira_structs::{Issue, IssueType, Project, JQL, REST_URI};
 use crate::traits::{ArgOptions, Searchable};
-use anyhow::{bail, anyhow};
+use anyhow::{anyhow, bail};
 use async_trait::async_trait;
 use core::fmt;
+use json_patch::merge;
 use reqwest::header::CONTENT_TYPE;
 use reqwest::Client;
 use serde::{Deserialize, Serialize};
 use serde_json::Value;
+use serde_json::{json, Map};
 use serde_yaml;
-use serde_json::{Map, json};
+use std::borrow::Borrow;
+use std::collections::HashMap;
 use std::default::default;
 use term_table::row::Row;
 use term_table::table_cell::{Alignment, TableCell};
 use term_table::{Table, TableStyle};
 use yaml_rust::YamlLoader;
-use std::borrow::Borrow;
-use json_patch::merge;
-
 
 static STORIES_URI: &str = "/project";
 
@@ -31,9 +31,8 @@ pub struct Story {
     pub description: Option<String>,
     pub issuetype: Option<IssueType>,
     pub labels: Option<Vec<String>>,
-    pub custom_fields: Option<Vec<String>>,
+    pub custom_fields: Option<Vec<HashMap<String, String>>>,
 }
-
 
 impl Default for Story {
     fn default() -> Self {
@@ -73,7 +72,7 @@ impl Searchable<Result<(), ()>> for StoriesHandler {
             &CustomFieldsHandler
                 .get_custom_field("Epic Link")
                 .await
-                .unwrap()[0],
+                .unwrap(),
             "=",
             &options.epic.as_ref().unwrap()
         );
@@ -132,9 +131,9 @@ impl StoriesHandler {
         summary: Option<String>,
         description: Option<String>,
         labels: Option<Vec<String>>,
-        custom_fields: Option<Vec<String>>,
+        custom_fields: Option<Vec<HashMap<String, String>>>,
         mut path: Option<String>,
-    ) -> serde_json::Value {
+    ) -> String {
         let mut story_template: Story =
             match load_yaml(&path.get_or_insert("./template.yaml".to_string())).await {
                 Ok(yaml) => {
@@ -144,7 +143,6 @@ impl StoriesHandler {
                 Err(_) => Story { ..default() },
             };
 
-
         let story = Story {
             project: project.or(story_template.project),
             summary: summary.or(story_template.summary),
@@ -153,35 +151,40 @@ impl StoriesHandler {
             ..default()
         };
 
-        let mut story_json_fields =
-            json!(&story);
-        let cf =
-            custom_fields.or(story_template.custom_fields);
+        let mut story_json_fields = json!(&story);
+        let cf = custom_fields.or(story_template.custom_fields);
 
         let json: Option<Map<String, Value>> = if cf.is_some() {
-            info!("É SOME");
-           let custom_fields = cf.unwrap();
+            let custom_fields = cf.unwrap();
             let mut map: Map<String, Value> = Map::new();
-                for field in custom_fields {
-                    let custom_fields =
-                        &CustomFieldsHandler.get_custom_field(&*field).await.unwrap();
-                    let custom_field_name = custom_fields[0].clone()
+            for field_map in custom_fields {
+                for (field_key, field_value) in field_map {
+                    let custom_field_key = &CustomFieldsHandler
+                        .get_custom_field(&*field_key)
+                        .await
+                        .unwrap();
+                    let custom_field_name = custom_field_key
+                        .clone()
                         .replace("[", "")
                         .replace("]", "")
                         .replace("cf", "customfield_");
-                    &map.insert(custom_field_name, json!(custom_fields[1].clone()));
-                };
+                    &map.insert(custom_field_name, json!(field_value.clone()));
+                }
+            }
             Some(map)
         } else {
             None
         };
+
         let payload: serde_json::Value = match json {
             Some(json) => {
                 merge(&mut story_json_fields, &serde_json::to_value(json).unwrap());
                 story_json_fields
-            },
-            None => story_json_fields
+            }
+            None => story_json_fields,
         };
-        payload
+        serde_json::to_string(&payload)
+            .unwrap()
+            .replace("\"custom_fields\":null,", "")
     }
 }
