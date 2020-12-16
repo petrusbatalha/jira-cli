@@ -5,6 +5,23 @@ pub static REST_URI: &str = "/rest/api/2";
 pub static JQL: &str = "/search?jql=";
 
 #[derive(Debug, Clone, Deserialize)]
+pub struct AuthOptions {
+    pub host: String,
+    pub user: Option<String>,
+    pub pass: Option<String>,
+}
+
+impl Default for AuthOptions {
+    fn default() -> Self {
+        AuthOptions {
+            host: "localhost".to_string(),
+            user: None,
+            pass: None,
+        }
+    }
+}
+
+#[derive(Debug, Clone, Deserialize)]
 pub struct Issue {
     pub expand: String,
     pub id: String,

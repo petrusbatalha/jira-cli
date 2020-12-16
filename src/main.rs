@@ -1,11 +1,13 @@
 #![feature(associated_type_defaults)]
 #![feature(default_free_fn)]
 #![feature(option_insert)]
-#[macro_use] extern crate log;
-#[macro_use] extern crate lazy_static;
+#[macro_use]
+extern crate log;
+#[macro_use]
+extern crate lazy_static;
 
+mod custom_fields;
 mod epic;
-mod fields;
 mod file_utilities;
 mod jira_structs;
 mod project;
@@ -15,15 +17,16 @@ mod traits;
 extern crate base64;
 extern crate pretty_env_logger;
 
+use crate::custom_fields::{CustomFieldsHandler, CustomFieldsCache};
 use crate::epic::EpicHandler;
-use crate::fields::CustomFieldsHandler;
 use crate::project::ProjectHandler;
-use crate::stories::{StoriesHandler};
-use crate::traits::{ArgOptions, Searchable};
+use crate::stories::StoriesHandler;
+use crate::traits::{Searchable};
 use reqwest::Client;
 use std::env;
 use structopt::StructOpt;
 use yaml_rust::YamlLoader;
+use crate::jira_structs::AuthOptions;
 
 const CONF_PATH: &str = "./.jira-cli/conf.yaml";
 
@@ -87,13 +90,17 @@ pub struct StoryOps {
     description: Option<String>,
     #[structopt(long = "labels", short = "l", help = "Story Labels")]
     labels: Option<Vec<String>>,
-    #[structopt(long = "template", short = "t", help = "Link to template for creating stories")]
+    #[structopt(
+        long = "template",
+        short = "t",
+        help = "Link to template for creating stories"
+    )]
     template_path: Option<String>,
 }
 
 #[derive(StructOpt, Debug)]
 pub struct StoryListOps {
-    #[structopt(long = "epic", short = "e", help="Epic to list stories for.")]
+    #[structopt(long = "epic", short = "e", help = "Epic to list stories for.")]
     epic: Option<String>,
 }
 
@@ -110,38 +117,40 @@ async fn main() {
 
     let conf_string = file_utilities::load_yaml(&CONF_PATH).await;
     let conf = &YamlLoader::load_from_str(&conf_string.unwrap()).unwrap()[0];
-
-    let arg_options = ArgOptions {
+    let auth_options = AuthOptions {
         host: conf["jira"]["host"].as_str().unwrap().to_owned(),
         user: Some(conf["jira"]["user"].as_str().unwrap().to_owned()),
         pass: Some(conf["jira"]["pass"].as_str().unwrap().to_owned()),
     };
 
-    &CustomFieldsHandler
-        .cache_custom_fields(&arg_options, &REST_CLIENT)
-        .await;
+    let custom_fields_cache = CustomFieldsHandler
+        .cache_custom_fields(&auth_options, &REST_CLIENT)
+        .await.unwrap();
 
-    handle_args(opts, &arg_options).await;
+    &handle_args(opts, custom_fields_cache, &auth_options).await;
 }
 
-async fn handle_args(opts: Opts, fixed_options: &ArgOptions) {
+async fn handle_args(opts: Opts, custom_fields_cache: CustomFieldsCache, auth_options: &AuthOptions) {
     if let Some(subcommand) = opts.commands {
         match subcommand {
             Commands::List(issue_type) => match issue_type {
                 List::Story(args) => {
                     &StoriesHandler
-                        .list(&args, fixed_options, &REST_CLIENT).await;
+                        .list(&args, auth_options, &custom_fields_cache, &REST_CLIENT)
+                        .await;
                 }
                 List::Epic(args) => {
-                    &EpicHandler.list(&args, fixed_options, &REST_CLIENT).await;
+                    &EpicHandler.list(&args,auth_options,  &custom_fields_cache, &REST_CLIENT).await;
                 }
                 List::Project(args) => {
-                    &ProjectHandler.list(&args, fixed_options, &REST_CLIENT).await;
+                    &ProjectHandler
+                        .list(&args, auth_options, &custom_fields_cache,  &REST_CLIENT)
+                        .await;
                 }
             },
             Commands::Add(issue_type) => match issue_type {
                 Add::Story(args) => {
-                    &StoriesHandler.create_story(args).await;
+                    &StoriesHandler.create_story(args,  auth_options,  &custom_fields_cache).await;
                 }
             },
         }

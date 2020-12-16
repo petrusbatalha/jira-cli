@@ -1,8 +1,8 @@
-use crate::fields::CustomFieldsHandler;
+use crate::custom_fields::{CustomFieldsCache};
 use crate::file_utilities::load_yaml;
-use crate::jira_structs::{Issue, IssueType, Project, JQL, REST_URI};
-use crate::traits::{ArgOptions, Searchable};
-use crate::{StoryOps, StoryListOps};
+use crate::jira_structs::{Issue, IssueType, Project, JQL, REST_URI, AuthOptions};
+use crate::traits::{Searchable};
+use crate::{StoryListOps, StoryOps};
 use async_trait::async_trait;
 use json_patch::merge;
 use reqwest::header::CONTENT_TYPE;
@@ -60,19 +60,17 @@ impl Searchable<StoryListOps, Result<(), ()>> for StoriesHandler {
     async fn list(
         &self,
         options: &StoryListOps,
-        fixed_options: &ArgOptions,
+        auth_options: &AuthOptions,
+        custom_fields_cache: &CustomFieldsCache,
         client: &Client,
     ) -> Result<(), ()> {
-        let uri = format!("{}{}", &fixed_options.host, &REST_URI);
+        let uri = format!("{}{}", &auth_options.host, &REST_URI);
 
         let epic_uri = format!(
             "{}{}{}{}{}",
             &uri,
             &JQL,
-            &CustomFieldsHandler
-                .get_custom_field("Epic Link")
-                .await
-                .unwrap(),
+            &custom_fields_cache.get("Epic Link").unwrap()[0],
             "=",
             &options.epic.clone().unwrap()
         );
@@ -82,8 +80,8 @@ impl Searchable<StoryListOps, Result<(), ()>> for StoriesHandler {
         let stories = client
             .get(&epic_uri)
             .basic_auth(
-                &fixed_options.user.as_ref().unwrap(),
-                fixed_options.clone().pass,
+                &auth_options.user.as_ref().unwrap(),
+                auth_options.clone().pass,
             )
             .header(CONTENT_TYPE, "application/json")
             .send()
@@ -128,12 +126,13 @@ fn build_table_header_row() -> Row<'static> {
 }
 
 impl StoriesHandler {
-    pub async fn create_story(&self, mut args: StoryOps) {
+    pub async fn create_story(&self, mut args: StoryOps,  auth_options: &AuthOptions, custom_field_cache: &CustomFieldsCache,) {
         let story_template: Story = match load_yaml(
             &args
                 .template_path
                 .get_or_insert("./template.yaml".to_string()),
-        ).await
+        )
+        .await
         {
             Ok(yaml) => {
                 let story_yaml = serde_yaml::from_str(&yaml).unwrap();
@@ -154,14 +153,15 @@ impl StoriesHandler {
                 "labels": args.labels.or(story_template.labels),
         });
 
+        println!("FIELD CACHE {:?}", custom_field_cache.clone());
+        let fields_cache = custom_field_cache.clone();
+
         let json: Option<Map<String, Value>> = if story_template.custom_fields.is_some() {
             let mut map: Map<String, Value> = Map::new();
             for field_map in story_template.custom_fields.unwrap() {
                 for (field_key, field_value) in field_map {
-                    let custom_field_key = &CustomFieldsHandler
-                        .get_custom_field(&*field_key)
-                        .await
-                        .unwrap();
+                    println!("{:?}", fields_cache.clone().get(&*field_key));
+                    let custom_field_key = fields_cache.get(&*field_key).unwrap()[0].clone();
                     let custom_field_name = custom_field_key
                         .clone()
                         .replace("[", "")
@@ -178,7 +178,7 @@ impl StoriesHandler {
         let payload: serde_json::Value = match json {
             Some(json) => {
                 merge(&mut story_json_fields, &serde_json::to_value(json).unwrap());
-                json!({"fields": story_json_fields})
+                json!({ "fields": story_json_fields })
             }
             None => story_json_fields,
         };

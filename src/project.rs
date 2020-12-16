@@ -1,5 +1,5 @@
-use crate::jira_structs::REST_URI;
-use crate::traits::{ArgOptions, Searchable};
+use crate::jira_structs::{REST_URI, AuthOptions};
+use crate::traits::{Searchable};
 use crate::ProjectOps;
 use async_trait::async_trait;
 use core::fmt;
@@ -9,6 +9,7 @@ use serde::Deserialize;
 use term_table::row::Row;
 use term_table::table_cell::{Alignment, TableCell};
 use term_table::{Table, TableStyle};
+use crate::custom_fields::CustomFieldsCache;
 
 static PROJECT_URI: &str = "/project";
 
@@ -69,16 +70,17 @@ impl Searchable<ProjectOps, Result<(), ()>> for ProjectHandler {
     async fn list(
         &self,
         options: &ProjectOps,
-        fixed_options: &ArgOptions,
+        auth_options: &AuthOptions,
+        custom_fields_cache: &CustomFieldsCache,
         client: &Client,
     ) -> Result<(), ()> {
-        let uri = format!("{}{}{}", &fixed_options.host, &REST_URI, &PROJECT_URI);
+        let uri = format!("{}{}{}", &auth_options.host, &REST_URI, &PROJECT_URI);
 
         let projects = client
             .get(&uri)
             .basic_auth(
-                &fixed_options.user.as_ref().unwrap(),
-                fixed_options.clone().pass,
+                &auth_options.user.as_ref().unwrap(),
+                auth_options.clone().pass,
             )
             .header(CONTENT_TYPE, "application/json")
             .send()

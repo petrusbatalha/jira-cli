@@ -15,8 +15,15 @@
   <component name="ChangeListManager">
     <list default="true" id="54f75dd0-d2b5-4f5c-bfda-06307fd1452d" name="Default Changelist" comment="">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.jira-cli/custom_fields.json" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/.jira-cli/most_used_fields.json" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/epic.rs" beforeDir="false" afterPath="$PROJECT_DIR$/src/epic.rs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/fields.rs" beforeDir="false" afterPath="$PROJECT_DIR$/src/custom_fields.rs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/jira_structs.rs" beforeDir="false" afterPath="$PROJECT_DIR$/src/jira_structs.rs" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main.rs" beforeDir="false" afterPath="$PROJECT_DIR$/src/main.rs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/project.rs" beforeDir="false" afterPath="$PROJECT_DIR$/src/project.rs" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/stories.rs" beforeDir="false" afterPath="$PROJECT_DIR$/src/stories.rs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/traits.rs" beforeDir="false" afterPath="$PROJECT_DIR$/src/traits.rs" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -63,7 +70,7 @@
     <property name="org.rust.cargo.project.model.PROJECT_DISCOVERY" value="true" />
     <property name="org.rust.disableDetachedFileInspection/Users/petrusbatalha/jira-cli/src/mod.rs" value="true" />
   </component>
-  <component name="RunManager">
+  <component name="RunManager" selected="Cargo.All Tests">
     <configuration default="true" type="ArquillianJUnit" factoryName="" nameIsGenerated="true">
       <option name="arquillianRunConfiguration">
         <value>
@@ -73,6 +80,18 @@
       <option name="TEST_OBJECT" value="class" />
       <method v="2">
         <option name="Make" enabled="true" />
+      </method>
+    </configuration>
+    <configuration name="All Tests" type="CargoCommandRunConfiguration" factoryName="Cargo Command" temporary="true">
+      <option name="channel" value="DEFAULT" />
+      <option name="command" value="test" />
+      <option name="allFeatures" value="false" />
+      <option name="emulateTerminal" value="false" />
+      <option name="backtrace" value="SHORT" />
+      <option name="workingDirectory" value="file://$PROJECT_DIR$" />
+      <envs />
+      <method v="2">
+        <option name="CARGO.BUILD_TASK_PROVIDER" enabled="true" />
       </method>
     </configuration>
     <configuration name="Run jira-cli" type="CargoCommandRunConfiguration" factoryName="Cargo Command" temporary="true">
@@ -89,6 +108,7 @@
     </configuration>
     <recent_temporary>
       <list>
+        <item itemvalue="Cargo.All Tests" />
         <item itemvalue="Cargo.Run jira-cli" />
       </list>
     </recent_temporary>
@@ -141,27 +161,27 @@
       <screen x="0" y="0" width="1440" height="900" />
     </state>
     <state x="533" y="173" key="#com.intellij.ide.util.MemberChooser/0.0.1440.900@0.0.1440.900" timestamp="1607539979623" />
-    <state x="100" y="100" width="1240" height="700" key="DiffContextDialog" timestamp="1608139868847">
+    <state x="100" y="100" width="1240" height="700" key="DiffContextDialog" timestamp="1608151203756">
       <screen x="0" y="0" width="1440" height="900" />
     </state>
-    <state x="100" y="100" width="1240" height="700" key="DiffContextDialog/0.0.1440.900@0.0.1440.900" timestamp="1608139868847" />
+    <state x="100" y="100" width="1240" height="700" key="DiffContextDialog/0.0.1440.900@0.0.1440.900" timestamp="1608151203756" />
     <state x="100" y="120" width="1240" height="683" key="DiffContextDialog/0.23.1440.877@0.23.1440.877" timestamp="1608051677073" />
-    <state width="1398" height="245" key="GridCell.Tab.0.bottom" timestamp="1607511557512">
+    <state width="1398" height="245" key="GridCell.Tab.0.bottom" timestamp="1608153650655">
       <screen x="0" y="0" width="1440" height="900" />
     </state>
-    <state width="1398" height="245" key="GridCell.Tab.0.bottom/0.0.1440.900@0.0.1440.900" timestamp="1607511557512" />
-    <state width="1398" height="245" key="GridCell.Tab.0.center" timestamp="1607511557511">
+    <state width="1398" height="245" key="GridCell.Tab.0.bottom/0.0.1440.900@0.0.1440.900" timestamp="1608153650655" />
+    <state width="1398" height="245" key="GridCell.Tab.0.center" timestamp="1608153650653">
       <screen x="0" y="0" width="1440" height="900" />
     </state>
-    <state width="1398" height="245" key="GridCell.Tab.0.center/0.0.1440.900@0.0.1440.900" timestamp="1607511557511" />
-    <state width="1398" height="245" key="GridCell.Tab.0.left" timestamp="1607511557508">
+    <state width="1398" height="245" key="GridCell.Tab.0.center/0.0.1440.900@0.0.1440.900" timestamp="1608153650653" />
+    <state width="1398" height="245" key="GridCell.Tab.0.left" timestamp="1608153650653">
       <screen x="0" y="0" width="1440" height="900" />
     </state>
-    <state width="1398" height="245" key="GridCell.Tab.0.left/0.0.1440.900@0.0.1440.900" timestamp="1607511557508" />
-    <state width="1398" height="245" key="GridCell.Tab.0.right" timestamp="1607511557511">
+    <state width="1398" height="245" key="GridCell.Tab.0.left/0.0.1440.900@0.0.1440.900" timestamp="1608153650653" />
+    <state width="1398" height="245" key="GridCell.Tab.0.right" timestamp="1608153650654">
       <screen x="0" y="0" width="1440" height="900" />
     </state>
-    <state width="1398" height="245" key="GridCell.Tab.0.right/0.0.1440.900@0.0.1440.900" timestamp="1607511557511" />
+    <state width="1398" height="245" key="GridCell.Tab.0.right/0.0.1440.900@0.0.1440.900" timestamp="1608153650654" />
     <state x="611" y="202" key="VcsDiffUtil.ChangesDialog" timestamp="1607706817740">
       <screen x="0" y="23" width="1440" height="877" />
     </state>
@@ -170,10 +190,14 @@
       <screen x="0" y="23" width="1440" height="877" />
     </state>
     <state width="600" height="428" key="javadoc.popup/0.23.1440.877@0.23.1440.877" timestamp="1608059894731" />
-    <state x="357" y="196" width="725" height="676" key="search.everywhere.popup" timestamp="1608139812679">
+    <state x="385" y="210" key="run.anything.popup" timestamp="1608150845487">
       <screen x="0" y="0" width="1440" height="900" />
     </state>
-    <state x="357" y="196" width="725" height="676" key="search.everywhere.popup/0.0.1440.900@0.0.1440.900" timestamp="1608139812679" />
+    <state x="385" y="210" key="run.anything.popup/0.0.1440.900@0.0.1440.900" timestamp="1608150845487" />
+    <state x="357" y="196" width="725" height="676" key="search.everywhere.popup" timestamp="1608153834570">
+      <screen x="0" y="0" width="1440" height="900" />
+    </state>
+    <state x="357" y="196" width="725" height="676" key="search.everywhere.popup/0.0.1440.900@0.0.1440.900" timestamp="1608153834570" />
     <state x="357" y="214" width="725" height="659" key="search.everywhere.popup/0.23.1440.877@0.23.1440.877" timestamp="1608052921941" />
   </component>
 </project>
