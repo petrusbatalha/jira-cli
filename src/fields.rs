@@ -9,7 +9,7 @@ use serde::Deserialize;
 use std::collections::HashMap;
 use std::default::default;
 
-const MOST_USED_FIELDS: [&'static str; 2] = ["Epic Link", "Team"];
+const MOST_USED_FIELDS: [&'static str; 3] = ["Epic Link", "Team", "Story Points"];
 const MOST_USED_FIELDS_PATH: &str = "./.jira-cli/most_used_fields.json";
 const FILE_CACHE_PATH: &str = "./.jira-cli/custom_fields.json";
 const FIELD_URI: &str = "/field";
