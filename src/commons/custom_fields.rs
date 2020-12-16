@@ -55,12 +55,12 @@ impl CustomFieldsHandler {
             .await
             .unwrap();
 
-        let len = *&fields.len();
+        let len = fields.len();
 
         let mut custom_fields_map: CustomFieldsCache = HashMap::with_capacity(len);
 
         for field in fields.clone() {
-            &custom_fields_map.insert(field.name, field.clause_names);
+            custom_fields_map.insert(field.name, field.clause_names);
         }
 
         match json_to_file::<&CustomFieldsCache>(&custom_fields_map, &FILE_CACHE_PATH).await {

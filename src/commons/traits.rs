@@ -4,8 +4,7 @@ use crate::commons::structs::AuthOptions;
 use crate::commons::custom_fields::CustomFieldsCache;
 
 #[async_trait]
-pub trait Searchable<O, R> {
-    type Result = R;
+pub trait Searchable<O> {
     type Options = O;
     async fn list(
         &self,
@@ -13,5 +12,5 @@ pub trait Searchable<O, R> {
         fixed_options: &AuthOptions,
         custom_fields_cache: &CustomFieldsCache,
         client: &Client,
-    ) -> R;
+    );
 }

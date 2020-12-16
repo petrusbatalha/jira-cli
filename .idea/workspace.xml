@@ -14,17 +14,13 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="54f75dd0-d2b5-4f5c-bfda-06307fd1452d" name="Default Changelist" comment="">
-      <change afterPath="$PROJECT_DIR$/src/commons/mod.rs" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/src/issues/mod.rs" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/custom_fields.rs" beforeDir="false" afterPath="$PROJECT_DIR$/src/commons/custom_fields.rs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/epic.rs" beforeDir="false" afterPath="$PROJECT_DIR$/src/issues/epic.rs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/file_utilities.rs" beforeDir="false" afterPath="$PROJECT_DIR$/src/commons/file_utilities.rs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/jira_structs.rs" beforeDir="false" afterPath="$PROJECT_DIR$/src/commons/structs.rs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/commons/custom_fields.rs" beforeDir="false" afterPath="$PROJECT_DIR$/src/commons/custom_fields.rs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/commons/traits.rs" beforeDir="false" afterPath="$PROJECT_DIR$/src/commons/traits.rs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/issues/epic.rs" beforeDir="false" afterPath="$PROJECT_DIR$/src/issues/epic.rs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/issues/project.rs" beforeDir="false" afterPath="$PROJECT_DIR$/src/issues/project.rs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/issues/stories.rs" beforeDir="false" afterPath="$PROJECT_DIR$/src/issues/stories.rs" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/main.rs" beforeDir="false" afterPath="$PROJECT_DIR$/src/main.rs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/project.rs" beforeDir="false" afterPath="$PROJECT_DIR$/src/issues/project.rs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/stories.rs" beforeDir="false" afterPath="$PROJECT_DIR$/src/issues/stories.rs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/traits.rs" beforeDir="false" afterPath="$PROJECT_DIR$/src/commons/traits.rs" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />

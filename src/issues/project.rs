@@ -67,14 +67,14 @@ impl fmt::Display for Project {
 }
 
 #[async_trait]
-impl Searchable<ProjectOps, Result<(), ()>> for ProjectHandler {
+impl Searchable<ProjectOps> for ProjectHandler {
     async fn list(
         &self,
         _options: &ProjectOps,
         auth_options: &AuthOptions,
         _custom_fields_cache: &CustomFieldsCache,
         client: &Client,
-    ) -> Result<(), ()> {
+    ) {
         let uri = format!("{}{}{}", &auth_options.host, &REST_URI, &PROJECT_URI);
 
         let projects = client
@@ -104,8 +104,6 @@ impl Searchable<ProjectOps, Result<(), ()>> for ProjectHandler {
         }
 
         println!("{}", table.render());
-
-        Ok(())
     }
 }
 

@@ -120,7 +120,7 @@ async fn main() {
         .await
         .unwrap();
 
-    &handle_args(opts, custom_fields_cache, &auth_options).await;
+    handle_args(opts, custom_fields_cache, &auth_options).await;
 }
 
 async fn handle_args(
@@ -132,24 +132,24 @@ async fn handle_args(
         match subcommand {
             Commands::List(issue_type) => match issue_type {
                 List::Story(args) => {
-                    &StoriesHandler
+                    StoriesHandler
                         .list(&args, auth_options, &custom_fields_cache, &REST_CLIENT)
                         .await;
                 }
                 List::Epic(args) => {
-                    &EpicHandler
+                    EpicHandler
                         .list(&args, auth_options, &custom_fields_cache, &REST_CLIENT)
                         .await;
                 }
                 List::Project(args) => {
-                    &ProjectHandler
+                    ProjectHandler
                         .list(&args, auth_options, &custom_fields_cache, &REST_CLIENT)
                         .await;
                 }
             },
             Commands::Add(issue_type) => match issue_type {
                 Add::Story(args) => {
-                    &StoriesHandler
+                    StoriesHandler
                         .create_story(args, auth_options, &custom_fields_cache)
                         .await;
                 }

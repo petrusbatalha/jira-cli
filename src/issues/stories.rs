@@ -56,14 +56,14 @@ pub struct Stories {
 }
 
 #[async_trait]
-impl Searchable<StoryListOps, Result<(), ()>> for StoriesHandler {
+impl Searchable<StoryListOps> for StoriesHandler {
     async fn list(
         &self,
         options: &StoryListOps,
         auth_options: &AuthOptions,
         custom_fields_cache: &CustomFieldsCache,
         client: &Client,
-    ) -> Result<(), ()> {
+    ) {
         let uri = format!("{}{}", &auth_options.host, &REST_URI);
 
         let epic_uri = format!(
@@ -102,8 +102,6 @@ impl Searchable<StoryListOps, Result<(), ()>> for StoriesHandler {
         }
 
         println!("{}", table.render());
-
-        Ok(())
     }
 }
 
@@ -140,8 +138,7 @@ impl StoriesHandler {
         .await
         {
             Ok(yaml) => {
-                let story_yaml = serde_yaml::from_str(&yaml).unwrap();
-                story_yaml
+                serde_yaml::from_str(&yaml).unwrap()
             }
             Err(_) => Story { ..default() },
         };
@@ -171,7 +168,7 @@ impl StoriesHandler {
                         .replace("[", "")
                         .replace("]", "")
                         .replace("cf", "customfield_");
-                    &map.insert(custom_field_name, json!(field_value.clone()));
+                    map.insert(custom_field_name, json!(field_value.clone()));
                 }
             }
             Some(map)

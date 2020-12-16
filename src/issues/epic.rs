@@ -23,14 +23,14 @@ pub struct Epic {
 // https://jira.bradesco.com.br:8443/rest/api/2/search?jql=PROJECT=ESTRT AND issuetype="Epic"&fields=summary
 
 #[async_trait]
-impl Searchable<EpicOps, Result<(), anyhow::Error>> for EpicHandler {
+impl Searchable<EpicOps> for EpicHandler {
     async fn list(
         &self,
         options: &EpicOps,
         auth_options: &AuthOptions,
         _custom_fields_cache: &CustomFieldsCache,
         client: &Client,
-    ) -> Result<(), anyhow::Error> {
+    ) {
         let uri = format!("{}{}", &auth_options.host, &REST_URI);
 
         let project = Project::new(options.project_key.clone());
@@ -63,8 +63,6 @@ impl Searchable<EpicOps, Result<(), anyhow::Error>> for EpicHandler {
         }
 
         println!("{}", table.render());
-
-        Ok(())
     }
 }
 
