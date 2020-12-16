@@ -102,7 +102,8 @@ async fn main() {
             Some("TITULO".to_string()),
             Some("Descricao".to_string()),
             None,
-            Some(vec![map_link, map_team]),
+            None,
+            // Some(vec![map_link, map_team]),
             None,
         )
         .await;
