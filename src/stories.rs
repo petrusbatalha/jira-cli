@@ -183,8 +183,6 @@ impl StoriesHandler {
             }
             None => story_json_fields,
         };
-        serde_json::to_string(&payload)
-            .unwrap()
-            .replace("\"custom_fields\":null,", "")
+        json!({"fields": &payload}).to_string().replace("\"custom_fields\":null,", "")
     }
 }
