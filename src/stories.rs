@@ -165,7 +165,11 @@ impl StoriesHandler {
                 for field in custom_fields {
                     let custom_fields =
                         &CustomFieldsHandler.get_custom_field(&*field).await.unwrap();
-                    &map.insert(custom_fields[0].clone(), json!(custom_fields[1].clone()));
+                    let custom_field_name = custom_fields[0].clone()
+                        .replace("[", "")
+                        .replace("]", "")
+                        .replace("cf", "customfield_");
+                    &map.insert(custom_field_name, json!(custom_fields[1].clone()));
                 };
             Some(map)
         } else {

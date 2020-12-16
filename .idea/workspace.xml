@@ -14,18 +14,7 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="54f75dd0-d2b5-4f5c-bfda-06307fd1452d" name="Default Changelist" comment="">
-      <change afterPath="$PROJECT_DIR$/template.yaml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.conf.yaml" beforeDir="false" afterPath="$PROJECT_DIR$/.conf.yaml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Cargo.lock" beforeDir="false" afterPath="$PROJECT_DIR$/Cargo.lock" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/Cargo.toml" beforeDir="false" afterPath="$PROJECT_DIR$/Cargo.toml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/custom_fields.json" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/most_used_fields.json" beforeDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/epic.rs" beforeDir="false" afterPath="$PROJECT_DIR$/src/epic.rs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/fields.rs" beforeDir="false" afterPath="$PROJECT_DIR$/src/fields.rs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/file_utilities.rs" beforeDir="false" afterPath="$PROJECT_DIR$/src/file_utilities.rs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/jira_structs.rs" beforeDir="false" afterPath="$PROJECT_DIR$/src/jira_structs.rs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/main.rs" beforeDir="false" afterPath="$PROJECT_DIR$/src/main.rs" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/stories.rs" beforeDir="false" afterPath="$PROJECT_DIR$/src/stories.rs" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
@@ -74,19 +63,6 @@
     <property name="org.rust.disableDetachedFileInspection/Users/petrusbatalha/jira-cli/src/mod.rs" value="true" />
   </component>
   <component name="RunManager">
-    <configuration default="true" type="ArquillianTestNG" factoryName="" nameIsGenerated="true">
-      <option name="arquillianRunConfiguration">
-        <value>
-          <option name="containerStateName" value="" />
-        </value>
-      </option>
-      <option name="TEST_OBJECT" value="CLASS" />
-      <properties />
-      <listeners />
-      <method v="2">
-        <option name="Make" enabled="true" />
-      </method>
-    </configuration>
     <configuration name="Run jira-cli" type="CargoCommandRunConfiguration" factoryName="Cargo Command" temporary="true">
       <option name="channel" value="DEFAULT" />
       <option name="command" value="run --package jira-cli --bin jira-cli" />
@@ -124,7 +100,8 @@
       <workItem from="1607626954672" duration="5914000" />
       <workItem from="1607686669251" duration="593000" />
       <workItem from="1607689165627" duration="22163000" />
-      <workItem from="1608045723465" duration="24913000" />
+      <workItem from="1608045723465" duration="25151000" />
+      <workItem from="1608124124738" duration="476000" />
     </task>
     <servers />
   </component>
