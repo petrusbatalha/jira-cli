@@ -1,13 +1,10 @@
-use crate::file_utilities::{json_from_file, json_to_file};
-use crate::jira_structs::REST_URI;
-use crate::jira_structs::AuthOptions;
+use crate::commons::file_utilities::{json_from_file, json_to_file};
+use crate::commons::structs::{AuthOptions, REST_URI};
 use anyhow::bail;
 use reqwest::header::CONTENT_TYPE;
 use reqwest::Client;
 use serde::Deserialize;
 use std::collections::HashMap;
-use std::collections::hash_map::RandomState;
-use serde_json::Error;
 
 const FILE_CACHE_PATH: &str = "./.jira-cli/custom_fields.json";
 const FIELD_URI: &str = "/field";
@@ -85,19 +82,17 @@ impl CustomFieldsHandler {
         match json_from_file::<CustomFieldsCache>(&FILE_CACHE_PATH).await {
             Ok(fields_result) => match fields_result {
                 Ok(fields) => Ok(fields),
-                _ => bail!("Failed to create most used fields cache: {}")
+                _ => bail!("Failed to create most used fields cache: {}"),
             },
-            Err(e) => {
-                match self.save_custom_fields(arg_options, client).await {
-                    Ok(cache) => {
-                        info!("Most used fields cache created with success.");
-                        Ok(cache)
-                    },
-                    Err(e) => {
-                        bail!("Failed to create most used fields cache: {}", e);
-                    }
+            Err(e) => match self.save_custom_fields(arg_options, client).await {
+                Ok(cache) => {
+                    info!("Most used fields cache created with success. {}", e);
+                    Ok(cache)
                 }
-            }
+                Err(e) => {
+                    bail!("Failed to create most used fields cache: {}", e);
+                }
+            },
         }
     }
 }

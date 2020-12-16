@@ -1,15 +1,16 @@
-use crate::jira_structs::{REST_URI, AuthOptions};
-use crate::traits::{Searchable};
-use crate::ProjectOps;
+use crate::commons::structs::{AuthOptions, REST_URI};
+use crate::commons::traits::Searchable;
+use crate::commons::custom_fields::CustomFieldsCache;
+use crate::{ProjectOps};
 use async_trait::async_trait;
-use core::fmt;
-use reqwest::header::CONTENT_TYPE;
-use reqwest::Client;
+use reqwest::{header::CONTENT_TYPE, Client};
 use serde::Deserialize;
-use term_table::row::Row;
-use term_table::table_cell::{Alignment, TableCell};
-use term_table::{Table, TableStyle};
-use crate::custom_fields::CustomFieldsCache;
+use std::fmt;
+use term_table::{
+    row::Row,
+    table_cell::{Alignment, TableCell},
+    Table, TableStyle,
+};
 
 static PROJECT_URI: &str = "/project";
 
@@ -69,9 +70,9 @@ impl fmt::Display for Project {
 impl Searchable<ProjectOps, Result<(), ()>> for ProjectHandler {
     async fn list(
         &self,
-        options: &ProjectOps,
+        _options: &ProjectOps,
         auth_options: &AuthOptions,
-        custom_fields_cache: &CustomFieldsCache,
+        _custom_fields_cache: &CustomFieldsCache,
         client: &Client,
     ) -> Result<(), ()> {
         let uri = format!("{}{}{}", &auth_options.host, &REST_URI, &PROJECT_URI);

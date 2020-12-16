@@ -14,9 +14,17 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="54f75dd0-d2b5-4f5c-bfda-06307fd1452d" name="Default Changelist" comment="">
+      <change afterPath="$PROJECT_DIR$/src/commons/mod.rs" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/src/issues/mod.rs" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/custom_fields.rs" beforeDir="false" afterPath="$PROJECT_DIR$/src/custom_fields.rs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/stories.rs" beforeDir="false" afterPath="$PROJECT_DIR$/src/stories.rs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/custom_fields.rs" beforeDir="false" afterPath="$PROJECT_DIR$/src/commons/custom_fields.rs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/epic.rs" beforeDir="false" afterPath="$PROJECT_DIR$/src/issues/epic.rs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/file_utilities.rs" beforeDir="false" afterPath="$PROJECT_DIR$/src/commons/file_utilities.rs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/jira_structs.rs" beforeDir="false" afterPath="$PROJECT_DIR$/src/commons/structs.rs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/main.rs" beforeDir="false" afterPath="$PROJECT_DIR$/src/main.rs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/project.rs" beforeDir="false" afterPath="$PROJECT_DIR$/src/issues/project.rs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/stories.rs" beforeDir="false" afterPath="$PROJECT_DIR$/src/issues/stories.rs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/traits.rs" beforeDir="false" afterPath="$PROJECT_DIR$/src/commons/traits.rs" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -61,7 +69,16 @@
     <property name="last_opened_file_path" value="$PROJECT_DIR$" />
     <property name="nodejs_package_manager_path" value="npm" />
     <property name="org.rust.cargo.project.model.PROJECT_DISCOVERY" value="true" />
+    <property name="org.rust.disableDetachedFileInspection/Users/petrusbatalha/jira-cli/src/issues/project.rs" value="true" />
     <property name="org.rust.disableDetachedFileInspection/Users/petrusbatalha/jira-cli/src/mod.rs" value="true" />
+  </component>
+  <component name="RecentsManager">
+    <key name="MoveFile.RECENT_KEYS">
+      <recent name="$PROJECT_DIR$/src/commons" />
+      <recent name="$PROJECT_DIR$/src" />
+      <recent name="$PROJECT_DIR$/src/utils" />
+      <recent name="$PROJECT_DIR$/src/issues" />
+    </key>
   </component>
   <component name="RunManager" selected="Cargo.All Tests">
     <configuration default="true" type="ArquillianJUnit" factoryName="" nameIsGenerated="true">
@@ -146,10 +163,10 @@
     <option name="oldMeFiltersMigrated" value="true" />
   </component>
   <component name="WindowStateProjectService">
-    <state x="445" y="259" key="#com.intellij.fileTypes.FileTypeChooser" timestamp="1608138332609">
+    <state x="445" y="259" key="#com.intellij.fileTypes.FileTypeChooser" timestamp="1608154502252">
       <screen x="0" y="0" width="1440" height="900" />
     </state>
-    <state x="445" y="259" key="#com.intellij.fileTypes.FileTypeChooser/0.0.1440.900@0.0.1440.900" timestamp="1608138332609" />
+    <state x="445" y="259" key="#com.intellij.fileTypes.FileTypeChooser/0.0.1440.900@0.0.1440.900" timestamp="1608154502252" />
     <state x="533" y="173" key="#com.intellij.ide.util.MemberChooser" timestamp="1607539979623">
       <screen x="0" y="0" width="1440" height="900" />
     </state>

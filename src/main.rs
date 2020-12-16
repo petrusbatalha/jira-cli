@@ -6,27 +6,19 @@ extern crate log;
 #[macro_use]
 extern crate lazy_static;
 
-mod custom_fields;
-mod epic;
-mod file_utilities;
-mod jira_structs;
-mod project;
-mod stories;
-mod traits;
+mod commons;
+mod issues;
 
 extern crate base64;
 extern crate pretty_env_logger;
 
-use crate::custom_fields::{CustomFieldsHandler, CustomFieldsCache};
-use crate::epic::EpicHandler;
-use crate::project::ProjectHandler;
-use crate::stories::StoriesHandler;
-use crate::traits::{Searchable};
+use commons::{traits::Searchable,file_utilities::load_yaml, structs::AuthOptions, custom_fields::{CustomFieldsCache, CustomFieldsHandler}};
+use crate::issues::{project::ProjectHandler, epic::EpicHandler, stories::StoriesHandler};
 use reqwest::Client;
 use std::env;
 use structopt::StructOpt;
 use yaml_rust::YamlLoader;
-use crate::jira_structs::AuthOptions;
+
 
 const CONF_PATH: &str = "./.jira-cli/conf.yaml";
 
@@ -115,8 +107,8 @@ async fn main() {
     env::set_var("RUST_LOG", opts.log_level.to_ascii_uppercase());
     pretty_env_logger::init();
 
-    let conf_string = file_utilities::load_yaml(&CONF_PATH).await;
-    let conf = &YamlLoader::load_from_str(&conf_string.unwrap()).unwrap()[0];
+    let conf_string = load_yaml(&CONF_PATH).await.unwrap();
+    let conf = &YamlLoader::load_from_str(&conf_string).unwrap()[0];
     let auth_options = AuthOptions {
         host: conf["jira"]["host"].as_str().unwrap().to_owned(),
         user: Some(conf["jira"]["user"].as_str().unwrap().to_owned()),
@@ -125,12 +117,17 @@ async fn main() {
 
     let custom_fields_cache = CustomFieldsHandler
         .cache_custom_fields(&auth_options, &REST_CLIENT)
-        .await.unwrap();
+        .await
+        .unwrap();
 
     &handle_args(opts, custom_fields_cache, &auth_options).await;
 }
 
-async fn handle_args(opts: Opts, custom_fields_cache: CustomFieldsCache, auth_options: &AuthOptions) {
+async fn handle_args(
+    opts: Opts,
+    custom_fields_cache: CustomFieldsCache,
+    auth_options: &AuthOptions,
+) {
     if let Some(subcommand) = opts.commands {
         match subcommand {
             Commands::List(issue_type) => match issue_type {
@@ -140,17 +137,21 @@ async fn handle_args(opts: Opts, custom_fields_cache: CustomFieldsCache, auth_op
                         .await;
                 }
                 List::Epic(args) => {
-                    &EpicHandler.list(&args,auth_options,  &custom_fields_cache, &REST_CLIENT).await;
+                    &EpicHandler
+                        .list(&args, auth_options, &custom_fields_cache, &REST_CLIENT)
+                        .await;
                 }
                 List::Project(args) => {
                     &ProjectHandler
-                        .list(&args, auth_options, &custom_fields_cache,  &REST_CLIENT)
+                        .list(&args, auth_options, &custom_fields_cache, &REST_CLIENT)
                         .await;
                 }
             },
             Commands::Add(issue_type) => match issue_type {
                 Add::Story(args) => {
-                    &StoriesHandler.create_story(args,  auth_options,  &custom_fields_cache).await;
+                    &StoriesHandler
+                        .create_story(args, auth_options, &custom_fields_cache)
+                        .await;
                 }
             },
         }

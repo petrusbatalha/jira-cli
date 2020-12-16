@@ -1,21 +1,21 @@
-use crate::custom_fields::{CustomFieldsCache};
-use crate::file_utilities::load_yaml;
-use crate::jira_structs::{Issue, IssueType, Project, JQL, REST_URI, AuthOptions};
-use crate::traits::{Searchable};
+use crate::commons::{
+    file_utilities::load_yaml,
+    structs::{AuthOptions, Issue, IssueType, Project, JQL, REST_URI},
+    traits::Searchable,
+};
+use crate::commons::custom_fields::CustomFieldsCache;
 use crate::{StoryListOps, StoryOps};
 use async_trait::async_trait;
 use json_patch::merge;
-use reqwest::header::CONTENT_TYPE;
-use reqwest::Client;
-use serde::{Deserialize, Serialize};
-use serde_json::Value;
-use serde_json::{json, Map};
-use serde_yaml;
-use std::collections::HashMap;
-use std::default::default;
-use term_table::row::Row;
-use term_table::table_cell::{Alignment, TableCell};
-use term_table::{Table, TableStyle};
+use reqwest::{header::CONTENT_TYPE, Client};
+use serde::{Serialize, Deserialize};
+use serde_json::{json, Map, Value};
+use std::{collections::HashMap, default::default};
+use term_table::{
+    row::Row,
+    table_cell::{Alignment, TableCell},
+    Table, TableStyle,
+};
 
 pub struct StoriesHandler;
 
@@ -126,7 +126,12 @@ fn build_table_header_row() -> Row<'static> {
 }
 
 impl StoriesHandler {
-    pub async fn create_story(&self, mut args: StoryOps,  auth_options: &AuthOptions, custom_field_cache: &CustomFieldsCache,) {
+    pub async fn create_story(
+        &self,
+        mut args: StoryOps,
+        _auth_options: &AuthOptions,
+        custom_field_cache: &CustomFieldsCache,
+    ) {
         let story_template: Story = match load_yaml(
             &args
                 .template_path

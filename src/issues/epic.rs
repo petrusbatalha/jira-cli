@@ -1,15 +1,16 @@
-use crate::jira_structs::{Issue, Project, JQL, REST_URI, AuthOptions};
-use crate::traits::{Searchable};
+use crate::commons::structs::{AuthOptions, Issue, Project, JQL, REST_URI};
+use crate::commons::traits::Searchable;
+use crate::commons::custom_fields::CustomFieldsCache;
 use crate::EpicOps;
 use async_trait::async_trait;
-use reqwest::header::CONTENT_TYPE;
-use reqwest::Client;
+use reqwest::{header::CONTENT_TYPE, Client};
 use serde::Deserialize;
-use term_table::row::Row;
-use term_table::table_cell::{Alignment, TableCell};
-use term_table::{Table, TableStyle};
+use term_table::{
+    row::Row,
+    table_cell::{Alignment, TableCell},
+    Table, TableStyle,
+};
 use url::Url;
-use crate::custom_fields::CustomFieldsCache;
 
 pub struct EpicHandler;
 
@@ -27,7 +28,7 @@ impl Searchable<EpicOps, Result<(), anyhow::Error>> for EpicHandler {
         &self,
         options: &EpicOps,
         auth_options: &AuthOptions,
-        custom_fields_cache: &CustomFieldsCache,
+        _custom_fields_cache: &CustomFieldsCache,
         client: &Client,
     ) -> Result<(), anyhow::Error> {
         let uri = format!("{}{}", &auth_options.host, &REST_URI);
