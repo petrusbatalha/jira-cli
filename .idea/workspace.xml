@@ -14,8 +14,11 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="54f75dd0-d2b5-4f5c-bfda-06307fd1452d" name="Default Changelist" comment="">
+      <change afterPath="$PROJECT_DIR$/src/commons/req_builder.rs" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.jira-cli/custom_fields.json" beforeDir="false" />
       <change beforePath="$PROJECT_DIR$/src/commons/custom_fields.rs" beforeDir="false" afterPath="$PROJECT_DIR$/src/commons/custom_fields.rs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/commons/mod.rs" beforeDir="false" afterPath="$PROJECT_DIR$/src/commons/mod.rs" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/commons/traits.rs" beforeDir="false" afterPath="$PROJECT_DIR$/src/commons/traits.rs" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/issues/epic.rs" beforeDir="false" afterPath="$PROJECT_DIR$/src/issues/epic.rs" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/issues/project.rs" beforeDir="false" afterPath="$PROJECT_DIR$/src/issues/project.rs" afterDir="false" />
@@ -200,10 +203,10 @@
       <screen x="0" y="0" width="1440" height="900" />
     </state>
     <state x="385" y="210" key="run.anything.popup/0.0.1440.900@0.0.1440.900" timestamp="1608150845487" />
-    <state x="357" y="196" width="725" height="676" key="search.everywhere.popup" timestamp="1608153834570">
+    <state x="357" y="196" width="725" height="676" key="search.everywhere.popup" timestamp="1608202913258">
       <screen x="0" y="0" width="1440" height="900" />
     </state>
-    <state x="357" y="196" width="725" height="676" key="search.everywhere.popup/0.0.1440.900@0.0.1440.900" timestamp="1608153834570" />
+    <state x="357" y="196" width="725" height="676" key="search.everywhere.popup/0.0.1440.900@0.0.1440.900" timestamp="1608202913258" />
     <state x="357" y="214" width="725" height="659" key="search.everywhere.popup/0.23.1440.877@0.23.1440.877" timestamp="1608052921941" />
   </component>
 </project>

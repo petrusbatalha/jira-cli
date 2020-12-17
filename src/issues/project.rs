@@ -11,6 +11,8 @@ use term_table::{
     table_cell::{Alignment, TableCell},
     Table, TableStyle,
 };
+use reqwest::Url;
+use crate::commons::req_builder::build_req;
 
 static PROJECT_URI: &str = "/project";
 
@@ -73,25 +75,20 @@ impl Searchable<ProjectOps> for ProjectHandler {
         _options: &ProjectOps,
         auth_options: &AuthOptions,
         _custom_fields_cache: &CustomFieldsCache,
-        client: &Client,
     ) {
-        let uri = format!("{}{}{}", &auth_options.host, &REST_URI, &PROJECT_URI);
+        let url =
+            Url::parse(&format!("{}{}{}", &auth_options.host, &REST_URI, &PROJECT_URI)).unwrap();
 
-        let projects = client
-            .get(&uri)
-            .basic_auth(
-                &auth_options.user.as_ref().unwrap(),
-                auth_options.clone().pass,
-            )
-            .header(CONTENT_TYPE, "application/json")
+        debug!("Listing projects... will call uri: {}", url.clone());
+
+        let projects =
+            build_req(url, auth_options)
             .send()
             .await
             .unwrap()
             .json::<Vec<Project>>()
             .await
             .unwrap();
-
-        debug!("Listing projects... called uri: {}", uri);
 
         let mut table = Table::new();
         table.max_column_width = 40;

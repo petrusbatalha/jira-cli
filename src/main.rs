@@ -93,11 +93,7 @@ pub struct StoryOps {
 #[derive(StructOpt, Debug)]
 pub struct StoryListOps {
     #[structopt(long = "epic", short = "e", help = "Epic to list stories for.")]
-    epic: Option<String>,
-}
-
-lazy_static! {
-    static ref REST_CLIENT: Client = reqwest::Client::new();
+    epic: String,
 }
 
 #[tokio::main]
@@ -116,7 +112,7 @@ async fn main() {
     };
 
     let custom_fields_cache = CustomFieldsHandler
-        .cache_custom_fields(&auth_options, &REST_CLIENT)
+        .cache_custom_fields(&auth_options)
         .await
         .unwrap();
 
@@ -133,17 +129,17 @@ async fn handle_args(
             Commands::List(issue_type) => match issue_type {
                 List::Story(args) => {
                     StoriesHandler
-                        .list(&args, auth_options, &custom_fields_cache, &REST_CLIENT)
+                        .list(&args, auth_options, &custom_fields_cache,)
                         .await;
                 }
                 List::Epic(args) => {
                     EpicHandler
-                        .list(&args, auth_options, &custom_fields_cache, &REST_CLIENT)
+                        .list(&args, auth_options, &custom_fields_cache, )
                         .await;
                 }
                 List::Project(args) => {
                     ProjectHandler
-                        .list(&args, auth_options, &custom_fields_cache, &REST_CLIENT)
+                        .list(&args, auth_options, &custom_fields_cache, )
                         .await;
                 }
             },

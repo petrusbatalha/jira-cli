@@ -16,6 +16,8 @@ use term_table::{
     table_cell::{Alignment, TableCell},
     Table, TableStyle,
 };
+use reqwest::Url;
+use crate::commons::req_builder::build_req;
 
 pub struct StoriesHandler;
 
@@ -62,7 +64,6 @@ impl Searchable<StoryListOps> for StoriesHandler {
         options: &StoryListOps,
         auth_options: &AuthOptions,
         custom_fields_cache: &CustomFieldsCache,
-        client: &Client,
     ) {
         let uri = format!("{}{}", &auth_options.host, &REST_URI);
 
@@ -72,18 +73,14 @@ impl Searchable<StoryListOps> for StoriesHandler {
             &JQL,
             &custom_fields_cache.get("Epic Link").unwrap()[0],
             "=",
-            &options.epic.clone().unwrap()
+            &options.epic.clone()
         );
 
-        debug!("Epic Request {}", epic_uri);
+        let url = Url::parse(&epic_uri).unwrap();
 
-        let stories = client
-            .get(&epic_uri)
-            .basic_auth(
-                &auth_options.user.as_ref().unwrap(),
-                auth_options.clone().pass,
-            )
-            .header(CONTENT_TYPE, "application/json")
+        debug!("Epic Request {}", url);
+
+        let stories = build_req(url, auth_options)
             .send()
             .await
             .unwrap()
@@ -161,7 +158,6 @@ impl StoriesHandler {
             let mut map: Map<String, Value> = Map::new();
             for field_map in story_template.custom_fields.unwrap() {
                 for (field_key, field_value) in field_map {
-                    println!("{:?}", fields_cache.clone().get(&*field_key));
                     let custom_field_key = fields_cache.get(&*field_key).unwrap()[0].clone();
                     let custom_field_name = custom_field_key
                         .clone()

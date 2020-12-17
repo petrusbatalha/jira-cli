@@ -11,6 +11,5 @@ pub trait Searchable<O> {
         options: &O,
         fixed_options: &AuthOptions,
         custom_fields_cache: &CustomFieldsCache,
-        client: &Client,
     );
 }
