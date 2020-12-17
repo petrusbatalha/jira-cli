@@ -10,12 +10,16 @@ mod issues;
 extern crate base64;
 extern crate pretty_env_logger;
 
-use commons::{traits::Searchable,file_utilities::load_yaml, structs::AuthOptions, custom_fields::{CustomFieldsCache, CustomFieldsHandler}};
-use crate::issues::{project::ProjectHandler, epic::EpicHandler, stories::StoriesHandler};
+use crate::issues::{epic::EpicHandler, project::ProjectHandler, stories::StoriesHandler};
+use commons::{
+    custom_fields::{CustomFieldsCache, CustomFieldsHandler},
+    file_utilities::load_yaml,
+    structs::AuthOptions,
+    traits::Searchable,
+};
 use std::env;
 use structopt::StructOpt;
 use yaml_rust::YamlLoader;
-
 
 const CONF_PATH: &str = "./.jira-cli/conf.yaml";
 
@@ -91,6 +95,12 @@ pub struct StoryOps {
 pub struct StoryListOps {
     #[structopt(long = "epic", short = "e", help = "Epic to list stories for.")]
     epic: String,
+    #[structopt(
+        long = "project",
+        short = "p",
+        help = "Project wich contain the epics."
+    )]
+    project: String,
 }
 
 #[tokio::main]
@@ -108,43 +118,26 @@ async fn main() {
         pass: Some(conf["jira"]["pass"].as_str().unwrap().to_owned()),
     };
 
-    let custom_fields_cache = CustomFieldsHandler
-        .cache_custom_fields(&auth_options)
-        .await
-        .unwrap();
-
-    handle_args(opts, custom_fields_cache, &auth_options).await;
+    handle_args(opts, &auth_options).await;
 }
 
-async fn handle_args(
-    opts: Opts,
-    custom_fields_cache: CustomFieldsCache,
-    auth_options: &AuthOptions,
-) {
+async fn handle_args(opts: Opts, auth_options: &AuthOptions) {
     if let Some(subcommand) = opts.commands {
         match subcommand {
             Commands::List(issue_type) => match issue_type {
                 List::Story(args) => {
-                    StoriesHandler
-                        .list(&args, auth_options, &custom_fields_cache,)
-                        .await;
+                    StoriesHandler.list(&args, auth_options).await;
                 }
                 List::Epic(args) => {
-                    EpicHandler
-                        .list(&args, auth_options, &custom_fields_cache, )
-                        .await;
+                    EpicHandler.list(&args, auth_options).await;
                 }
                 List::Project(args) => {
-                    ProjectHandler
-                        .list(&args, auth_options, &custom_fields_cache, )
-                        .await;
+                    ProjectHandler.list(&args, auth_options).await;
                 }
             },
             Commands::Add(issue_type) => match issue_type {
                 Add::Story(args) => {
-                    StoriesHandler
-                        .create_story(args, auth_options, &custom_fields_cache)
-                        .await;
+                    StoriesHandler.create_story(args, auth_options).await;
                 }
             },
         }

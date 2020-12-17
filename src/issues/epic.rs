@@ -1,16 +1,16 @@
-use crate::commons::structs::{AuthOptions, Issue, Project, JQL, REST_URI};
-use crate::commons::traits::Searchable;
-use crate::commons::req_builder::build_req;
 use crate::commons::custom_fields::CustomFieldsCache;
+use crate::commons::req_builder::build_req;
+use crate::commons::structs::{AuthOptions, Issue, ProjectKey, JQL, REST_URI};
+use crate::commons::traits::Searchable;
 use crate::EpicOps;
 use async_trait::async_trait;
+use reqwest::Url;
 use serde::Deserialize;
 use term_table::{
     row::Row,
     table_cell::{Alignment, TableCell},
     Table, TableStyle,
 };
-use reqwest::Url;
 
 pub struct EpicHandler;
 
@@ -24,14 +24,9 @@ pub struct Epic {
 
 #[async_trait]
 impl Searchable<EpicOps> for EpicHandler {
-    async fn list(
-        &self,
-        options: &EpicOps,
-        auth_options: &AuthOptions,
-        _custom_fields_cache: &CustomFieldsCache,
-    ) {
+    async fn list(&self, options: &EpicOps, auth_options: &AuthOptions) {
         let uri = format!("{}{}", &auth_options.host, &REST_URI);
-        let project = Project::new(options.project_key.clone());
+        let project = ProjectKey::new(options.project_key.clone());
         let jql_query = format!(
             "{}{}{}{}{}",
             &uri, &JQL, "PROJECT=", project.key, " AND issuetype=Epic&fields=summary,description"

@@ -1,13 +1,15 @@
+use crate::commons::custom_fields::{CustomFieldsCache, CustomFieldsHandler};
+use crate::commons::req_builder::build_req;
 use crate::commons::{
     file_utilities::load_yaml,
-    structs::{AuthOptions, Issue, IssueType, Project, JQL, REST_URI},
+    structs::{AuthOptions, Issue, IssueType, ProjectKey, JQL, REST_URI},
     traits::Searchable,
 };
-use crate::commons::custom_fields::CustomFieldsCache;
 use crate::{StoryListOps, StoryOps};
 use async_trait::async_trait;
 use json_patch::merge;
-use serde::{Serialize, Deserialize};
+use reqwest::Url;
+use serde::{Deserialize, Serialize};
 use serde_json::{json, Map, Value};
 use std::{collections::HashMap, default::default};
 use term_table::{
@@ -15,14 +17,12 @@ use term_table::{
     table_cell::{Alignment, TableCell},
     Table, TableStyle,
 };
-use reqwest::Url;
-use crate::commons::req_builder::build_req;
 
 pub struct StoriesHandler;
 
 #[derive(Debug, Clone, Deserialize, Serialize)]
 pub struct Story {
-    pub project: Option<Project>,
+    pub project: Option<ProjectKey>,
     pub summary: Option<String>,
     pub description: Option<String>,
     pub issuetype: Option<IssueType>,
@@ -38,6 +38,7 @@ impl Default for Story {
             description: None,
             issuetype: Some(IssueType {
                 name: "Story".to_string(),
+                fields: None,
             }),
             labels: None,
             custom_fields: None,
@@ -53,24 +54,27 @@ pub struct Stories {
     #[serde(rename = "maxResults")]
     pub max_result: Option<i32>,
     pub total: Option<i32>,
-    pub issues: Vec<Issue>,
+    pub issues: Option<Vec<Issue>>,
 }
 
 #[async_trait]
 impl Searchable<StoryListOps> for StoriesHandler {
-    async fn list(
-        &self,
-        options: &StoryListOps,
-        auth_options: &AuthOptions,
-        custom_fields_cache: &CustomFieldsCache,
-    ) {
+    async fn list(&self, options: &StoryListOps, auth_options: &AuthOptions) {
         let uri = format!("{}{}", &auth_options.host, &REST_URI);
+
+        let epic_link_custom_field = CustomFieldsHandler
+            .get_or_cache(auth_options, &options.project)
+            .await
+            .unwrap();
+
+        let epic_link = epic_link_custom_field.get("Epic Link").unwrap();
+        let epic_field = format!("cf[{}]", epic_link.replace("customfield_", ""));
 
         let epic_uri = format!(
             "{}{}{}{}{}",
             &uri,
             &JQL,
-            &custom_fields_cache.get("Epic Link").unwrap()[0],
+            &epic_field,
             "=",
             &options.epic.clone()
         );
@@ -93,8 +97,8 @@ impl Searchable<StoryListOps> for StoriesHandler {
 
         table.add_row(build_table_header_row());
 
-        for issue in stories.issues {
-            table.add_row(build_table_body(issue));
+        for issue in stories.issues.unwrap() {
+                table.add_row(build_table_body(issue));
         }
 
         println!("{}", table.render());
@@ -120,12 +124,7 @@ fn build_table_header_row() -> Row<'static> {
 }
 
 impl StoriesHandler {
-    pub async fn create_story(
-        &self,
-        mut args: StoryOps,
-        _auth_options: &AuthOptions,
-        custom_field_cache: &CustomFieldsCache,
-    ) {
+    pub async fn create_story(&self, mut args: StoryOps, auth_options: &AuthOptions) {
         let story_template: Story = match load_yaml(
             &args
                 .template_path
@@ -133,14 +132,12 @@ impl StoriesHandler {
         )
         .await
         {
-            Ok(yaml) => {
-                serde_yaml::from_str(&yaml).unwrap()
-            }
+            Ok(yaml) => serde_yaml::from_str(&yaml).unwrap(),
             Err(_) => Story { ..default() },
         };
 
         let project = match args.project {
-            Some(key) => Project::new(key),
+            Some(key) => ProjectKey::new(key),
             None => story_template.project.unwrap(),
         };
 
@@ -151,19 +148,20 @@ impl StoriesHandler {
                 "labels": args.labels.or(story_template.labels),
         });
 
-        let fields_cache = custom_field_cache.clone();
+        let fields_cache = CustomFieldsHandler
+            .get_or_cache(auth_options, &project.key)
+            .await
+            .unwrap();
 
         let json: Option<Map<String, Value>> = if story_template.custom_fields.is_some() {
             let mut map: Map<String, Value> = Map::new();
             for field_map in story_template.custom_fields.unwrap() {
                 for (field_key, field_value) in field_map {
-                    let custom_field_key = fields_cache.get(&*field_key).unwrap()[0].clone();
-                    let custom_field_name = custom_field_key
-                        .clone()
-                        .replace("[", "")
-                        .replace("]", "")
-                        .replace("cf", "customfield_");
-                    map.insert(custom_field_name, json!(field_value.clone()));
+                    let custom_field_key = fields_cache.get(&*field_key).unwrap().clone();
+                    map.insert(
+                        custom_field_key.clone(),
+                        json!(field_value.clone()),
+                    );
                 }
             }
             Some(map)

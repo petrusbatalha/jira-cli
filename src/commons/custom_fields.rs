@@ -1,26 +1,34 @@
 use crate::commons::file_utilities::{json_from_file, json_to_file};
-use crate::commons::structs::{AuthOptions, REST_URI};
+use crate::commons::req_builder::build_req;
+use crate::commons::structs::{AuthOptions, ProjectKey, REST_URI};
+use crate::issues::project::Project;
 use anyhow::bail;
 use serde::Deserialize;
+use serde_json::Value;
 use std::collections::HashMap;
-use crate::commons::req_builder::build_req;
 use url::Url;
 
 const FILE_CACHE_PATH: &str = "./.jira-cli/custom_fields";
-const FIELD_URI: &str = "/field";
+const SEARCH_URI: &str = "/issue/createmeta?";
 
-pub type CustomFieldsCache = HashMap<String, Vec<String>>;
+pub type CustomFieldsCache = HashMap<String, String>;
 
 pub struct CustomFieldsHandler;
+
+#[derive(Debug, Clone, Deserialize)]
+struct ProjectCustomFields {
+    expand: String,
+    projects: Vec<Project>,
+}
 
 #[derive(Debug, Clone, Deserialize)]
 pub struct CustomFields {
     id: String,
     name: String,
-    custom: bool,
-    orderable: bool,
-    navigable: bool,
-    searchable: bool,
+    custom: Option<bool>,
+    orderable: Option<bool>,
+    navigable: Option<bool>,
+    searchable: Option<bool>,
     #[serde(rename = "clauseNames")]
     clause_names: Vec<String>,
     schema: Option<Schema>,
@@ -40,29 +48,41 @@ impl CustomFieldsHandler {
     async fn save_custom_fields(
         &self,
         auth_options: &AuthOptions,
+        project: &str,
+        cache_path: String,
     ) -> Result<CustomFieldsCache, anyhow::Error> {
-        let url =
-            Url::parse(&format!("{}{}{}", &auth_options.host, &REST_URI, FIELD_URI)).unwrap();
+        let url = Url::parse(&format!(
+            "{}{}{}projectKeys={}&expand=projects.issuetypes.fields",
+            &auth_options.host, &REST_URI, &SEARCH_URI, project,
+        ))
+        .unwrap();
 
         let fields = build_req(url, auth_options)
             .send()
             .await
             .unwrap()
-            .json::<Vec<CustomFields>>()
+            .json::<ProjectCustomFields>()
             .await
             .unwrap();
 
-        let len = fields.len();
+        let fields = fields.projects[0].clone().issuetypes[0]
+            .clone()
+            .fields
+            .unwrap()
+            .unmapped_fields;
 
-        let mut custom_fields_map: CustomFieldsCache = HashMap::with_capacity(len);
+        let mut custom_fields_map: HashMap<String, String> = HashMap::new();
 
-        for field in fields.clone() {
-            custom_fields_map.insert(field.name, field.clause_names);
+        for (key, value) in fields {
+            if key.contains("customfield") {
+                let new_key = value.get("name").unwrap().as_str().unwrap();
+                custom_fields_map.insert(new_key.to_string(), key);
+            }
         }
 
-        match json_to_file::<&CustomFieldsCache>(&custom_fields_map, &FILE_CACHE_PATH).await {
+        match json_to_file::<&CustomFieldsCache>(&custom_fields_map, &cache_path).await {
             Ok(()) => {
-                debug!("Custom Fields Cache File created at {}", &FILE_CACHE_PATH);
+                debug!("Custom Fields Cache File created at {}", &cache_path);
             }
             Err(e) => {
                 bail!("Failed to create Custom Field File Cache {}", e);
@@ -71,16 +91,21 @@ impl CustomFieldsHandler {
         Ok(custom_fields_map)
     }
 
-    pub async fn cache_custom_fields(
+    pub async fn get_or_cache(
         &self,
         auth_options: &AuthOptions,
+        project: &str,
     ) -> Result<CustomFieldsCache, anyhow::Error> {
-        match json_from_file::<CustomFieldsCache>(&FILE_CACHE_PATH).await {
+        let cache_path = format!("{}_{}.json", &FILE_CACHE_PATH, &project);
+        match json_from_file::<CustomFieldsCache>(&cache_path).await {
             Ok(fields_result) => match fields_result {
                 Ok(fields) => Ok(fields),
                 _ => bail!("Failed to create most used fields cache: {}"),
             },
-            Err(e) => match self.save_custom_fields(auth_options).await {
+            Err(e) => match self
+                .save_custom_fields(auth_options, project, cache_path.clone())
+                .await
+            {
                 Ok(cache) => {
                     info!("Most used fields cache created with success. {}", e);
                     Ok(cache)

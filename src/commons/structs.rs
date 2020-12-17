@@ -1,5 +1,6 @@
 use serde::{Deserialize, Serialize};
 use serde_json::Value;
+use std::collections::HashMap;
 
 pub static REST_URI: &str = "/rest/api/2";
 pub static JQL: &str = "/search?jql=";
@@ -38,19 +39,26 @@ pub struct Fields {
 }
 
 #[derive(Debug, Clone, Serialize, Deserialize)]
-pub struct Project {
+pub struct FieldsType {
+    #[serde(flatten)]
+    pub unmapped_fields: HashMap<String, Value>,
+}
+
+#[derive(Debug, Clone, Serialize, Deserialize)]
+pub struct ProjectKey {
     pub key: String,
 }
 
-impl Project {
-    pub fn new(key: String) -> Project {
-        Project { key }
+impl ProjectKey {
+    pub fn new(key: String) -> ProjectKey {
+        ProjectKey { key }
     }
 }
 
 #[derive(Debug, Clone, Serialize, Deserialize)]
 pub struct IssueType {
     pub name: String,
+    pub fields: Option<FieldsType>,
 }
 
 #[derive(Debug, Clone, Serialize)]

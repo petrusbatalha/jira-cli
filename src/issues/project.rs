@@ -1,8 +1,10 @@
-use crate::commons::structs::{AuthOptions, REST_URI};
-use crate::commons::traits::Searchable;
 use crate::commons::custom_fields::CustomFieldsCache;
-use crate::{ProjectOps};
+use crate::commons::req_builder::build_req;
+use crate::commons::structs::{AuthOptions, IssueType, REST_URI};
+use crate::commons::traits::Searchable;
+use crate::ProjectOps;
 use async_trait::async_trait;
+use reqwest::Url;
 use serde::Deserialize;
 use std::fmt;
 use term_table::{
@@ -10,8 +12,6 @@ use term_table::{
     table_cell::{Alignment, TableCell},
     Table, TableStyle,
 };
-use reqwest::Url;
-use crate::commons::req_builder::build_req;
 
 static PROJECT_URI: &str = "/project";
 
@@ -25,7 +25,7 @@ pub struct ProjectDisplay {
 }
 
 #[derive(Debug, Clone, Deserialize)]
-struct AvatarUrls {
+pub struct AvatarUrls {
     #[serde(rename = "16x16")]
     sixteen_url: String,
     #[serde(rename = "24x24")]
@@ -37,7 +37,7 @@ struct AvatarUrls {
 }
 
 #[derive(Debug, Clone, Deserialize)]
-struct ProjectCategory {
+pub struct ProjectCategory {
     #[serde(rename = "self")]
     project_category: String,
     id: String,
@@ -46,19 +46,20 @@ struct ProjectCategory {
 }
 
 #[derive(Debug, Clone, Deserialize)]
-struct Project {
-    expand: String,
+pub struct Project {
+    pub expand: String,
     #[serde(rename = "self")]
-    project_url: String,
-    id: String,
-    key: String,
-    name: String,
+    pub project_url: String,
+    pub id: String,
+    pub key: String,
+    pub name: String,
     #[serde(rename = "avatarUrls")]
-    avatar_urls: AvatarUrls,
+    pub avatar_urls: AvatarUrls,
     #[serde(rename = "projectCategory")]
-    project_category: ProjectCategory,
+    pub project_category: Option<ProjectCategory>,
     #[serde(rename = "projectTypeKey")]
-    project_type_key: String,
+    pub project_type_key: Option<String>,
+    pub issuetypes: Vec<IssueType>,
 }
 
 impl fmt::Display for Project {
@@ -69,19 +70,16 @@ impl fmt::Display for Project {
 
 #[async_trait]
 impl Searchable<ProjectOps> for ProjectHandler {
-    async fn list(
-        &self,
-        _options: &ProjectOps,
-        auth_options: &AuthOptions,
-        _custom_fields_cache: &CustomFieldsCache,
-    ) {
-        let url =
-            Url::parse(&format!("{}{}{}", &auth_options.host, &REST_URI, &PROJECT_URI)).unwrap();
+    async fn list(&self, _options: &ProjectOps, auth_options: &AuthOptions) {
+        let url = Url::parse(&format!(
+            "{}{}{}",
+            &auth_options.host, &REST_URI, &PROJECT_URI
+        ))
+        .unwrap();
 
         debug!("Listing projects... will call uri: {}", url.clone());
 
-        let projects =
-            build_req(url, auth_options)
+        let projects = build_req(url, auth_options)
             .send()
             .await
             .unwrap()
