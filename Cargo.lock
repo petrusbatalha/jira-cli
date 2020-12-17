@@ -433,7 +433,6 @@ dependencies = [
  "async-trait",
  "base64",
  "json-patch",
- "lazy_static",
  "log",
  "pretty_env_logger",
  "reqwest",

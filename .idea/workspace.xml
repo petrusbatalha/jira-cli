@@ -14,11 +14,11 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="54f75dd0-d2b5-4f5c-bfda-06307fd1452d" name="Default Changelist" comment="">
-      <change afterPath="$PROJECT_DIR$/src/commons/req_builder.rs" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.jira-cli/custom_fields.json" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/Cargo.lock" beforeDir="false" afterPath="$PROJECT_DIR$/Cargo.lock" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/Cargo.toml" beforeDir="false" afterPath="$PROJECT_DIR$/Cargo.toml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/commons/custom_fields.rs" beforeDir="false" afterPath="$PROJECT_DIR$/src/commons/custom_fields.rs" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/src/commons/mod.rs" beforeDir="false" afterPath="$PROJECT_DIR$/src/commons/mod.rs" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/src/commons/req_builder.rs" beforeDir="false" afterPath="$PROJECT_DIR$/src/commons/req_builder.rs" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/commons/traits.rs" beforeDir="false" afterPath="$PROJECT_DIR$/src/commons/traits.rs" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/issues/epic.rs" beforeDir="false" afterPath="$PROJECT_DIR$/src/issues/epic.rs" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/src/issues/project.rs" beforeDir="false" afterPath="$PROJECT_DIR$/src/issues/project.rs" afterDir="false" />

@@ -7,7 +7,6 @@ use crate::commons::custom_fields::CustomFieldsCache;
 use crate::{StoryListOps, StoryOps};
 use async_trait::async_trait;
 use json_patch::merge;
-use reqwest::{header::CONTENT_TYPE, Client};
 use serde::{Serialize, Deserialize};
 use serde_json::{json, Map, Value};
 use std::{collections::HashMap, default::default};

@@ -3,8 +3,6 @@
 #![feature(option_insert)]
 #[macro_use]
 extern crate log;
-#[macro_use]
-extern crate lazy_static;
 
 mod commons;
 mod issues;
@@ -14,7 +12,6 @@ extern crate pretty_env_logger;
 
 use commons::{traits::Searchable,file_utilities::load_yaml, structs::AuthOptions, custom_fields::{CustomFieldsCache, CustomFieldsHandler}};
 use crate::issues::{project::ProjectHandler, epic::EpicHandler, stories::StoriesHandler};
-use reqwest::Client;
 use std::env;
 use structopt::StructOpt;
 use yaml_rust::YamlLoader;

@@ -1,5 +1,4 @@
 use async_trait::async_trait;
-use reqwest::Client;
 use crate::commons::structs::AuthOptions;
 use crate::commons::custom_fields::CustomFieldsCache;
 

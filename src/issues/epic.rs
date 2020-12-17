@@ -4,7 +4,6 @@ use crate::commons::req_builder::build_req;
 use crate::commons::custom_fields::CustomFieldsCache;
 use crate::EpicOps;
 use async_trait::async_trait;
-use reqwest::{header::CONTENT_TYPE, Client};
 use serde::Deserialize;
 use term_table::{
     row::Row,

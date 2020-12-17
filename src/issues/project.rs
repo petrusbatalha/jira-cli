@@ -3,7 +3,6 @@ use crate::commons::traits::Searchable;
 use crate::commons::custom_fields::CustomFieldsCache;
 use crate::{ProjectOps};
 use async_trait::async_trait;
-use reqwest::{header::CONTENT_TYPE, Client};
 use serde::Deserialize;
 use std::fmt;
 use term_table::{

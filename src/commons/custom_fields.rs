@@ -1,8 +1,6 @@
 use crate::commons::file_utilities::{json_from_file, json_to_file};
 use crate::commons::structs::{AuthOptions, REST_URI};
 use anyhow::bail;
-use reqwest::header::CONTENT_TYPE;
-use reqwest::Client;
 use serde::Deserialize;
 use std::collections::HashMap;
 use crate::commons::req_builder::build_req;

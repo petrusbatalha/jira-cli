@@ -1,5 +1,5 @@
 use reqwest::header::CONTENT_TYPE;
-use reqwest::{Client, RequestBuilder};
+use reqwest::{RequestBuilder};
 use crate::commons::structs::AuthOptions;
 use reqwest::Url;
 
