@@ -1,4 +1,4 @@
-use crate::commons::custom_fields::{CustomFieldsCache, CustomFieldsHandler};
+use crate::commons::custom_fields::CustomFieldsHandler;
 use crate::commons::req_builder::build_req;
 use crate::commons::{
     file_utilities::load_yaml,

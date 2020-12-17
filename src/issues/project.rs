@@ -1,4 +1,3 @@
-use crate::commons::custom_fields::CustomFieldsCache;
 use crate::commons::req_builder::build_req;
 use crate::commons::structs::{AuthOptions, IssueType, REST_URI};
 use crate::commons::traits::Searchable;
@@ -59,7 +58,7 @@ pub struct Project {
     pub project_category: Option<ProjectCategory>,
     #[serde(rename = "projectTypeKey")]
     pub project_type_key: Option<String>,
-    pub issuetypes: Vec<IssueType>,
+    pub issuetypes: Option<Vec<IssueType>>,
 }
 
 impl fmt::Display for Project {

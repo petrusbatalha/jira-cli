@@ -1,4 +1,3 @@
-use crate::commons::custom_fields::CustomFieldsCache;
 use crate::commons::req_builder::build_req;
 use crate::commons::structs::{AuthOptions, Issue, ProjectKey, JQL, REST_URI};
 use crate::commons::traits::Searchable;

@@ -12,7 +12,6 @@ extern crate pretty_env_logger;
 
 use crate::issues::{epic::EpicHandler, project::ProjectHandler, stories::StoriesHandler};
 use commons::{
-    custom_fields::{CustomFieldsCache, CustomFieldsHandler},
     file_utilities::load_yaml,
     structs::AuthOptions,
     traits::Searchable,

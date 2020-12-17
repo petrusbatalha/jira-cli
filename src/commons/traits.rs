@@ -1,4 +1,3 @@
-use crate::commons::custom_fields::CustomFieldsCache;
 use crate::commons::structs::AuthOptions;
 use async_trait::async_trait;
 

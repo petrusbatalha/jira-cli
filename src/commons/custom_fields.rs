@@ -1,10 +1,9 @@
 use crate::commons::file_utilities::{json_from_file, json_to_file};
 use crate::commons::req_builder::build_req;
-use crate::commons::structs::{AuthOptions, ProjectKey, REST_URI};
+use crate::commons::structs::{AuthOptions, REST_URI};
 use crate::issues::project::Project;
 use anyhow::bail;
 use serde::Deserialize;
-use serde_json::Value;
 use std::collections::HashMap;
 use url::Url;
 
@@ -65,7 +64,8 @@ impl CustomFieldsHandler {
             .await
             .unwrap();
 
-        let fields = fields.projects[0].clone().issuetypes[0]
+        let fields =
+            fields.projects[0].clone().issuetypes.unwrap()[0]
             .clone()
             .fields
             .unwrap()
