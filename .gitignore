@@ -1,2 +1,4 @@
 /target
+.jira-cli
 .idea/*
+.DS_Store
