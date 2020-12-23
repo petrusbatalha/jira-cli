@@ -1,7 +1,7 @@
 use crate::commons::custom_fields::CustomFieldsHandler;
 use crate::commons::req_builder::build_req;
 use crate::commons::structs::{AuthOptions, Issue, JQL, REST_URI};
-use crate::stories::stories_structs::{StoryMeta, StoriesHandler};
+use crate::stories::stories_structs::{StoriesHandler, StoryResponse};
 use crate::StoryListOps;
 use reqwest::Url;
 use term_table::{
@@ -39,7 +39,7 @@ impl StoriesHandler {
             .send()
             .await
             .unwrap()
-            .json::<StoryMeta>()
+            .json::<StoryResponse>()
             .await
             .unwrap();
 

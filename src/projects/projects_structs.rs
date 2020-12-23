@@ -53,6 +53,12 @@ pub struct Project {
 
 impl fmt::Display for Project {
     fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
-        write!(f, "{} \t\t {} \t {} \t", &self.key.as_ref().unwrap(), &self.name.as_ref().unwrap(), &self.id.as_ref().unwrap())
+        write!(
+            f,
+            "{} \t\t {} \t {} \t",
+            &self.key.as_ref().unwrap(),
+            &self.name.as_ref().unwrap(),
+            &self.id.as_ref().unwrap()
+        )
     }
 }

@@ -2,8 +2,8 @@ use crate::commons::custom_fields::CustomFieldsHandler;
 use crate::commons::file_utilities::load_yaml;
 use crate::commons::structs::{AuthOptions, REST_URI};
 use crate::stories::command_args::StoryOps;
-use crate::stories::stories_structs::{StoriesHandler, Story, Stories};
-use anyhow::{Error, bail};
+use crate::stories::stories_structs::{Stories, StoriesHandler, StoryRequest, StoryRequestFields};
+use anyhow::{bail, Error};
 use json_patch::merge;
 use serde_json::json;
 use serde_json::Value;
@@ -19,31 +19,25 @@ impl StoriesHandler {
             .await
             .unwrap();
 
-        let story_template: Value = match &options.template_path {
-            None => json!(&Story { ..default() }),
+        let mut story_template: StoryRequest = match &options.template_path {
+            None => StoryRequest { ..default() },
             Some(path) => {
                 let template = load_yaml(&path).await.unwrap();
-                let story: Story = serde_yaml::from_str(&template).unwrap();
-                json!(story)
+                let story: StoryRequest = serde_yaml::from_str(&template).unwrap();
+                story
             }
         };
 
-       let yaml_string =
-                &load_yaml(&options.file).await.expect("Failed to load stories yaml");
+        let yaml_string = &load_yaml(&options.file)
+            .await
+            .expect("Failed to load stories yaml");
 
-        println!("Yaml String, {}", yaml_string.clone());
+        let mut stories_yaml: Stories = serde_yaml::from_str::<Stories>(yaml_string).unwrap();
 
-        let load: Stories = serde_yaml::from_str::<Stories>(yaml_string).unwrap();
+        for story in stories_yaml.issue_updates.iter_mut() {
+            *story = StoryRequestFields::new_or_template(story.clone().fields, story_template.clone());
+        }
 
-        println!("Load {:?}", load);
-
-        // merge(&mut stories, &story_template);
-
-        // println!("{:?}", stories);
-    }
-
-    fn parse_custom_fields(&self, yaml_string: String) {
-
-
+        println!("{}", json!(stories_yaml))
     }
 }
