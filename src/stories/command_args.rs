@@ -3,7 +3,7 @@ use structopt::StructOpt;
 #[derive(StructOpt, Debug)]
 pub struct StoryOps {
     #[structopt(long = "project", short = "p", help = "Project to create stories")]
-    pub project: String,
+    pub project: Option<String>,
     #[structopt(long = "epic", short = "e", help = "Epic to link stories")]
     pub epic: Option<String>,
     #[structopt(long = "summary", short = "s", help = "Story summary")]

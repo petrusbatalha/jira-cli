@@ -3,6 +3,7 @@ use crate::projects::projects_structs::Project;
 use serde::{Deserialize, Serialize};
 use std::collections::{BTreeMap, HashMap};
 use std::default::default;
+use serde_json::Value;
 
 pub struct StoriesHandler;
 
@@ -43,7 +44,7 @@ pub struct StoryRequest {
     pub story_point: Option<i8>,
     pub labels: Option<Vec<String>>,
     #[serde(flatten)]
-    pub custom_fields: Option<Vec<BTreeMap<String, String>>>,
+    pub custom_fields: Option<HashMap<String, Value>>,
 }
 
 impl StoryRequestFields {

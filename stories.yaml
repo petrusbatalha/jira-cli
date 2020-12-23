@@ -2,12 +2,8 @@ issueUpdates:
   - fields:
       summary: Flag para ligar log tecnico ou desligar o envio de logs para eventos, mantendo apenas o log no console.
       Story Point: 8
-      custom_fields:
-      - Epic Link: JC-3
-      - Team: engenhariacloud
+      cf[10014]: JC-3
   - fields:
       summary: Flag para ligar log servico canal ou desligar o envio de logs para eventos, mantendo apenas o log no console.
       Story Point: 8
-      custom_fields:
-      - Epic Link: JC-3
-      - Team: engenhariacloud
+      cf[10014]: JC-3

@@ -74,8 +74,8 @@ impl CustomFieldsHandler {
 
         for (key, value) in fields {
             if key.contains("customfield") {
-                let new_key = value.get("name").unwrap().as_str().unwrap();
-                custom_fields_map.insert(new_key.to_string(), key);
+                custom_fields_map.insert(key,value.get("name")
+                    .unwrap().as_str().unwrap().to_string());
             }
         }
 

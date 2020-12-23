@@ -1,4 +1,4 @@
-use crate::commons::custom_fields::CustomFieldsHandler;
+use crate::commons::custom_fields::{CustomFieldsHandler, CustomFieldsCache};
 use crate::commons::file_utilities::load_yaml;
 use crate::commons::structs::{AuthOptions, REST_URI};
 use crate::stories::command_args::StoryOps;
@@ -9,13 +9,14 @@ use serde_json::json;
 use serde_json::Value;
 use std::default::default;
 use tokio::macros::support::Future;
+use std::collections::HashMap;
 
 impl StoriesHandler {
     pub async fn create_story(&self, options: &StoryOps, auth_options: &AuthOptions) {
         let uri = format!("{}{}", &auth_options.host, &REST_URI);
 
         let custom_fields = CustomFieldsHandler
-            .get_or_cache(auth_options, &options.project)
+            .get_or_cache(auth_options, &options.project.as_ref().unwrap())
             .await
             .unwrap();
 
@@ -35,9 +36,9 @@ impl StoriesHandler {
         let mut stories_yaml: Stories = serde_yaml::from_str::<Stories>(yaml_string).unwrap();
 
         for story in stories_yaml.issue_updates.iter_mut() {
-            *story = StoryRequestFields::new_or_template(story.clone().fields, story_template.clone());
+            *story = StoryRequestFields::new_or_template(story.clone().fields,
+                                                         story_template.clone());
         }
-
         println!("{}", json!(stories_yaml))
     }
 }
