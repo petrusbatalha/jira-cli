@@ -6,8 +6,8 @@ use term_table::{
 use crate::projects::command_args::ProjectOps;
 use crate::commons::structs::{AuthOptions, REST_URI};
 use crate::commons::req_builder::build_req;
-use crate::projects::projects::{PROJECT_URI, Project};
-use crate::projects::projects::ProjectHandler;
+use crate::projects::projects_structs::{PROJECT_URI, Project};
+use crate::projects::projects_structs::ProjectHandler;
 use url::Url;
 
 

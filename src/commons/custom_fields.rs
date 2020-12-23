@@ -1,7 +1,7 @@
 use crate::commons::file_utilities::{json_from_file, json_to_file};
 use crate::commons::req_builder::build_req;
 use crate::commons::structs::{AuthOptions, REST_URI};
-use crate::projects::projects::Project;
+use crate::projects::projects_structs::Project;
 use anyhow::bail;
 use serde::Deserialize;
 use std::collections::HashMap;

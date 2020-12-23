@@ -3,7 +3,7 @@ use term_table::{
     table_cell::{Alignment, TableCell},
     Table, TableStyle,
 };
-use crate::epics::epics::{EpicHandler, Epic};
+use crate::epics::epics_projects::{EpicHandler, Epic};
 use crate::EpicOps;
 use crate::commons::structs::{AuthOptions, REST_URI, ProjectKey, JQL, Issue};
 use url::Url;

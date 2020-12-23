@@ -1,14 +1,14 @@
 use crate::commons::custom_fields::CustomFieldsHandler;
 use crate::commons::req_builder::build_req;
 use crate::commons::{structs::{AuthOptions, Issue, JQL, REST_URI}, };
-use crate::{StoryListOps, StoryOps};
+use crate::{StoryListOps,};
 use reqwest::Url;
 use term_table::{
     row::Row,
     table_cell::{Alignment, TableCell},
     Table, TableStyle,
 };
-use crate::stories::stories::{StoriesHandler, Stories};
+use crate::stories::stories_structs::{StoriesHandler, Stories};
 
 impl StoriesHandler {
     pub async fn list(&self, options: &StoryListOps, auth_options: &AuthOptions) {

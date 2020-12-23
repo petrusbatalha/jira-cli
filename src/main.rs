@@ -13,10 +13,10 @@ extern crate base64;
 extern crate pretty_env_logger;
 
 use stories::command_args::{StoryListOps, StoryOps};
-use crate::epics::epics::EpicHandler;
+use crate::epics::epics_projects::EpicHandler;
 use crate::epics::command_args::EpicOps;
-use crate::projects::projects::ProjectHandler;
-use crate::stories::stories::StoriesHandler;
+use crate::projects::projects_structs::ProjectHandler;
+use crate::stories::stories_structs::StoriesHandler;
 use crate::projects::command_args::ProjectOps;
 use commons::{
     file_utilities::load_yaml,
