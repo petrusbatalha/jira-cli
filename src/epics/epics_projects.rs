@@ -1,5 +1,5 @@
-use serde::Deserialize;
 use crate::commons::structs::Issue;
+use serde::Deserialize;
 
 pub struct EpicHandler;
 

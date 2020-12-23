@@ -1,25 +1,25 @@
 use crate::commons::custom_fields::CustomFieldsHandler;
 use crate::commons::req_builder::build_req;
-use crate::commons::{structs::{AuthOptions, Issue, JQL, REST_URI}, };
-use crate::{StoryListOps,};
+use crate::commons::structs::{AuthOptions, Issue, JQL, REST_URI};
+use crate::stories::stories_structs::{StoryMeta, StoriesHandler};
+use crate::StoryListOps;
 use reqwest::Url;
 use term_table::{
     row::Row,
     table_cell::{Alignment, TableCell},
     Table, TableStyle,
 };
-use crate::stories::stories_structs::{StoriesHandler, Stories};
 
 impl StoriesHandler {
     pub async fn list(&self, options: &StoryListOps, auth_options: &AuthOptions) {
         let uri = format!("{}{}", &auth_options.host, &REST_URI);
 
-        let epic_link_custom_field = CustomFieldsHandler
+        let custom_fields = CustomFieldsHandler
             .get_or_cache(auth_options, &options.project)
             .await
             .unwrap();
 
-        let epic_link = epic_link_custom_field.get("Epic Link").unwrap();
+        let epic_link = custom_fields.get("Epic Link").unwrap();
         let epic_field = format!("cf[{}]", epic_link.replace("customfield_", ""));
 
         let epic_uri = format!(
@@ -39,7 +39,7 @@ impl StoriesHandler {
             .send()
             .await
             .unwrap()
-            .json::<Stories>()
+            .json::<StoryMeta>()
             .await
             .unwrap();
 
@@ -50,7 +50,7 @@ impl StoriesHandler {
         table.add_row(build_table_header_row());
 
         for issue in stories.issues.unwrap() {
-                table.add_row(build_table_body(issue));
+            table.add_row(build_table_body(issue));
         }
 
         println!("{}", table.render());

@@ -5,24 +5,21 @@
 extern crate log;
 
 mod commons;
-mod stories;
-mod projects;
 mod epics;
+mod projects;
+mod stories;
 
 extern crate base64;
 extern crate pretty_env_logger;
 
-use stories::command_args::{StoryListOps, StoryOps};
-use crate::epics::epics_projects::EpicHandler;
 use crate::epics::command_args::EpicOps;
+use crate::epics::epics_projects::EpicHandler;
+use crate::projects::command_args::ProjectOps;
 use crate::projects::projects_structs::ProjectHandler;
 use crate::stories::stories_structs::StoriesHandler;
-use crate::projects::command_args::ProjectOps;
-use commons::{
-    file_utilities::load_yaml,
-    structs::AuthOptions,
-};
+use commons::{file_utilities::load_yaml, structs::AuthOptions};
 use std::env;
+use stories::command_args::{StoryListOps, StoryOps};
 use structopt::StructOpt;
 use yaml_rust::YamlLoader;
 

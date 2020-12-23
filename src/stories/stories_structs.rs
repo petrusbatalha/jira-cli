@@ -1,17 +1,25 @@
+use crate::commons::structs::{Issue, IssueType};
 use serde::{Deserialize, Serialize};
-use crate::commons::structs::{ProjectKey, IssueType, Issue};
-use std::collections::HashMap;
+use std::collections::{HashMap, BTreeMap};
+use crate::projects::projects_structs::Project;
 
 pub struct StoriesHandler;
 
 #[derive(Debug, Clone, Deserialize, Serialize)]
+pub struct Stories {
+    pub stories: Vec<Story>,
+}
+
+#[derive(Debug, Clone, Deserialize, Serialize)]
 pub struct Story {
-    pub project: Option<ProjectKey>,
+    pub project: Option<Project>,
     pub summary: Option<String>,
     pub description: Option<String>,
     pub issuetype: Option<IssueType>,
+    #[serde(rename = "Story Point")]
+    pub story_point: Option<i8>,
     pub labels: Option<Vec<String>>,
-    pub custom_fields: Option<Vec<HashMap<String, String>>>,
+    pub custom_fields: Option<Vec<BTreeMap<String, String>>>,
 }
 
 impl Default for Story {
@@ -19,6 +27,7 @@ impl Default for Story {
         Story {
             project: None,
             summary: None,
+            story_point: Some(0 as i8),
             description: None,
             issuetype: Some(IssueType {
                 name: "Story".to_string(),
@@ -30,8 +39,14 @@ impl Default for Story {
     }
 }
 
+#[derive(Debug, Clone, Deserialize, Serialize)]
+pub struct CustomField {
+    name: Option<String>,
+    value: Option<String>,
+}
+
 #[derive(Debug, Clone, Deserialize)]
-pub struct Stories {
+pub struct StoryMeta {
     pub expand: Option<String>,
     #[serde(rename = "startAt")]
     pub start_at: Option<i32>,

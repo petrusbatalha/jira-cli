@@ -1,13 +1,13 @@
+use crate::commons::req_builder::build_req;
+use crate::commons::structs::{AuthOptions, Issue, JQL, REST_URI};
+use crate::epics::epics_projects::{Epic, EpicHandler};
+use crate::EpicOps;
 use term_table::{
     row::Row,
     table_cell::{Alignment, TableCell},
     Table, TableStyle,
 };
-use crate::epics::epics_projects::{EpicHandler, Epic};
-use crate::EpicOps;
-use crate::commons::structs::{AuthOptions, REST_URI, ProjectKey, JQL, Issue};
 use url::Url;
-use crate::commons::req_builder::build_req;
 
 // Query para listar epicos no jira.
 // https://jira.bradesco.com.br:8443/rest/api/2/search?jql=PROJECT=ESTRT AND issuetype="Epic"&fields=summary
@@ -15,10 +15,10 @@ use crate::commons::req_builder::build_req;
 impl EpicHandler {
     pub async fn list(&self, options: &EpicOps, auth_options: &AuthOptions) {
         let uri = format!("{}{}", &auth_options.host, &REST_URI);
-        let project = ProjectKey::new(options.project_key.clone());
+        let project = options.project_key.clone();
         let jql_query = format!(
             "{}{}{}{}{}",
-            &uri, &JQL, "PROJECT=", project.key, " AND issuetype=Epic&fields=summary,description"
+            &uri, &JQL, "PROJECT=", project, " AND issuetype=Epic&fields=summary,description"
         );
         let url = Url::parse(&jql_query).unwrap();
 

@@ -1,16 +1,14 @@
+use crate::commons::req_builder::build_req;
+use crate::commons::structs::{AuthOptions, REST_URI};
+use crate::projects::command_args::ProjectOps;
+use crate::projects::projects_structs::ProjectHandler;
+use crate::projects::projects_structs::{Project, PROJECT_URI};
 use term_table::{
     row::Row,
     table_cell::{Alignment, TableCell},
     Table, TableStyle,
 };
-use crate::projects::command_args::ProjectOps;
-use crate::commons::structs::{AuthOptions, REST_URI};
-use crate::commons::req_builder::build_req;
-use crate::projects::projects_structs::{PROJECT_URI, Project};
-use crate::projects::projects_structs::ProjectHandler;
 use url::Url;
-
-
 
 impl ProjectHandler {
     pub async fn list(&self, _options: &ProjectOps, auth_options: &AuthOptions) {
@@ -18,7 +16,7 @@ impl ProjectHandler {
             "{}{}{}",
             &auth_options.host, &REST_URI, &PROJECT_URI
         ))
-            .unwrap();
+        .unwrap();
 
         debug!("Listing projects... will call uri: {}", url.clone());
 
@@ -46,9 +44,9 @@ impl ProjectHandler {
 
 fn build_table_body(project: Project) -> Row<'static> {
     Row::new(vec![
-        TableCell::new_with_alignment(project.key, 1, Alignment::Left),
-        TableCell::new_with_alignment(project.name, 2, Alignment::Left),
-        TableCell::new_with_alignment(project.id, 1, Alignment::Left),
+        TableCell::new_with_alignment(project.key.unwrap(), 1, Alignment::Left),
+        TableCell::new_with_alignment(project.name.unwrap(), 2, Alignment::Left),
+        TableCell::new_with_alignment(project.id.unwrap(), 1, Alignment::Left),
     ])
 }
 

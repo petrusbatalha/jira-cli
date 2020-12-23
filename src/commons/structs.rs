@@ -45,17 +45,6 @@ pub struct FieldsType {
 }
 
 #[derive(Debug, Clone, Serialize, Deserialize)]
-pub struct ProjectKey {
-    pub key: String,
-}
-
-impl ProjectKey {
-    pub fn new(key: String) -> ProjectKey {
-        ProjectKey { key }
-    }
-}
-
-#[derive(Debug, Clone, Serialize, Deserialize)]
 pub struct IssueType {
     pub name: String,
     pub fields: Option<FieldsType>,

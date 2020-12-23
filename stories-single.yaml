@@ -1,0 +1,6 @@
+summary: Flag para ligar log tecnico ou desligar o envio de logs para eventos, mantendo apenas o log no console.
+storypoint: 8
+description: OLHA A FLAG
+custom_fields:
+- Epic Link: JC-3
+- Team: engenhariacloud

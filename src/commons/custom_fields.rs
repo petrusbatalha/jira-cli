@@ -64,10 +64,7 @@ impl CustomFieldsHandler {
             .await
             .unwrap();
 
-        println!("FIELDS {:?}", fields);
-
-        let fields =
-            fields.projects[0].clone().issuetypes.unwrap()[0]
+        let fields = fields.projects[0].clone().issuetypes.unwrap()[0]
             .clone()
             .fields
             .unwrap()
