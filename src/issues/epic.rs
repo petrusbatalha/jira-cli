@@ -1,8 +1,6 @@
 use crate::commons::req_builder::build_req;
 use crate::commons::structs::{AuthOptions, Issue, ProjectKey, JQL, REST_URI};
-use crate::commons::traits::Searchable;
 use crate::EpicOps;
-use async_trait::async_trait;
 use reqwest::Url;
 use serde::Deserialize;
 use term_table::{
@@ -21,9 +19,8 @@ pub struct Epic {
 // Query para listar epicos no jira.
 // https://jira.bradesco.com.br:8443/rest/api/2/search?jql=PROJECT=ESTRT AND issuetype="Epic"&fields=summary
 
-#[async_trait]
-impl Searchable<EpicOps> for EpicHandler {
-    async fn list(&self, options: &EpicOps, auth_options: &AuthOptions) {
+impl EpicHandler {
+    pub async fn list(&self, options: &EpicOps, auth_options: &AuthOptions) {
         let uri = format!("{}{}", &auth_options.host, &REST_URI);
         let project = ProjectKey::new(options.project_key.clone());
         let jql_query = format!(

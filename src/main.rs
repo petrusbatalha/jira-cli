@@ -7,17 +7,18 @@ extern crate log;
 mod commons;
 mod issues;
 mod stories;
+mod projects;
 
 extern crate base64;
 extern crate pretty_env_logger;
 
 use stories::command_args::{StoryListOps, StoryOps};
-use crate::issues::{epic::EpicHandler, project::ProjectHandler};
+use crate::issues::{epic::EpicHandler};
+use crate::projects::projects::ProjectHandler;
 use crate::stories::stories::StoriesHandler;
 use commons::{
     file_utilities::load_yaml,
     structs::AuthOptions,
-    traits::Searchable,
 };
 use std::env;
 use structopt::StructOpt;
