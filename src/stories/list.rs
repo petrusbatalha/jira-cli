@@ -11,10 +11,6 @@ use term_table::{
 use crate::stories::stories::{StoriesHandler, Stories};
 
 impl StoriesHandler {
-    pub async fn create_story(&self, _options: &StoryOps, _auth_options: &AuthOptions) {
-        println!("{:?}", "add stories");
-    }
-
     pub async fn list(&self, options: &StoryListOps, auth_options: &AuthOptions) {
         let uri = format!("{}{}", &auth_options.host, &REST_URI);
 

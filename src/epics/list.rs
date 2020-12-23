@@ -1,20 +1,13 @@
-use crate::commons::req_builder::build_req;
-use crate::commons::structs::{AuthOptions, Issue, ProjectKey, JQL, REST_URI};
-use crate::EpicOps;
-use reqwest::Url;
-use serde::Deserialize;
 use term_table::{
     row::Row,
     table_cell::{Alignment, TableCell},
     Table, TableStyle,
 };
-
-pub struct EpicHandler;
-
-#[derive(Debug, Clone, Deserialize)]
-pub struct Epic {
-    pub issues: Option<Vec<Issue>>,
-}
+use crate::epics::epics::{EpicHandler, Epic};
+use crate::EpicOps;
+use crate::commons::structs::{AuthOptions, REST_URI, ProjectKey, JQL, Issue};
+use url::Url;
+use crate::commons::req_builder::build_req;
 
 // Query para listar epicos no jira.
 // https://jira.bradesco.com.br:8443/rest/api/2/search?jql=PROJECT=ESTRT AND issuetype="Epic"&fields=summary

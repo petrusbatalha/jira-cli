@@ -5,17 +5,19 @@
 extern crate log;
 
 mod commons;
-mod issues;
 mod stories;
 mod projects;
+mod epics;
 
 extern crate base64;
 extern crate pretty_env_logger;
 
 use stories::command_args::{StoryListOps, StoryOps};
-use crate::issues::{epic::EpicHandler};
+use crate::epics::epics::EpicHandler;
+use crate::epics::command_args::EpicOps;
 use crate::projects::projects::ProjectHandler;
 use crate::stories::stories::StoriesHandler;
+use crate::projects::command_args::ProjectOps;
 use commons::{
     file_utilities::load_yaml,
     structs::AuthOptions,
@@ -63,15 +65,6 @@ enum List {
     Story(StoryListOps),
     #[structopt(name = "epics")]
     Epic(EpicOps),
-}
-
-#[derive(StructOpt, Debug)]
-pub struct ProjectOps {}
-
-#[derive(StructOpt, Debug)]
-pub struct EpicOps {
-    #[structopt(long = "project", short = "p")]
-    project_key: String,
 }
 
 #[tokio::main]

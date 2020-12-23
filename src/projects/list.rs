@@ -3,7 +3,7 @@ use term_table::{
     table_cell::{Alignment, TableCell},
     Table, TableStyle,
 };
-use crate::ProjectOps;
+use crate::projects::command_args::ProjectOps;
 use crate::commons::structs::{AuthOptions, REST_URI};
 use crate::commons::req_builder::build_req;
 use crate::projects::projects::{PROJECT_URI, Project};
