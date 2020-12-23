@@ -6,12 +6,14 @@ extern crate log;
 
 mod commons;
 mod issues;
+mod stories;
 
 extern crate base64;
 extern crate pretty_env_logger;
 
-use crate::issues::stories_args::{StoryListOps, StoryOps};
-use crate::issues::{epic::EpicHandler, project::ProjectHandler, stories::StoriesHandler};
+use stories::command_args::{StoryListOps, StoryOps};
+use crate::issues::{epic::EpicHandler, project::ProjectHandler};
+use crate::stories::stories::StoriesHandler;
 use commons::{
     file_utilities::load_yaml,
     structs::AuthOptions,
@@ -105,7 +107,7 @@ async fn handle_args(opts: Opts, auth_options: &AuthOptions) {
             },
             Commands::Add(issue_type) => match issue_type {
                 Add::Story(args) => {
-                    StoriesHandler.create_story(args, auth_options).await;
+                    StoriesHandler.create_story(&args, auth_options).await;
                 }
             },
         }
