@@ -1,4 +1,4 @@
-use crate::commons::req_builder::build_req;
+use crate::commons::req_builder::build_get_req;
 use crate::commons::structs::{AuthOptions, REST_URI};
 use crate::projects::command_args::ProjectOps;
 use crate::projects::projects_structs::ProjectHandler;
@@ -20,7 +20,7 @@ impl ProjectHandler {
 
         debug!("Listing projects... will call uri: {}", url.clone());
 
-        let projects = build_req(url, auth_options)
+        let projects = build_get_req(url, auth_options)
             .send()
             .await
             .unwrap()

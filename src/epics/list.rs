@@ -1,4 +1,4 @@
-use crate::commons::req_builder::build_req;
+use crate::commons::req_builder::build_get_req;
 use crate::commons::structs::{AuthOptions, Issue, JQL, REST_URI};
 use crate::epics::epics_projects::{Epic, EpicHandler};
 use crate::EpicOps;
@@ -22,7 +22,7 @@ impl EpicHandler {
         );
         let url = Url::parse(&jql_query).unwrap();
 
-        let epics = build_req(url, auth_options)
+        let epics = build_get_req(url, auth_options)
             .send()
             .await
             .unwrap()

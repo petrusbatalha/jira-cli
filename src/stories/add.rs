@@ -1,4 +1,4 @@
-use crate::commons::custom_fields::{CustomFieldsHandler, CustomFieldsCache};
+use crate::commons::custom_fields::{CustomFieldsCache, CustomFieldsHandler};
 use crate::commons::file_utilities::load_yaml;
 use crate::commons::structs::{AuthOptions, REST_URI};
 use crate::stories::command_args::StoryOps;
@@ -7,19 +7,17 @@ use anyhow::{bail, Error};
 use json_patch::merge;
 use serde_json::json;
 use serde_json::Value;
+use std::collections::HashMap;
 use std::default::default;
 use tokio::macros::support::Future;
-use std::collections::HashMap;
+use crate::commons::req_builder::{build_post_req};
+use url::Url;
+use reqwest::Response;
 
 impl StoriesHandler {
     pub async fn create_story(&self, options: &StoryOps, auth_options: &AuthOptions) {
-        let uri = format!("{}{}", &auth_options.host, &REST_URI);
-
-        let custom_fields = CustomFieldsHandler
-            .get_or_cache(auth_options, &options.project.as_ref().unwrap())
-            .await
-            .unwrap();
-
+        let uri = Url::parse(&format!("{}{}/issue/bulk", &auth_options.host, &REST_URI)).unwrap();
+        println!("Uri {}", uri);
         let mut story_template: StoryRequest = match &options.template_path {
             None => StoryRequest { ..default() },
             Some(path) => {
@@ -36,9 +34,17 @@ impl StoriesHandler {
         let mut stories_yaml: Stories = serde_yaml::from_str::<Stories>(yaml_string).unwrap();
 
         for story in stories_yaml.issue_updates.iter_mut() {
-            *story = StoryRequestFields::new_or_template(story.clone().fields,
-                                                         story_template.clone());
+            *story =
+                StoryRequestFields::new_or_template(story.clone().fields, story_template.clone());
         }
-        println!("{}", json!(stories_yaml))
+
+        let req =
+            build_post_req(uri, auth_options).json(&json!(stories_yaml)).send().await.unwrap().json::<Value>().await;
+
+        info!("{:?}", req);
+        // match req {
+        //     Ok(success) => info!("Historias criadas com sucesso. {:?}", success),
+        //     Err(error) => error!("Erro ao criar historias {:?}", error),
+        // }
     }
 }

@@ -76,7 +76,7 @@ async fn main() {
     let auth_options = AuthOptions {
         host: conf["jira"]["host"].as_str().unwrap().to_owned(),
         user: Some(conf["jira"]["user"].as_str().unwrap().to_owned()),
-        pass: Some(conf["jira"]["pass"].as_str().unwrap().to_owned()),
+        pass: Some(conf["jira"]["password"].as_str().unwrap().to_owned()),
     };
 
     handle_args(opts, &auth_options).await;

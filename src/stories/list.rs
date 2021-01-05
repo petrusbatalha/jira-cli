@@ -1,9 +1,12 @@
 use crate::commons::custom_fields::CustomFieldsHandler;
-use crate::commons::req_builder::build_req;
+use crate::commons::req_builder::build_get_req;
 use crate::commons::structs::{AuthOptions, Issue, JQL, REST_URI};
 use crate::stories::stories_structs::{StoriesHandler, StoryResponse};
 use crate::StoryListOps;
+use anyhow::{bail, Error};
 use reqwest::Url;
+use std::collections::hash_map::RandomState;
+use std::collections::HashMap;
 use term_table::{
     row::Row,
     table_cell::{Alignment, TableCell},
@@ -14,19 +17,26 @@ impl StoriesHandler {
     pub async fn list(&self, options: &StoryListOps, auth_options: &AuthOptions) {
         let uri = format!("{}{}", &auth_options.host, &REST_URI);
 
-        let custom_fields = CustomFieldsHandler
+        let custom_fields = match CustomFieldsHandler
             .get_or_cache(auth_options, &options.project)
             .await
-            .unwrap();
+        {
+            Some((_, rcf)) => {
+                Some(rcf)
+            },
+            _ => None,
+        }
+        .unwrap();
+
+        debug!("Custom  fields {:?}", &custom_fields);
 
         let epic_link = custom_fields.get("Epic Link").unwrap();
-        let epic_field = format!("cf[{}]", epic_link.replace("customfield_", ""));
 
         let epic_uri = format!(
             "{}{}{}{}{}",
             &uri,
             &JQL,
-            &epic_field,
+            &epic_link,
             "=",
             &options.epic.clone()
         );
@@ -35,7 +45,7 @@ impl StoriesHandler {
 
         debug!("Epic Request {}", url);
 
-        let stories = build_req(url, auth_options)
+        let stories = build_get_req(url, auth_options)
             .send()
             .await
             .unwrap()

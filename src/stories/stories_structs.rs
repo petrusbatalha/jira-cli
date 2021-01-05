@@ -1,9 +1,9 @@
 use crate::commons::structs::{Fields, Issue, IssueType};
 use crate::projects::projects_structs::Project;
 use serde::{Deserialize, Serialize};
+use serde_json::Value;
 use std::collections::{BTreeMap, HashMap};
 use std::default::default;
-use serde_json::Value;
 
 pub struct StoriesHandler;
 
@@ -40,8 +40,8 @@ pub struct StoryRequest {
     pub summary: Option<String>,
     pub description: Option<String>,
     pub issuetype: Option<IssueType>,
-    #[serde(rename = "Story Point")]
-    pub story_point: Option<i8>,
+    // #[serde(rename = "Story Point")]
+    // pub story_point: Option<i8>,
     pub labels: Option<Vec<String>>,
     #[serde(flatten)]
     pub custom_fields: Option<HashMap<String, Value>>,
@@ -57,7 +57,7 @@ impl StoryRequestFields {
                 project: story.project.or(story_template.project),
                 summary: story.summary.or(story_template.summary),
                 description: story.description.or(story_template.description),
-                story_point: story.story_point.or(story_template.story_point),
+                // story_point: story.story_point.or(story_template.story_point),
                 labels: story.labels.or(story_template.labels),
                 custom_fields: story.custom_fields.or(story_template.custom_fields),
                 ..default()
@@ -71,7 +71,7 @@ impl Default for StoryRequest {
         StoryRequest {
             project: None,
             summary: None,
-            story_point: Some(0 as i8),
+            // story_point: Some(0 as i8),
             description: None,
             issuetype: Some(IssueType {
                 name: "Story".to_string(),

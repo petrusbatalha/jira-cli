@@ -3,6 +3,7 @@ use anyhow::{anyhow, bail};
 use serde::{Deserialize, Serialize};
 use std::fs::File;
 use std::io::{BufReader, Read};
+use tokio::io::Error;
 
 pub async fn load_yaml(yaml_path: &str) -> Result<String, anyhow::Error> {
     // Open stories yaml.
@@ -17,7 +18,7 @@ pub async fn load_yaml(yaml_path: &str) -> Result<String, anyhow::Error> {
 }
 
 pub async fn json_to_file<T: Serialize>(payload: T, path: &str) -> serde_json::Result<()> {
-    let file = File::create(&path).unwrap();
+    let mut file = File::create(&path).unwrap();
 
     serde_json::to_writer(file, &payload)
 }
