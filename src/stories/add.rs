@@ -1,24 +1,18 @@
-use crate::commons::custom_fields::{CustomFieldsCache, CustomFieldsHandler};
 use crate::commons::file_utilities::load_yaml;
+use crate::commons::req_builder::build_post_req;
 use crate::commons::structs::{AuthOptions, REST_URI};
 use crate::stories::command_args::StoryOps;
 use crate::stories::stories_structs::{Stories, StoriesHandler, StoryRequest, StoryRequestFields};
-use anyhow::{bail, Error};
-use json_patch::merge;
 use serde_json::json;
 use serde_json::Value;
-use std::collections::HashMap;
 use std::default::default;
-use tokio::macros::support::Future;
-use crate::commons::req_builder::{build_post_req};
 use url::Url;
-use reqwest::Response;
 
 impl StoriesHandler {
     pub async fn create_story(&self, options: &StoryOps, auth_options: &AuthOptions) {
         let uri = Url::parse(&format!("{}{}/issue/bulk", &auth_options.host, &REST_URI)).unwrap();
         println!("Uri {}", uri);
-        let mut story_template: StoryRequest = match &options.template_path {
+        let story_template: StoryRequest = match &options.template_path {
             None => StoryRequest { ..default() },
             Some(path) => {
                 let template = load_yaml(&path).await.unwrap();
@@ -38,8 +32,13 @@ impl StoriesHandler {
                 StoryRequestFields::new_or_template(story.clone().fields, story_template.clone());
         }
 
-        let req =
-            build_post_req(uri, auth_options).json(&json!(stories_yaml)).send().await.unwrap().json::<Value>().await;
+        let req = build_post_req(uri, auth_options)
+            .json(&json!(stories_yaml))
+            .send()
+            .await
+            .unwrap()
+            .json::<Value>()
+            .await;
 
         match req {
             Ok(success) => info!("Historias criadas com sucesso. {:?}", success),

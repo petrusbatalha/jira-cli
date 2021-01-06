@@ -3,10 +3,8 @@ use crate::commons::req_builder::build_get_req;
 use crate::commons::structs::{AuthOptions, REST_URI};
 use crate::projects::projects_structs::Project;
 use serde::Deserialize;
-use serde_json::Error;
 use std::collections::hash_map::RandomState;
 use std::collections::HashMap;
-use tokio::macros::support::Future;
 use url::Url;
 
 const FILE_CACHE_PATH: &str = ".";
@@ -52,7 +50,10 @@ impl CustomFieldsHandler {
         project: &str,
         cache_path: &str,
         reversed_cache_path: &str,
-    ) -> Option<(HashMap<String, String, RandomState>, HashMap<String, String, RandomState>,)> {
+    ) -> Option<(
+        HashMap<String, String, RandomState>,
+        HashMap<String, String, RandomState>,
+    )> {
         let url = Url::parse(&format!(
             "{}{}{}projectKeys={}&expand=projects.issuetypes.fields",
             &auth_options.host, &REST_URI, &SEARCH_URI, project,
@@ -89,13 +90,20 @@ impl CustomFieldsHandler {
         }
 
         match json_to_file::<&CustomFieldsCache>(&custom_fields_map, &cache_path).await {
-            Ok(r) => {debug!("Custom Fields Cache File created at {}", &cache_path); }
-            Err(e) => {error!("Failed to create Custom Field File Cache {}", e); }
+            Ok(_) => {
+                debug!("Custom Fields Cache File created at {}", &cache_path);
+            }
+            Err(e) => {
+                error!("Failed to create Custom Field File Cache {}", e);
+            }
         };
 
         match json_to_file::<&CustomFieldsCache>(&reversed_fields_map, &reversed_cache_path).await {
-            Ok(()) => { debug!("Reversed Custom Fields Cache File created at {}", &reversed_cache_path) },
-            Err(e) => { error!("Failed to create Reversed Custom Field File Cache {}", e) }
+            Ok(()) => debug!(
+                "Reversed Custom Fields Cache File created at {}",
+                &reversed_cache_path
+            ),
+            Err(e) => error!("Failed to create Reversed Custom Field File Cache {}", e),
         };
         Some((custom_fields_map, reversed_fields_map))
     }
@@ -105,7 +113,6 @@ impl CustomFieldsHandler {
         auth_options: &AuthOptions,
         project: &str,
     ) -> Option<(CustomFieldsCache, CustomFieldsCache)> {
-
         let reversed_cache_path = format!(
             "{}/custom_fields_{}.reversed.json",
             &FILE_CACHE_PATH, &project
@@ -139,9 +146,12 @@ impl CustomFieldsHandler {
                 _ => None,
             },
             None => {
-                match self.save_custom_fields(auth_options, project, &cache_path, &reversed_cache_path, ).await
-                { Some(cache) => Some(cache),
-                   _ => None,
+                match self
+                    .save_custom_fields(auth_options, project, &cache_path, &reversed_cache_path)
+                    .await
+                {
+                    Some(cache) => Some(cache),
+                    _ => None,
                 }
             }
         }

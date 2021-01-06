@@ -1,8 +1,7 @@
-use crate::commons::structs::{Fields, Issue, IssueType};
-use crate::projects::projects_structs::Project;
+use crate::commons::structs::{Issue, IssueType};
 use serde::{Deserialize, Serialize};
 use serde_json::Value;
-use std::collections::{BTreeMap, HashMap};
+use std::collections::HashMap;
 use std::default::default;
 
 pub struct StoriesHandler;

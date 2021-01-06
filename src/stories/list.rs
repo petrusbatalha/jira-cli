@@ -3,10 +3,7 @@ use crate::commons::req_builder::build_get_req;
 use crate::commons::structs::{AuthOptions, Issue, JQL, REST_URI};
 use crate::stories::stories_structs::{StoriesHandler, StoryResponse};
 use crate::StoryListOps;
-use anyhow::{bail, Error};
 use reqwest::Url;
-use std::collections::hash_map::RandomState;
-use std::collections::HashMap;
 use term_table::{
     row::Row,
     table_cell::{Alignment, TableCell},
@@ -21,9 +18,7 @@ impl StoriesHandler {
             .get_or_cache(auth_options, &options.project)
             .await
         {
-            Some((_, rcf)) => {
-                Some(rcf)
-            },
+            Some((_, rcf)) => Some(rcf),
             _ => None,
         }
         .unwrap();
