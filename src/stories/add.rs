@@ -41,10 +41,9 @@ impl StoriesHandler {
         let req =
             build_post_req(uri, auth_options).json(&json!(stories_yaml)).send().await.unwrap().json::<Value>().await;
 
-        info!("{:?}", req);
-        // match req {
-        //     Ok(success) => info!("Historias criadas com sucesso. {:?}", success),
-        //     Err(error) => error!("Erro ao criar historias {:?}", error),
-        // }
+        match req {
+            Ok(success) => info!("Historias criadas com sucesso. {:?}", success),
+            Err(error) => error!("Erro ao criar historias {:?}", error),
+        }
     }
 }

@@ -23,7 +23,7 @@ use stories::command_args::{StoryListOps, StoryOps};
 use structopt::StructOpt;
 use yaml_rust::YamlLoader;
 
-const CONF_PATH: &str = "./.jira-cli/conf.yaml";
+const CONF_PATH: &str = "/jira-cli/conf.yaml";
 
 #[derive(Debug, StructOpt)]
 #[structopt(name = "jira-cli")]

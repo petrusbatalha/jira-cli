@@ -1,0 +1,131 @@
+issueUpdates:
+  - fields:
+      summary: |
+        [CWS][Bug] Incluir dependência do Jdom no Conector CWS
+      description: |-
+        Eu como engenheiro Cloud necessito realizar a correção no conector CWS, para disponibilizar para uso dos outros times.
+        Escopo:
+          - Incluir dependência do Jdom.
+          - Disponibilizar nova versão do conector CWS.
+      customfield_10101: ESTRT-1206
+      customfield_10214: engenhariacloud
+  - fields:
+      summary: |
+        [CWS-3.4.2][PF] Alterar serviço coredig-login
+      description: |-
+        Como Po da engenharia
+        solicito a atualização da biblioteca CWS do serviço coredig-login na torre PF
+        visando evitar erros gerados por conexões encerradas pelo Firewall
+        DOD:
+        Alteração do pom apontamento a nova LIB.
+        Disponibilização no ambientes de testes(TU/TI/TH) da torre PF.
+      customfield_10101: ESTRT-1206
+      customfield_10214: engenhariacloud
+  - fields:
+      summary: |
+        [CWS-3.4.2][PF] Alterar serviço coredig-senha4
+      description: |-
+        Como Po da engenharia
+        solicito a atualização da biblioteca CWS do serviço coredig-senha4 na torre PF
+        visando evitar erros gerados por conexões encerradas pelo Firewall
+        DOD:
+        Alteração do pom apontamento a nova LIB.
+        Disponibilização no ambientes de testes(TU/TI/TH) da torre PF.
+      customfield_10101: ESTRT-1206
+      customfield_10214: engenhariacloud
+  - fields:
+      summary: |
+        [CWS-3.4.2][PF] Alterar serviço coredig-senha-debito
+      description: |-
+        Como Po da engenharia
+        solicito a atualização da biblioteca CWS do serviço coredig-senha-debito na torre PF
+        visando evitar erros gerados por conexões encerradas pelo Firewall
+        DOD:
+        Alteração do pom apontamento a nova LIB.
+        Disponibilização no ambientes de testes(TU/TI/TH) da torre PF.
+      customfield_10101: ESTRT-1206
+      customfield_10214: engenhariacloud
+  - fields:
+      summary: |
+        [CWS-3.4.2][PF] Alterar serviço coreopen-tancode
+      description: |-
+        Como Po da engenharia
+        solicito a atualização da biblioteca CWS do serviço coreopen-tancode na torre PF
+        visando evitar erros gerados por conexões encerradas pelo Firewall
+        DOD:
+        Alteração do pom apontamento a nova LIB.
+        Disponibilização no ambientes de testes(TU/TI/TH) da torre PF.
+      customfield_10101: ESTRT-1206
+      customfield_10214: engenhariacloud
+  - fields:
+      summary: |
+        [CWS-3.4.2][PF] Alterar serviço coreopen-tokenpf
+      description: |-
+        Como Po da engenharia
+        solicito a atualização da biblioteca CWS do serviço coreopen-tokenpf na torre PF
+        visando evitar erros gerados por conexões encerradas pelo Firewall
+        DOD:
+        Alteração do pom apontamento a nova LIB.
+        Disponibilização no ambientes de testes(TU/TI/TH) da torre PF.
+      customfield_10101: ESTRT-1206
+      customfield_10214: engenhariacloud
+  - fields:
+      summary: |
+        [CWS-3.4.2][PF] Alterar serviço gacb-coreopen-mtoken
+      description: |-
+        Como Po da engenharia
+        solicito a atualização da biblioteca CWS do serviço gacb-coreopen-mtoken na torre PF
+        visando evitar erros gerados por conexões encerradas pelo Firewall
+        DOD:
+        Alteração do pom apontamento a nova LIB.
+        Disponibilização no ambientes de testes(TU/TI/TH) da torre PF.
+      customfield_10101: ESTRT-1206
+      customfield_10214: engenhariacloud
+  - fields:
+      summary: |
+        [CWS-3.4.2][PF] Alterar serviço gacb-coreopen-captcha
+      description: |-
+        Como Po da engenharia
+        solicito a atualização da biblioteca CWS do serviço gacb-coreopen-captcha na torre PF
+        visando evitar erros gerados por conexões encerradas pelo Firewall
+        DOD:
+        Alteração do pom apontamento a nova LIB.
+        Disponibilização no ambientes de testes(TU/TI/TH) da torre PF.
+      customfield_10101: ESTRT-1206
+      customfield_10214: engenhariacloud
+  - fields:
+      summary: |
+        [CWS-3.4.2][PF] Alterar serviço gacb-srv-login-celular
+      description: |-
+        Como Po da engenharia
+        solicito a atualização da biblioteca CWS do serviço gacb-srv-login-celular na torre PF
+        visando evitar erros gerados por conexões encerradas pelo Firewall
+        DOD:
+        Alteração do pom apontamento a nova LIB.
+        Disponibilização no ambientes de testes(TU/TI/TH) da torre PF.
+      customfield_10101: ESTRT-1206
+      customfield_10214: engenhariacloud
+  - fields:
+      summary: |
+        [CWS-3.4.2][PF] Alterar serviço gacb-srv-listagem-produtos-celular
+      description: |-
+        Como Po da engenharia
+        solicito a atualização da biblioteca CWS do serviço gacb-srv-listagem-produtos-celular na torre PF
+        visando evitar erros gerados por conexões encerradas pelo Firewall
+        DOD:
+        Alteração do pom apontamento a nova LIB.
+        Disponibilização no ambientes de testes(TU/TI/TH) da torre PF.
+      customfield_10101: ESTRT-1206
+      customfield_10214: engenhariacloud
+  - fields:
+      summary: |
+        [CWS-3.4.2][PF] Alterar serviço gseg-login-funcionario
+      description: |-
+        Como Po da engenharia
+        solicito a atualização da biblioteca CWS do serviço gseg-login-funcionario na torre PF
+        visando evitar erros gerados por conexões encerradas pelo Firewall
+        DOD:
+        Alteração do pom apontamento a nova LIB.
+        Disponibilização no ambientes de testes(TU/TI/TH) da torre PF.
+      customfield_10101: ESTRT-1206
+      customfield_10214: engenhariacloud

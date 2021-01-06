@@ -63,7 +63,7 @@ impl StoriesHandler {
             table.add_row(build_table_body(issue));
         }
 
-        println!("{}", table.render());
+        print!("{}", table.render());
     }
 }
 

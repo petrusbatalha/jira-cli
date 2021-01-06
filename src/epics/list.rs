@@ -39,7 +39,7 @@ impl EpicHandler {
             table.add_row(build_table_body(issue));
         }
 
-        println!("{}", table.render());
+        info!("{}", table.render());
     }
 }
 

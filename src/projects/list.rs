@@ -38,7 +38,7 @@ impl ProjectHandler {
             table.add_row(build_table_body(project));
         }
 
-        println!("{}", table.render());
+        info!("{}", table.render());
     }
 }
 
