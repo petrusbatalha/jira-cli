@@ -9,7 +9,7 @@ mod epics;
 mod projects;
 mod stories;
 
-extern crate base64;
+extern crate dirs;
 extern crate pretty_env_logger;
 
 use crate::epics::command_args::EpicOps;
@@ -22,8 +22,7 @@ use std::env;
 use stories::command_args::{StoryListOps, StoryOps};
 use structopt::StructOpt;
 use yaml_rust::YamlLoader;
-
-const CONF_PATH: &str = "/jira-cli/conf.yaml";
+use dirs::home_dir;
 
 #[derive(Debug, StructOpt)]
 #[structopt(name = "jira-cli")]
@@ -71,14 +70,17 @@ async fn main() {
     env::set_var("RUST_LOG", opts.log_level.to_ascii_uppercase());
     pretty_env_logger::init();
 
-    let conf_string = load_yaml(&CONF_PATH).await.unwrap();
+    let home_dir = home_dir().unwrap();
+    let conf_path = format!("{}{}", home_dir.to_str().unwrap(), "/.jira-cli/conf.yaml");
+    println!("{}", &conf_path);
+    let conf_string = load_yaml(&conf_path).await.unwrap();
+
     let conf = &YamlLoader::load_from_str(&conf_string).unwrap()[0];
     let auth_options = AuthOptions {
         host: conf["jira"]["host"].as_str().unwrap().to_owned(),
         user: Some(conf["jira"]["user"].as_str().unwrap().to_owned()),
         pass: Some(conf["jira"]["password"].as_str().unwrap().to_owned()),
     };
-
     handle_args(opts, &auth_options).await;
 }
 

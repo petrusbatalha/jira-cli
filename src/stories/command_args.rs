@@ -6,12 +6,8 @@ pub struct StoryOps {
     pub project: Option<String>,
     #[structopt(long = "epic", short = "e", help = "Epic to link stories")]
     pub epic: Option<String>,
-    #[structopt(long = "summary", short = "s", help = "Story summary")]
     pub summary: Option<String>,
-    #[structopt(long = "description", short = "d", help = "Story Description")]
     pub description: Option<String>,
-    #[structopt(long = "labels", short = "l", help = "Story Labels")]
-    pub labels: Option<Vec<String>>,
     #[structopt(
         long = "template",
         short = "t",

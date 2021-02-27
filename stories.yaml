@@ -1,92 +1,25 @@
 issueUpdates:
   - fields:
       summary: |
-        [Circuit Breaker][BFF] Implementar serviço enge-bff-realworld.
+        Teste criacao historia batch 1
       description: |
-        Eu como engenheiro Cloud desejo um serviço de exemplo para validar a
-        funcionalidade de circuit breaker do Istio.
-        Escopo:
-          - Deverá ser desenvolvido em NodeJS.
-          - Realizará uma chamada para o serviço enge-srv-quarkus-realworld e
-        caso recebe o statuscode 500 como retorno, irá realizar uma chamada
-        para o enge-srv-micronaut-realworld.
-      customfield_10101: ESTRT-1299
+        Eu como desenvolvedor desejo criar historias via cli.
+      customfield_10014: JC-3
   - fields:
       summary: |
-        [Circuit Breaker][DS] Adequação do serviço enge-bff-realworld para esteira.
+        Teste criacao historia batch 2
       description: |
-        Eu como engenheiro Cloud necessito do serviço enge-bff-realworld em DS.
-        Escopo:
-        - Fazer o build da imagem local.
-        - Fazer o scp da imagem para a jump.
-        - Carregar a imagem em DS.
-        - Fazer deploy do serviço.
-      customfield_10101: ESTRT-1299
+        Eu como desenvolvedor desejo criar historias via cli.
+      customfield_10014: JC-3
   - fields:
       summary: |
-        [Circuit Breaker] Adequação do serviço enge-bff-realworld para esteira.
+        Teste criacao historia batch 3
       description: |
-        Eu como engenheiro Cloud necessito do serviço enge-bff-realworld nos ambientes TU/TI/TH.
-        Escopo:
-        - Adaptar a estrutura do projeto para a pipeline da esteira DevSecOps.
-        - Realizar testes unitários.
-        - Realizar testes integrados com o Octane.
-        - Deploy no ambiente.
-      customfield_10101: ESTRT-1299
+        Eu como desenvolvedor desejo criar historias via cli.
+      customfield_10014: JC-3
   - fields:
       summary: |
-        [Circuit Breaker][DS] Deploy do serviço enge-srv-quarkus-realworld em DS
+        Teste criacao historia batch 4
       description: |
-        Eu como engenheiro Cloud necessito do serviço enge-srv-quarkus-realworld em DS.
-             Escopo:
-             - Fazer o build da imagem local.
-             - Fazer o scp da imagem para a jump.
-             - Carregar a imagem em DS.
-             - Fazer deploy do serviço.
-      customfield_10101: ESTRT-1299
-  - fields:
-      summary: |
-        [Circuit Breaker][DS] Deploy do serviço enge-srv-micronaut-realworld em DS
-      description: |
-        Eu como engenheiro Cloud necessito do serviço enge-srv-micronaut-realworld em DS.
-             Escopo:
-             - Fazer o build da imagem local.
-             - Fazer o scp da imagem para a jump.
-             - Carregar a imagem em DS.
-             - Fazer deploy do serviço.
-      customfield_10101: ESTRT-1299
-  - fields:
-      summary: |
-        [Circuit Breaker][DS] Deploy do serviço enge-srv-realworld-moedas em DS
-      description: |
-        Eu como engenheiro Cloud necessito do serviço enge-srv-realworld-moedas em DS.
-             Escopo:
-             - Fazer o build da imagem local.
-             - Fazer o scp da imagem para a jump.
-             - Carregar a imagem em DS.
-             - Fazer deploy do serviço.
-      customfield_10101: ESTRT-1299
-  - fields:
-      summary: |
-        [Circuit Breaker] Implementar redis como base para o serviço enge-srv-realworld-moedas
-      description: |
-        Eu como engenheiro Cloud necessito que o serviço enge-srv-realworld-moedas busque
-        os dados da cotação das moedas do Redis.
-        O serviço deverá manter os dados em um cache local, para responder em caso de indisponibilidade do Redis.
-        Os dados deverão conter um timestamp que será referente ao horário de atualização, dada a característica
-        efêmera dos containers.
-        Escopo:
-          - Adicionar acesso ao Redis.
-          - Adicionar cache local para dados do Redis.
-          - Alterar a estrutura do payload para conter o timestamp.
-          - Adicionar funcionalidade para carregar o Redis.
-          - Testes unitários.
-      customfield_10101: ESTRT-1299
-  - fields:
-      summary: |
-        [Circuit Breaker][DS] Discovery Circuit Breaker Istio.
-      description: |
-        Eu como engenheiro Cloud necessito do mapeamento das configurações necessárias
-        para a implementação do Circuit Breaker via Istio.
-        Essa história será responsável pela geração de novas histórias de acordo com o resultado.
-      customfield_10101: ESTRT-1299
+        Eu como desenvolvedor desejo criar historias via cli.
+      customfield_10014: JC-3

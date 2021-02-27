@@ -41,8 +41,8 @@ impl StoriesHandler {
             .await;
 
         match req {
-            Ok(success) => info!("Historias criadas com sucesso. {:?}", success),
-            Err(error) => error!("Erro ao criar historias {:?}", error),
+            Ok(success) => info!("Historias criadas com sucesso. {:}", success),
+            Err(error) => error!("Erro ao criar historias {:}", error),
         }
     }
 }
