@@ -1,38 +1,28 @@
-use crate::commons::req_builder::build_req;
-use crate::commons::structs::{AuthOptions, Issue, ProjectKey, JQL, REST_URI};
-use crate::commons::traits::Searchable;
+use crate::commons::req_builder::build_get_req;
+use crate::commons::structs::{AuthOptions, Issue, JQL, REST_URI};
+use crate::epics::epics_projects::{Epic, EpicHandler};
 use crate::EpicOps;
-use async_trait::async_trait;
-use reqwest::Url;
-use serde::Deserialize;
 use term_table::{
     row::Row,
     table_cell::{Alignment, TableCell},
     Table, TableStyle,
 };
-
-pub struct EpicHandler;
-
-#[derive(Debug, Clone, Deserialize)]
-pub struct Epic {
-    pub issues: Option<Vec<Issue>>,
-}
+use url::Url;
 
 // Query para listar epicos no jira.
 // https://jira.bradesco.com.br:8443/rest/api/2/search?jql=PROJECT=ESTRT AND issuetype="Epic"&fields=summary
 
-#[async_trait]
-impl Searchable<EpicOps> for EpicHandler {
-    async fn list(&self, options: &EpicOps, auth_options: &AuthOptions) {
+impl EpicHandler {
+    pub async fn list(&self, options: &EpicOps, auth_options: &AuthOptions) {
         let uri = format!("{}{}", &auth_options.host, &REST_URI);
-        let project = ProjectKey::new(options.project_key.clone());
+        let project = options.project_key.clone();
         let jql_query = format!(
             "{}{}{}{}{}",
-            &uri, &JQL, "PROJECT=", project.key, " AND issuetype=Epic&fields=summary,description"
+            &uri, &JQL, "PROJECT=", project, " AND issuetype=Epic&fields=summary,description"
         );
         let url = Url::parse(&jql_query).unwrap();
 
-        let epics = build_req(url, auth_options)
+        let epics = build_get_req(url, auth_options)
             .send()
             .await
             .unwrap()
@@ -49,7 +39,7 @@ impl Searchable<EpicOps> for EpicHandler {
             table.add_row(build_table_body(issue));
         }
 
-        println!("{}", table.render());
+        info!("{}", table.render());
     }
 }
 

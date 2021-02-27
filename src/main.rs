@@ -5,22 +5,24 @@
 extern crate log;
 
 mod commons;
-mod issues;
+mod epics;
+mod projects;
+mod stories;
 
-extern crate base64;
+extern crate dirs;
 extern crate pretty_env_logger;
 
-use crate::issues::{epic::EpicHandler, project::ProjectHandler, stories::StoriesHandler};
-use commons::{
-    file_utilities::load_yaml,
-    structs::AuthOptions,
-    traits::Searchable,
-};
+use crate::epics::command_args::EpicOps;
+use crate::epics::epics_projects::EpicHandler;
+use crate::projects::command_args::ProjectOps;
+use crate::projects::projects_structs::ProjectHandler;
+use crate::stories::stories_structs::StoriesHandler;
+use commons::{file_utilities::load_yaml, structs::AuthOptions};
 use std::env;
+use stories::command_args::{StoryListOps, StoryOps};
 use structopt::StructOpt;
 use yaml_rust::YamlLoader;
-
-const CONF_PATH: &str = "./.jira-cli/conf.yaml";
+use dirs::home_dir;
 
 #[derive(Debug, StructOpt)]
 #[structopt(name = "jira-cli")]
@@ -61,47 +63,6 @@ enum List {
     Epic(EpicOps),
 }
 
-#[derive(StructOpt, Debug)]
-pub struct ProjectOps {}
-
-#[derive(StructOpt, Debug)]
-pub struct EpicOps {
-    #[structopt(long = "project", short = "p")]
-    project_key: String,
-}
-
-#[derive(StructOpt, Debug)]
-pub struct StoryOps {
-    #[structopt(long = "project", short = "p", help = "Project to create stories")]
-    project: Option<String>,
-    #[structopt(long = "epic", short = "e", help = "Epic to link stories")]
-    epic: Option<String>,
-    #[structopt(long = "summary", short = "s", help = "Story summary")]
-    summary: Option<String>,
-    #[structopt(long = "description", short = "d", help = "Story Description")]
-    description: Option<String>,
-    #[structopt(long = "labels", short = "l", help = "Story Labels")]
-    labels: Option<Vec<String>>,
-    #[structopt(
-        long = "template",
-        short = "t",
-        help = "Link to template for creating stories"
-    )]
-    template_path: Option<String>,
-}
-
-#[derive(StructOpt, Debug)]
-pub struct StoryListOps {
-    #[structopt(long = "epic", short = "e", help = "Epic to list stories for.")]
-    epic: String,
-    #[structopt(
-        long = "project",
-        short = "p",
-        help = "Project wich contain the epics."
-    )]
-    project: String,
-}
-
 #[tokio::main]
 async fn main() {
     let opts = Opts::from_args();
@@ -109,14 +70,17 @@ async fn main() {
     env::set_var("RUST_LOG", opts.log_level.to_ascii_uppercase());
     pretty_env_logger::init();
 
-    let conf_string = load_yaml(&CONF_PATH).await.unwrap();
+    let home_dir = home_dir().unwrap();
+    let conf_path = format!("{}{}", home_dir.to_str().unwrap(), "/.jira-cli/conf.yaml");
+    println!("{}", &conf_path);
+    let conf_string = load_yaml(&conf_path).await.unwrap();
+
     let conf = &YamlLoader::load_from_str(&conf_string).unwrap()[0];
     let auth_options = AuthOptions {
         host: conf["jira"]["host"].as_str().unwrap().to_owned(),
         user: Some(conf["jira"]["user"].as_str().unwrap().to_owned()),
-        pass: Some(conf["jira"]["pass"].as_str().unwrap().to_owned()),
+        pass: Some(conf["jira"]["password"].as_str().unwrap().to_owned()),
     };
-
     handle_args(opts, &auth_options).await;
 }
 
@@ -136,7 +100,7 @@ async fn handle_args(opts: Opts, auth_options: &AuthOptions) {
             },
             Commands::Add(issue_type) => match issue_type {
                 Add::Story(args) => {
-                    StoriesHandler.create_story(args, auth_options).await;
+                    StoriesHandler.create_story(&args, auth_options).await;
                 }
             },
         }
