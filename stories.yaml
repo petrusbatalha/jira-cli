@@ -1,0 +1,25 @@
+issueUpdates:
+  - fields:
+      summary: |
+        Teste criacao historia batch 1
+      description: |
+        Eu como desenvolvedor desejo criar historias via cli.
+      customfield_10014: JC-3
+  - fields:
+      summary: |
+        Teste criacao historia batch 2
+      description: |
+        Eu como desenvolvedor desejo criar historias via cli.
+      customfield_10014: JC-3
+  - fields:
+      summary: |
+        Teste criacao historia batch 3
+      description: |
+        Eu como desenvolvedor desejo criar historias via cli.
+      customfield_10014: JC-3
+  - fields:
+      summary: |
+        Teste criacao historia batch 4
+      description: |
+        Eu como desenvolvedor desejo criar historias via cli.
+      customfield_10014: JC-3
